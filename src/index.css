@@ -7,3 +7,12 @@
   font-family: "Nunito";
   src: url('/fonts/Nunito-VariableFont_wght.ttf');
 }
+
+body {
+  height: 100vh;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}

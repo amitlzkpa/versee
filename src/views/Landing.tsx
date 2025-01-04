@@ -1,14 +1,14 @@
-import { Center, Container } from '@mantine/core';
+import { Flex } from '@mantine/core';
 
 export default function Landing() {
 
   return (
-    <Container fluid>
-
-      <Center>
-        Landing
-      </Center>
-
-    </Container>
+    <Flex w="100%" direction="column" align="center" gap="sm">
+      {Array(45)
+        .fill(0)
+        .map((_, index) => (
+          <div key={index}>Landing</div>
+        ))}
+    </Flex>
   );
 }

@@ -13,7 +13,7 @@ export default function Navbar() {
   const { user } = useUser();
 
   return (
-    <Flex h="100%" justify="space-between" align="center" gap="md" p="md">
+    <Flex w="100%" h="100%" justify="space-between" align="center" gap="md">
       <Flex align="center" gap="md">
         <Button
           component="a"

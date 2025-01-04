@@ -1,14 +1,10 @@
-import { Center, Container } from '@mantine/core';
+import { Flex } from '@mantine/core';
 
 export default function Dev() {
 
   return (
-    <Container fluid>
-
-      <Center>
-        Dev
-      </Center>
-
-    </Container>
+    <Flex w="100%" direction="column" gap="sm">
+      <div>Dev</div>
+    </Flex>
   );
 }

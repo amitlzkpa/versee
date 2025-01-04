@@ -6,7 +6,7 @@ import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { ConvexReactClient } from "convex/react";
 
 import {
-  AppShell,
+  Flex,
   MantineProvider,
   createTheme,
   rem,
@@ -87,19 +87,20 @@ function App() {
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
         <MantineProvider theme={theme}>
-          <AppShell
-            padding="md"
-            header={{ height: 60 }}
+          <Flex
+            w="100%"
+            h="100%"
+            direction="column"
+            align="center"
+            gap="sm"
           >
-            <AppShell.Header>
+            <Flex w="100%" p="sm">
               <Navbar />
-            </AppShell.Header>
-
-            <AppShell.Main>
+            </Flex>
+            <Flex w="100%" h="100%" p="sm" style={{ overflowY: "auto" }}>
               <RouterProvider router={router} />
-            </AppShell.Main>
-
-          </AppShell>
+            </Flex>
+          </Flex>
         </MantineProvider>
       </ConvexProviderWithClerk>
     </ClerkProvider>
