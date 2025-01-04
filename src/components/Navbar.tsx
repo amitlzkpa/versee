@@ -2,6 +2,7 @@
 import {
   Button,
   Flex,
+  Loader
 } from '@mantine/core';
 import { FaInfoCircle } from 'react-icons/fa';
 
@@ -14,12 +15,11 @@ export default function Navbar() {
 
   return (
     <Flex w="100%" h="100%" justify="space-between" align="center" gap="md">
-      <Flex align="center" gap="md">
+      <Flex align="center">
         <Button
           component="a"
-          variant="outline"
           href="/"
-          radius="xl"
+          variant="subtle"
           size="md"
           h={48}
         >
@@ -39,10 +39,19 @@ export default function Navbar() {
 
       <Flex align="center" gap="md">
         <AuthLoading>
-          <div>...</div>
+          <Loader size="sm" />
         </AuthLoading>
         <Unauthenticated>
-          <SignInButton fallbackRedirectUrl="/dashboard" />
+          <SignInButton fallbackRedirectUrl="/">
+            <Button
+              variant="outline"
+              radius="xl"
+              size="md"
+              h={48}
+            >
+              Login
+            </Button>
+          </SignInButton>
         </Unauthenticated>
         <Authenticated>
           <UserButton />
