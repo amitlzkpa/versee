@@ -1,17 +1,26 @@
 import { useState } from 'react';
-import { Button, Flex, Loader, Text } from '@mantine/core';
+import { Button, Card, Flex, Input, Loader, Text } from '@mantine/core';
 
-import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
+import { Authenticated, Unauthenticated, AuthLoading, useMutation, useQuery } from "convex/react";
 import { useUser } from "@clerk/clerk-react";
+import { api } from "../../convex/_generated/api";
 
 export default function Dev() {
 
   const { user } = useUser();
+
+  const currUserVsMsgs = useQuery(api.dbOps.getVsMsgsForUser);
+  const addNewVsMsg = useMutation(api.dbOps.createVsMsg);
+
   const [msg, setMsg] = useState("");
 
   const onClick = async () => {
-    console.log("foo");
-    setMsg("click");
+    if (!msg) return;
+    console.log("Adding new message...");
+    addNewVsMsg({
+      newVsMsgContent: msg
+    })
+    setMsg("");
   };
 
   return (
@@ -25,16 +34,39 @@ export default function Dev() {
         </Flex>
       </Unauthenticated>
       <Authenticated>
-        <Flex direction="column" justify="center" gap="md" p="lg">
-          <Text>
-            {user?.fullName}
-          </Text>
-          <Button
-            onClick={onClick}
-            size="lg"
-          >
-            Go
-          </Button>
+        <Flex w="60%" direction="column" align="center" gap="md" p="lg">
+          <Flex w="100%" align="center" gap="sm">
+            <Text>
+              {user?.firstName ?? "You"}:
+            </Text>
+            <Input
+              value={msg}
+              onChange={(event) => setMsg(event.currentTarget.value)}
+              placeholder="type your message..."
+              size="lg"
+              radius="xl"
+              style={{ flexGrow: 1 }}
+            />
+            <Button
+              onClick={onClick}
+              size="lg"
+            >
+              Add
+            </Button>
+          </Flex>
+
+          <Flex w="100%" direction="column" align="stretch" gap="xs">
+            {
+              (currUserVsMsgs ?? [])
+                .map((msg, idx) => {
+                  return (
+                    <Card w="100%" withBorder radius="xl">
+                      <Text key={idx}>{msg.msgContent}</Text>
+                    </Card>
+                  );
+                })
+            }
+          </Flex>
         </Flex>
       </Authenticated>
     </Flex>
