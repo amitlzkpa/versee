@@ -1,27 +1,28 @@
 import '@mantine/core/styles.css';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ClerkProvider, useAuth } from "@clerk/clerk-react";
+import { ConvexProviderWithClerk } from "convex/react-clerk";
+import { ConvexReactClient } from "convex/react";
 
 import {
   AppShell,
-  Button,
-  Burger,
-  Container,
-  Group,
   MantineProvider,
   createTheme,
   rem,
 } from '@mantine/core';
-import { FaInfoCircle } from 'react-icons/fa';
-import { useDisclosure } from '@mantine/hooks';
 
 import Dev from "./views/Dev";
 import Landing from "./views/Landing";
 
-function App() {
+import Navbar from "./components/Navbar";
 
-  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const CONVEX_URL = import.meta.env.VITE_CONVEX_URL;
+
+const convex = new ConvexReactClient(CONVEX_URL);
+
+function App() {
 
   const theme = createTheme({
     fontFamily: 'Nunito, sans-serif',
@@ -83,48 +84,25 @@ function App() {
   ]);
 
   return (
-    <MantineProvider theme={theme}>
-      <AppShell
-        header={{ height: 60 }}
-        navbar={{
-          width: 300,
-          breakpoint: 'sm',
-          collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
-        }}
-        padding="md"
-      >
-        <AppShell.Header>
-          <Group h="100%" px="md">
-            <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
-            <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
-            <Button
-              component="a"
-              variant="outline"
-              href="/"
-              radius="xl"
-              size="md"
-              pr="2rem"
-              h={48}
-            >
-              <img src="/logo-512x512.png" alt="Versee" style={{ height: "3rem" }} />
-              Versee
-              <FaInfoCircle />
-            </Button>
-          </Group>
-        </AppShell.Header>
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+      <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+        <MantineProvider theme={theme}>
+          <AppShell
+            padding="md"
+            header={{ height: 60 }}
+          >
+            <AppShell.Header>
+              <Navbar />
+            </AppShell.Header>
 
-        <AppShell.Navbar pl="md" py="md">
-          Navbar
-        </AppShell.Navbar>
+            <AppShell.Main>
+              <RouterProvider router={router} />
+            </AppShell.Main>
 
-        <AppShell.Main>
-          <Container size="60rem">
-            <RouterProvider router={router} />
-          </Container>
-        </AppShell.Main>
-
-      </AppShell>
-    </MantineProvider>
+          </AppShell>
+        </MantineProvider>
+      </ConvexProviderWithClerk>
+    </ClerkProvider>
   )
 };
 
