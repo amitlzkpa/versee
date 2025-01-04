@@ -7,11 +7,9 @@ import {
 import { FaInfoCircle } from 'react-icons/fa';
 
 import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
-import { SignInButton, UserButton, useUser } from "@clerk/clerk-react";
+import { SignInButton, UserButton } from "@clerk/clerk-react";
 
 export default function Navbar() {
-
-  const { user } = useUser();
 
   return (
     <Flex w="100%" h="100%" justify="space-between" align="center" gap="md">
