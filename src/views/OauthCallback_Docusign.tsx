@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Button, Flex } from '@mantine/core';
 
 import { Authenticated, Unauthenticated, AuthLoading, useAction, useMutation, useQuery } from "convex/react";
@@ -8,11 +8,13 @@ import { api } from "../../convex/_generated/api";
 
 export default function OauthCallback_Docusign() {
 
-  const { code } = useParams();
+  const location = useLocation();
 
   const performAction_testAction_debugTwo = useAction(api.vsActions.testAction_debugTwo);
 
   const onClickTest_debugTwo = async () => {
+    const queryParams = new URLSearchParams(location.search);
+    const code = queryParams.get("code");
     console.log("======================================");
     console.log("code");
     console.log(code);
