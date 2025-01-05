@@ -25,10 +25,10 @@ export default function Dev() {
     console.log("Added message!");
   };
 
-  const performAction_testAction = useAction(api.vsActions.testAction);
+  const performAction_testAction_reverseText = useAction(api.vsActions.testAction_reverseText);
 
   const onClickTest = async () => {
-    const reverseText = await performAction_testAction({ inputText: msg });
+    const reverseText = await performAction_testAction_reverseText({ inputText: msg });
     setMsg(reverseText);
   };
 
