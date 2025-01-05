@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { FaRedo } from 'react-icons/fa';
 import { Button, Card, Flex, Input, Loader, Text } from '@mantine/core';
 
-import { Authenticated, Unauthenticated, AuthLoading, useMutation, useQuery } from "convex/react";
+import { Authenticated, Unauthenticated, AuthLoading, useAction, useMutation, useQuery } from "convex/react";
 import { useUser } from "@clerk/clerk-react";
 import { api } from "../../convex/_generated/api";
 
@@ -14,7 +15,7 @@ export default function Dev() {
 
   const [msg, setMsg] = useState("");
 
-  const onClick = async () => {
+  const onClickAdd = async () => {
     if (!msg) return;
     console.log("Adding new message...");
     addNewVsMsg({
@@ -22,6 +23,13 @@ export default function Dev() {
     })
     setMsg("");
     console.log("Added message!");
+  };
+
+  const performAction_testAction = useAction(api.vsActions.testAction);
+
+  const onClickTest = async () => {
+    const reverseText = await performAction_testAction({ inputText: msg });
+    setMsg(reverseText);
   };
 
   return (
@@ -49,7 +57,14 @@ export default function Dev() {
               style={{ flexGrow: 1 }}
             />
             <Button
-              onClick={onClick}
+              onClick={onClickTest}
+              size="md"
+              variant="outline"
+            >
+              <FaRedo color="versee-purple" />
+            </Button>
+            <Button
+              onClick={onClickAdd}
               size="lg"
             >
               Add
