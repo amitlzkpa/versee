@@ -21,6 +21,7 @@ export default function Dev() {
       newVsMsgContent: msg
     })
     setMsg("");
+    console.log("Added message!");
   };
 
   return (

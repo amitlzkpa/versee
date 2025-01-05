@@ -21,7 +21,7 @@ export default function Navbar() {
           size="md"
           h={48}
         >
-          <img src="/logo-512x512.png" alt="Versee" style={{ height: "3rem" }} />
+          <img src="/logo-512x512.png" alt="Versee" style={{ height: "2rem", margin: 8 }} />
           Versee
         </Button>
         <Button
@@ -31,7 +31,7 @@ export default function Navbar() {
           size="sm"
           h={32}
         >
-          <FaInfoCircle color="versee-maroon" />
+          <FaInfoCircle color="versee-purple" />
         </Button>
       </Flex>
 

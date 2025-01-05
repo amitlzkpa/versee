@@ -54,19 +54,19 @@ function App() {
       xl: '1.85',
     },
     defaultRadius: 'xl',
-    primaryColor: 'versee-maroon',
+    primaryColor: 'versee-purple',
     colors: {
-      'versee-maroon': [
-        "#ffeaec",
-        "#fcd4d7",
-        "#f4a7ac",
-        "#ec777e",
-        "#e64f57",
-        "#e3353f",
-        "#e22732",
-        "#c91a25",
-        "#b41220",
-        "#9e0419"
+      'versee-purple': [
+        "#f3edff",
+        "#e1d7fb",
+        "#beabf0",
+        "#9a7de7",
+        "#7c56de",
+        "#693dd9",
+        "#5f30d8",
+        "#4f23c0",
+        "#461eac",
+        "#3b1898"
       ],
     },
 
