@@ -13,6 +13,7 @@ import {
 } from '@mantine/core';
 
 import Dev from "./views/Dev";
+import OauthCallback_Docusign from "./views/OauthCallback_Docusign";
 import Landing from "./views/Landing";
 
 import Navbar from "./components/Navbar";
@@ -80,6 +81,10 @@ function App() {
     {
       path: "/dev",
       element: <Dev />,
+    },
+    {
+      path: "/callback/docusign",
+      element: <OauthCallback_Docusign />,
     },
   ]);
 
