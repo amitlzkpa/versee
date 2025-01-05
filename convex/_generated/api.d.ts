@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as dbOps from "../dbOps.js";
+import type * as vsActions from "../vsActions.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -25,6 +26,7 @@ import type * as dbOps from "../dbOps.js";
  */
 declare const fullApi: ApiFromModules<{
   dbOps: typeof dbOps;
+  vsActions: typeof vsActions;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
