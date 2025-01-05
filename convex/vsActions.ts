@@ -46,8 +46,10 @@ export const testAction_debugTwo = action({
     console.log("code");
     console.log(code);
 
-    const token = await apiClient.generateAccessToken(IntegratorKeyAuthCode, ClientSecret, code);
-    return token;
+    const oAuthToken = await apiClient.generateAccessToken(IntegratorKeyAuthCode, ClientSecret, code);
+    const userInfo = await apiClient.getUserInfo(oAuthToken.accessToken);
+    const retVal = { oAuthToken, userInfo };
+    return JSON.stringify(retVal);
   }
 });
 
