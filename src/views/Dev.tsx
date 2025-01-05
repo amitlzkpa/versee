@@ -8,6 +8,13 @@ import { api } from "../../convex/_generated/api";
 
 export default function Dev() {
 
+  const performAction_testAction_debugOne = useAction(api.vsActions.testAction_debugOne);
+
+  const onClickTest_debugOne = async () => {
+    const redirectUri = await performAction_testAction_debugOne();
+    window.location.href = redirectUri;
+  };
+
   const { user } = useUser();
 
   const currUserVsMsgs = useQuery(api.dbOps.getVsMsgsForUser);
@@ -52,6 +59,14 @@ export default function Dev() {
       </Unauthenticated>
       <Authenticated>
         <Flex w="60%" direction="column" align="center" gap="md" p="lg">
+          <Button
+            onClick={onClickTest_debugOne}
+            w="100%"
+            size="lg"
+          >
+            Test
+          </Button>
+
           <Flex w="100%" align="center" gap="sm">
             <Input
               value={msg}
