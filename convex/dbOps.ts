@@ -1,6 +1,7 @@
 import {
   query,
-  mutation
+  mutation,
+  internalMutation
 } from "./_generated/server";
 import { v } from "convex/values";
 
@@ -26,5 +27,27 @@ export const createVsMsg = mutation({
     const createData = { creator: currUser, msgContent: newVsMsgContent };
     const createdVsMsg = await ctx.db.insert("vsMsgs", createData);
     return createdVsMsg;
+  },
+});
+
+export const deleteMsgs = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const currUser = await ctx.auth.getUserIdentity();
+    if (!currUser) return [];
+
+    const vsMsgs = await ctx.db
+      .query("vsMsgs")
+      .filter((q) => q.eq(q.field("creator.subject"), currUser.subject))
+      .order("desc")
+      .collect();
+
+    const vsMsgIds = vsMsgs.map(m => m._id);
+    const deletePromises = vsMsgIds.map(msgId => new Promise((resolve, reject) => {
+      ctx.db.delete(msgId).then(resolve).catch(reject);
+    }));
+    await (Promise.allSettled(deletePromises));
+
+    return vsMsgIds;
   },
 });
