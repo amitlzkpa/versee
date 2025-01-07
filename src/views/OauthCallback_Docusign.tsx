@@ -15,13 +15,8 @@ export default function OauthCallback_Docusign() {
   const onClickTest_debugTwo = async () => {
     const queryParams = new URLSearchParams(location.search);
     const code = queryParams.get("code");
-    console.log("======================================");
-    console.log("code");
-    console.log(code);
-    const accessToken = await performAction_testAction_debugTwo({ authCode: code ?? "" });
-    console.log("======================================");
-    console.log("accessToken");
-    console.log(accessToken);
+    const savedRecord = await performAction_testAction_debugTwo({ authCode: code ?? "" });
+    console.log(savedRecord);
   };
 
   return (
@@ -32,7 +27,7 @@ export default function OauthCallback_Docusign() {
         w="100%"
         size="lg"
       >
-        Test
+        Get Access Token
       </Button>
     </Flex>
   );
