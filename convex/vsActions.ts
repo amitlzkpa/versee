@@ -66,3 +66,9 @@ export const testAction_deleteMsgs = action({
     return deleteMessageIds;
   },
 });
+
+export const testAction_sendSigningEmail = action({
+  handler: async (ctx) => {
+    return "foo";
+  },
+});

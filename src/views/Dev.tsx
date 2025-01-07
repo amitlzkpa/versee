@@ -47,6 +47,14 @@ export default function Dev() {
     console.log(`Deleted ${deletedMsgIds.length} messages.`);
   };
 
+  const performAction_testAction_sendSigningEmail = useAction(api.vsActions.testAction_sendSigningEmail);
+
+  const onClickTest_sendSigningEmail = async () => {
+    console.log("Sending signing email...");
+    const p = await performAction_testAction_sendSigningEmail();
+    console.log(p);
+  };
+
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
       <AuthLoading>
@@ -64,8 +72,17 @@ export default function Dev() {
             w="100%"
             size="lg"
           >
-            Test
+            Start Docusign OAuth
           </Button>
+          <Button
+            onClick={onClickTest_sendSigningEmail}
+            w="100%"
+            size="lg"
+          >
+            Send Signing Email
+          </Button>
+
+          <Divider w="100%" my="lg" />
 
           <Flex w="100%" align="center" gap="sm">
             <Input
