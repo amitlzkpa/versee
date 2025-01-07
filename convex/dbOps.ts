@@ -5,6 +5,19 @@ import {
 } from "./_generated/server";
 import { v } from "convex/values";
 
+export const upsertDocusignDataForUser = internalMutation({
+  args: {
+    docusignDataStr: v.string(),
+  },
+  handler: async (ctx, { docusignDataStr }) => {
+    const docusignData = JSON.parse(docusignDataStr);
+    const currUser = await ctx.auth.getUserIdentity();
+    const upsertData = { user: currUser, oAuthToken: docusignData.oAuthToken, userInfo: docusignData.userInfo };
+    const newRecord = await ctx.db.insert("docusignDataForUser", upsertData);
+    return newRecord;
+  },
+});
+
 export const getVsMsgsForUser = query({
   handler: async (ctx) => {
     const currUser = await ctx.auth.getUserIdentity();

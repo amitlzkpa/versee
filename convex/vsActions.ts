@@ -42,14 +42,11 @@ export const testAction_debugTwo = action({
     const ClientSecret = "603aed07-5ede-409c-8246-4539a219e1c2";
     const code = authCode;
 
-    console.log("======================================");
-    console.log("code");
-    console.log(code);
-
     const oAuthToken = await apiClient.generateAccessToken(IntegratorKeyAuthCode, ClientSecret, code);
     const userInfo = await apiClient.getUserInfo(oAuthToken.accessToken);
-    const retVal = { oAuthToken, userInfo };
-    return JSON.stringify(retVal);
+    const docusignDataStr = JSON.stringify({ oAuthToken, userInfo });
+    const storedData: any = await ctx.runMutation(internal.dbOps.upsertDocusignDataForUser, { docusignDataStr });
+    return storedData;
   }
 });
 
