@@ -1,9 +1,7 @@
-import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Button, Flex } from '@mantine/core';
+import { Button, Flex, Loader } from '@mantine/core';
 
 import { Authenticated, Unauthenticated, AuthLoading, useAction, useMutation, useQuery } from "convex/react";
-import { useUser } from "@clerk/clerk-react";
 import { api } from "../../convex/_generated/api";
 
 export default function OauthCallback_Docusign() {
@@ -21,14 +19,26 @@ export default function OauthCallback_Docusign() {
 
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
-      OAuth
-      <Button
-        onClick={onClickTest_debugTwo}
-        w="100%"
-        size="lg"
-      >
-        Get Access Token
-      </Button>
+      <AuthLoading>
+        <Loader size="md" />
+      </AuthLoading>
+      <Unauthenticated>
+        <Flex justify="center" p="lg">
+          Please login
+        </Flex>
+      </Unauthenticated>
+      <Authenticated>
+        <Flex w="60%" direction="column" align="center" gap="md" p="lg">
+          OAuth
+          <Button
+            onClick={onClickTest_debugTwo}
+            w="100%"
+            size="lg"
+          >
+            Get Access Token
+          </Button>
+        </Flex>
+      </Authenticated>
     </Flex>
   );
 }
