@@ -21,7 +21,6 @@ export const testAction_debugOne = action({
     const integratorKey = "e612e007-3539-464a-a972-797c81ce2088";
     const RedirectURI = "https://versee.vercel.app/callback/docusign";
     const oauthLoginUrl = apiClient.getJWTUri(integratorKey, RedirectURI, oAuthBasePath);
-
     return oauthLoginUrl;
   }
 });
@@ -109,8 +108,6 @@ export const testAction_sendSigningEmail = action({
     dsApiClient.addDefaultHeader('Authorization', 'Bearer ' + accessToken);
     const envelopesApi = new docusign.EnvelopesApi(dsApiClient);
 
-
-    // const envDef = await envelopesApi.createEnvelope(accountId);
     const envDef = new docusign.EnvelopeDefinition();
     envDef.emailSubject = 'Please Sign my Node SDK Envelope';
     envDef.emailBlurb = 'Hello, Please sign my Node SDK Envelope.';
@@ -157,7 +154,6 @@ export const testAction_sendSigningEmail = action({
     envDef.status = 'sent';
 
     const envelopeSummary = await envelopesApi.createEnvelope(accountId, { envelopeDefinition: envDef });
-    console.log('EnvelopeSummary: ' + JSON.stringify(envelopeSummary, null, 2));
-    return envelopeSummary;
+    return JSON.stringify(envelopeSummary);
   },
 });

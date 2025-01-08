@@ -51,8 +51,9 @@ export default function Dev() {
 
   const onClickTest_sendSigningEmail = async () => {
     console.log("Sending signing email...");
-    const p = await performAction_testAction_sendSigningEmail();
-    console.log(p);
+    const res = await performAction_testAction_sendSigningEmail();
+    const sentEnvelopSummary = JSON.parse(res);
+    console.log(sentEnvelopSummary);
   };
 
   return (

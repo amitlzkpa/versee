@@ -25,7 +25,7 @@ export const upsertDocusignDataForUser = internalMutation({
   handler: async (ctx, { docusignDataStr }) => {
     const docusignData = JSON.parse(docusignDataStr);
     const currUser = await ctx.auth.getUserIdentity();
-    const upsertData = { user: currUser, oAuthToken: docusignData.oAuthToken, userInfo: docusignData.userInfo };
+    const upsertData = { ...docusignData, user: currUser };
     const newRecord = await ctx.db.insert("docusignDataForUser", upsertData);
     return newRecord;
   },
