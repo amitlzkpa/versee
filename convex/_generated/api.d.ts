@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as dbOps from "../dbOps.js";
+import type * as uploadedFiles from "../uploadedFiles.js";
 import type * as vsActions from "../vsActions.js";
 
 /**
@@ -26,6 +27,7 @@ import type * as vsActions from "../vsActions.js";
  */
 declare const fullApi: ApiFromModules<{
   dbOps: typeof dbOps;
+  uploadedFiles: typeof uploadedFiles;
   vsActions: typeof vsActions;
 }>;
 export declare const api: FilterApi<
