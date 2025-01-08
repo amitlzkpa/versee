@@ -5,10 +5,10 @@ import { api } from "../../convex/_generated/api";
 
 export default function Dev() {
 
-  const performAction_testAction_debugOne = useAction(api.vsActions.testAction_debugOne);
+  const performAction_testAction_startDocusignOAuth = useAction(api.vsActions.testAction_startDocusignOAuth);
 
-  const onClickTest_debugOne = async () => {
-    const redirectUri = await performAction_testAction_debugOne();
+  const onClickTest_startDocusignOAuth = async () => {
+    const redirectUri = await performAction_testAction_startDocusignOAuth();
     window.location.href = redirectUri;
   };
 
@@ -34,7 +34,7 @@ export default function Dev() {
       <Authenticated>
         <Flex w="60%" direction="column" align="center" gap="md" p="lg">
           <Button
-            onClick={onClickTest_debugOne}
+            onClick={onClickTest_startDocusignOAuth}
             w="100%"
             size="lg"
           >

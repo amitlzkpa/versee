@@ -7,7 +7,7 @@ import { v } from "convex/values";
 
 import * as docusign from "docusign-esign";
 
-export const testAction_debugOne = action({
+export const testAction_startDocusignOAuth = action({
   handler: async (ctx) => {
     const restApi = docusign.ApiClient.RestApi;
     const oAuth = docusign.ApiClient.OAuth;
@@ -25,7 +25,7 @@ export const testAction_debugOne = action({
   }
 });
 
-export const testAction_debugTwo = action({
+export const testAction_getAccessToken = action({
   args: {
     authCode: v.string(),
   },
@@ -49,23 +49,6 @@ export const testAction_debugTwo = action({
     const storedData: any = await ctx.runMutation(internal.dbOps.upsertDocusignDataForUser, { docusignDataStr });
     return storedData;
   }
-});
-
-export const testAction_reverseText = action({
-  args: {
-    inputText: v.string(),
-  },
-  handler: async (ctx, { inputText }) => {
-    const outputText = inputText.split("").reverse().join("");
-    return outputText;
-  },
-});
-
-export const testAction_deleteMsgs = action({
-  handler: async (ctx) => {
-    const deleteMessageIds: any[] = await ctx.runMutation(internal.dbOps.deleteMsgs);
-    return deleteMessageIds;
-  },
 });
 
 async function downloadFileAsBytes(url: string): Promise<Buffer> {

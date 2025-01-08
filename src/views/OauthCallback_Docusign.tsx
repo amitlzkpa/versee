@@ -8,12 +8,12 @@ export default function OauthCallback_Docusign() {
 
   const location = useLocation();
 
-  const performAction_testAction_debugTwo = useAction(api.vsActions.testAction_debugTwo);
+  const performAction_testAction_getAccessToken = useAction(api.vsActions.testAction_getAccessToken);
 
-  const onClickTest_debugTwo = async () => {
+  const onClickTest_getAccessToken = async () => {
     const queryParams = new URLSearchParams(location.search);
     const code = queryParams.get("code");
-    const savedRecord = await performAction_testAction_debugTwo({ authCode: code ?? "" });
+    const savedRecord = await performAction_testAction_getAccessToken({ authCode: code ?? "" });
     console.log(savedRecord);
   };
 
@@ -29,9 +29,9 @@ export default function OauthCallback_Docusign() {
       </Unauthenticated>
       <Authenticated>
         <Flex w="60%" direction="column" align="center" gap="md" p="lg">
-          OAuth
+          Docusign OAuth
           <Button
-            onClick={onClickTest_debugTwo}
+            onClick={onClickTest_getAccessToken}
             w="100%"
             size="lg"
           >
