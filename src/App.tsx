@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css';
+import '@mantine/dropzone/styles.css';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ClerkProvider, useAuth } from "@clerk/clerk-react";

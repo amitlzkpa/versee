@@ -85,7 +85,7 @@ export const testAction_sendSigningEmail = action({
     const accessToken = storedDocusignData.oAuthToken.accessToken;
 
     const storageId = "kg20kf8cv8m6stc4nct8cbdbah781b38" as Id<"_storage">;
-    const docUrl = (await ctx.runMutation(api.uploadedFiles.generateViewUrl, { storageId })) ?? "";
+    const docUrl = (await ctx.runAction(api.uploadedFiles.generateViewUrl, { storageId })) ?? "";
     const docBytes = await downloadFileAsBytes(docUrl);
     const doc3b64 = Buffer.from(docBytes).toString('base64');
 
