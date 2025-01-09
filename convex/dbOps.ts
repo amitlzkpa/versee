@@ -40,3 +40,15 @@ export const upsertDocusignDataForUser = internalMutation({
     return retVal;
   },
 });
+
+// PROJECT
+
+export const createNewProject = internalMutation({
+  handler: async (ctx) => {
+    const currUser = await ctx.auth.getUserIdentity();
+    if (!currUser) return null;
+    const newProjectData = { user: currUser };
+    const newProject = await ctx.db.insert("vsProjects", newProjectData);
+    return newProject;
+  },
+});

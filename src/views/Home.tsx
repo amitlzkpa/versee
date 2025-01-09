@@ -1,9 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import { Button, Flex } from '@mantine/core';
+
+import { useAction } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 export default function Home() {
 
+  const navigate = useNavigate();
+
+  const performAction_createNewProject = useAction(api.vsActions.testAction_createNewProject);
+
   const onClickTest_createNewProject = async () => {
-    console.log("foo");
+    const newProject = await performAction_createNewProject();
+    navigate(`/p/${newProject}`);
   };
 
   return (

@@ -8,6 +8,13 @@ import { v } from "convex/values";
 
 import * as docusign from "docusign-esign";
 
+export const testAction_createNewProject = action({
+  handler: async (ctx) => {
+    const newProject: any = await ctx.runMutation(internal.dbOps.createNewProject);
+    return newProject;
+  }
+});
+
 export const testAction_startDocusignOAuth = action({
   handler: async (ctx) => {
     const restApi = docusign.ApiClient.RestApi;
