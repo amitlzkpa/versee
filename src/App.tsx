@@ -16,6 +16,9 @@ import {
 import Dev from "./views/Dev";
 import OauthCallback_Docusign from "./views/OauthCallback_Docusign";
 import Landing from "./views/Landing";
+import MyAccount from "./views/MyAccount";
+import Home from "./views/Home";
+import Project from "./views/Project";
 
 import Navbar from "./components/Navbar";
 
@@ -78,6 +81,18 @@ function App() {
     {
       path: "/",
       element: <Landing />,
+    },
+    {
+      path: "/home",
+      element: <Home />,
+    },
+    {
+      path: "/p/:projectId?",
+      element: <Project />,
+    },
+    {
+      path: "/my-account",
+      element: <MyAccount />,
     },
     {
       path: "/dev",

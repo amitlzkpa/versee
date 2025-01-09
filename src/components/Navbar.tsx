@@ -27,6 +27,33 @@ export default function Navbar() {
         <Button
           component="a"
           variant="transparent"
+          href="/home"
+          size="sm"
+          h={32}
+        >
+          <FaInfoCircle color="versee-purple" />
+        </Button>
+        <Button
+          component="a"
+          variant="transparent"
+          href="/p"
+          size="sm"
+          h={32}
+        >
+          <FaInfoCircle color="versee-purple" />
+        </Button>
+        <Button
+          component="a"
+          variant="transparent"
+          href="/my-account"
+          size="sm"
+          h={32}
+        >
+          <FaInfoCircle color="versee-purple" />
+        </Button>
+        <Button
+          component="a"
+          variant="transparent"
           href="/dev"
           size="sm"
           h={32}
