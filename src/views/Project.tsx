@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Button, Divider, Flex, Text, rem } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 
-import { FaMinusCircle, FaPaperclip, FaTrash, FaUpload } from 'react-icons/fa';
+import { FaFileDownload, FaFileImport, FaMinusCircle, FaTrash } from 'react-icons/fa';
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -33,7 +33,6 @@ export default function Project() {
   };
 
   const onClick_uploadFiles = async () => {
-
     setIsUploading(true);
 
     const ps = droppedFiles.map((file: any) => new Promise((resolve, reject) => {
@@ -49,9 +48,8 @@ export default function Project() {
     }));
 
     const uploadIds = (await Promise.allSettled(ps)).filter(r => r.status === "fulfilled").map(r => r.value);
-    console.log(uploadIds);
+    setDroppedFiles([]);
     setIsUploading(false);
-
   };
 
   return (
@@ -74,6 +72,16 @@ export default function Project() {
           activateOnClick={false}
           loading={isUploading}
           onDrop={addToDroppedFiles}
+          accept={[
+            'image/png',
+            'image/jpeg',
+            'image/webp',
+            'image/heic',
+            'text/csv',
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+          ]}
         >
           <div
             style={{
@@ -95,7 +103,7 @@ export default function Project() {
             style={{ pointerEvents: 'none', position: "relative" }}
           >
             <Dropzone.Accept>
-              <FaUpload
+              <FaFileDownload
                 style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
               />
             </Dropzone.Accept>
@@ -143,7 +151,7 @@ export default function Project() {
                         gap="sm"
                         style={{ textAlign: "center" }}
                       >
-                        <FaPaperclip
+                        <FaFileImport
                           style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-dimmed)' }}
                         />
                         <Text size="xl" inline>
@@ -168,6 +176,8 @@ export default function Project() {
         >
           Upload Files
         </Button>
+
+        <Divider w="100%" />
       </Flex>
     </Flex>
   );
