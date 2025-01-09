@@ -1,7 +1,9 @@
 import {
+  query,
   internalQuery,
   internalMutation
 } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 
 export const getDocusignData = internalQuery({
@@ -42,6 +44,18 @@ export const upsertDocusignDataForUser = internalMutation({
 });
 
 // PROJECT
+
+export const getProject = query(
+  {
+    args: { projectId: v.optional(v.string()) },
+    handler: async (ctx, { projectId }) => {
+      if (!projectId) return null;
+      const dbId = projectId as Id<"vsProjects">;
+      const project = await ctx.db.get(dbId);
+      return project;
+    }
+  }
+);
 
 export const createNewProject = internalMutation({
   handler: async (ctx) => {
