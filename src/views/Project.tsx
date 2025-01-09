@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { Button, Divider, Flex, Text, rem } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 
-import { FaMinusCircle, FaPhotoVideo, FaUpload } from 'react-icons/fa';
+import { FaMinusCircle, FaPaperclip, FaTrash, FaUpload } from 'react-icons/fa';
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -22,8 +22,14 @@ export default function Project() {
 
   const performAction_generateUploadUrl = useAction(api.uploadedFiles.generateUploadUrl);
 
-  const handleDrop = async (files: any) => {
+  const openRef = useRef<() => void>(null);
+
+  const addToDroppedFiles = (files: any) => {
     setDroppedFiles(prev => [...prev, ...files]);
+  };
+
+  const removeFromDroppedFiles = (file: any) => {
+    setDroppedFiles(droppedFiles.filter((f) => f !== file));
   };
 
   const onClick_uploadFiles = async () => {
@@ -63,14 +69,30 @@ export default function Project() {
 
         <Divider w="100%" />
 
-        <Dropzone loading={isUploading} onDrop={handleDrop}>
+        <Dropzone
+          openRef={openRef}
+          activateOnClick={false}
+          loading={isUploading}
+          onDrop={addToDroppedFiles}
+        >
+          <div
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              pointerEvents: "all",
+              cursor: "pointer"
+            }}
+            onClick={() => { openRef.current?.() }}
+          />
           <Flex
+            h="180"
             direction="column"
             justify="center"
             align="center"
             gap="md"
-            p="xl"
-            style={{ pointerEvents: 'none' }}
+            p="sm"
+            style={{ pointerEvents: 'none', position: "relative" }}
           >
             <Dropzone.Accept>
               <FaUpload
@@ -83,25 +105,58 @@ export default function Project() {
               />
             </Dropzone.Reject>
             <Dropzone.Idle>
-              <FaPhotoVideo
-                style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-dimmed)' }}
-              />
+              <Flex w="100%" h="100%">
+                {
+                  droppedFiles.length > 0
+                    ?
+                    (
+                      <Flex w="100%" direction="column" align="center" gap="sm">
+                        <Text fz="md" fw="bold">Selected Files</Text>
+                        <Flex w="100%" direction="column" gap="xs" style={{ overflowY: "auto", pointerEvents: "auto" }}>
+                          {droppedFiles.map((f, i) =>
+                          (
+                            <Flex key={`${f.name}_${i}`} gap="xs" align="center">
+                              <FaTrash
+                                style={{
+                                  pointerEvents: 'all',
+                                  width: rem(12),
+                                  height: rem(12),
+                                  color: 'var(--mantine-color-gray-5)',
+                                  cursor: "pointer"
+                                }}
+                                onClick={() => { removeFromDroppedFiles(f) }}
+                              />
+                              <Text fz="sm" c="dimmed">{i + 1}.</Text>
+                              <Text>{f.name}</Text>
+                            </Flex>
+                          )
+                          )}
+                        </Flex>
+                      </Flex>
+                    )
+                    :
+                    (
+                      <Flex
+                        direction="column"
+                        justify="center"
+                        align="center"
+                        gap="sm"
+                        style={{ textAlign: "center" }}
+                      >
+                        <FaPaperclip
+                          style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-dimmed)' }}
+                        />
+                        <Text size="xl" inline>
+                          Drag images here or click to select files
+                        </Text>
+                        <Text size="sm" c="dimmed" inline>
+                          Attach as many files as you like
+                        </Text>
+                      </Flex>
+                    )
+                }
+              </Flex>
             </Dropzone.Idle>
-
-            <Flex
-              direction="column"
-              justify="center"
-              align="center"
-              gap="sm"
-              style={{ textAlign: "center" }}
-            >
-              <Text size="xl" inline>
-                Drag images here or click to select files
-              </Text>
-              <Text size="sm" c="dimmed" inline>
-                Attach as many files as you like
-              </Text>
-            </Flex>
           </Flex>
         </Dropzone>
 
@@ -109,6 +164,7 @@ export default function Project() {
           onClick={onClick_uploadFiles}
           w="100%"
           size="lg"
+          disabled={droppedFiles.length < 1}
         >
           Upload Files
         </Button>
