@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams } from "react-router-dom";
-import { Divider, Flex, Text, rem } from '@mantine/core';
+import { Button, Divider, Flex, Text, rem } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 
 import { FaMinusCircle, FaPhotoVideo, FaUpload } from 'react-icons/fa';
@@ -16,15 +16,21 @@ export default function Project() {
 
   // FILE UPLOAD
 
+  const [droppedFiles, setDroppedFiles] = useState<any[]>([]);
+
   const [isUploading, setIsUploading] = useState(false);
 
   const performAction_generateUploadUrl = useAction(api.uploadedFiles.generateUploadUrl);
 
   const handleDrop = async (files: any) => {
+    setDroppedFiles(prev => [...prev, ...files]);
+  };
+
+  const onClick_uploadFiles = async () => {
 
     setIsUploading(true);
 
-    const ps = files.map((file: any) => new Promise((resolve, reject) => {
+    const ps = droppedFiles.map((file: any) => new Promise((resolve, reject) => {
       performAction_generateUploadUrl()
         .then(async (uploadUrl) => {
           const result = await fetch(uploadUrl, {
@@ -39,7 +45,8 @@ export default function Project() {
     const uploadIds = (await Promise.allSettled(ps)).filter(r => r.status === "fulfilled").map(r => r.value);
     console.log(uploadIds);
     setIsUploading(false);
-  }
+
+  };
 
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
@@ -97,6 +104,14 @@ export default function Project() {
             </Flex>
           </Flex>
         </Dropzone>
+
+        <Button
+          onClick={onClick_uploadFiles}
+          w="100%"
+          size="lg"
+        >
+          Upload Files
+        </Button>
       </Flex>
     </Flex>
   );
