@@ -1,10 +1,10 @@
 import '@mantine/core/styles.css';
 import '@mantine/dropzone/styles.css';
 import './index.css';
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { useUser } from "@clerk/clerk-react";
+import { createBrowserRouter, RouterProvider, Navigate, Outlet } from "react-router-dom";
+import { useConvexAuth } from "convex/react";
 
-import { Flex, MantineProvider, createTheme, rem } from '@mantine/core';
+import { Flex, Loader, MantineProvider, createTheme, rem } from '@mantine/core';
 
 import Dev from "./views/Dev";
 import OauthCallback_Docusign from "./views/OauthCallback_Docusign";
@@ -14,6 +14,30 @@ import Home from "./views/Home";
 import Project from "./views/Project";
 
 import Navbar from "./components/Navbar";
+
+const ProtectedRoute = ({ children }: any) => {
+  const { isAuthenticated, isLoading } = useConvexAuth();
+
+  if (isLoading) {
+    return (
+      <Flex
+        w="100%"
+        direction="column"
+        justify="center"
+        align="center"
+        p="xl"
+      >
+        <Loader size="md" type="bars" />
+      </Flex>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
+  return isAuthenticated ? children : <Navigate to="/" replace />;
+};
 
 function App() {
 
@@ -65,32 +89,46 @@ function App() {
 
   });
 
-  const user = useUser();
-
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Landing />,
-    },
-    {
-      path: "/dev",
-      element: <Dev />,
-    },
-    {
-      path: "/home",
-      element: user ? <Home /> : <Landing />,
-    },
-    {
-      path: "/p/:projectId?",
-      element: user ? <Project /> : <Landing />,
-    },
-    {
-      path: "/my-account",
-      element: user ? <MyAccount /> : <Landing />,
-    },
-    {
-      path: "/callback/docusign",
-      element: user ? <OauthCallback_Docusign /> : <Landing />,
+      element: <Outlet />,
+      children: [
+        { path: "", element: <Landing /> },
+        { path: "dev", element: <Dev /> },
+        {
+          path: "home",
+          element: (
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "my-account",
+          element: (
+            <ProtectedRoute>
+              <MyAccount />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "p/:projectId?",
+          element: (
+            <ProtectedRoute>
+              <Project />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "callback/docusign",
+          element: (
+            <ProtectedRoute>
+              <OauthCallback_Docusign />
+            </ProtectedRoute>
+          ),
+        },
+      ],
     },
   ]);
 
