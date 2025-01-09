@@ -42,8 +42,7 @@ eg: Logs, Communications, Statements, Bills, Invoices, CSVs
 [assign roles]
 ```
 
-5. 
-Take files from step 2 and extract following information:  
+5. Take files from step 2 and extract following information:  
 ```
 {RECORDS}
   - {PARTIES}
@@ -56,7 +55,7 @@ Take files from step 2 and extract following information:
 [party to role assignment]
 ```
 
-Start complicance check routine:
+7. Start complicance check routine:
 ```
 <compliance check routine>
 ```
