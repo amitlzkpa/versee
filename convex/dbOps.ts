@@ -1,7 +1,8 @@
 import {
   query,
   internalQuery,
-  internalMutation
+  internalMutation,
+  mutation
 } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 import { v } from "convex/values";
@@ -65,4 +66,18 @@ export const createNewProject = internalMutation({
     const newProject = await ctx.db.insert("vsProjects", newProjectData);
     return newProject;
   },
+});
+
+// FILE
+
+export const createFile_ProjectSrcDoc = mutation({
+  args: {
+    storedFileId: v.string(),
+    projectId: v.id("vsProjects")
+  },
+  handler: async (ctx, { storedFileId, projectId }) => {
+    const uploadedFileData = { storedFileId, projectId, type: "srcdoc" };
+    const newUploadedFile = await ctx.db.insert("vsFile", uploadedFileData);
+    return newUploadedFile;
+  }
 });

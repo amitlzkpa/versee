@@ -5,7 +5,7 @@ import { Dropzone } from '@mantine/dropzone';
 
 import { FaFileDownload, FaFileImport, FaMinusCircle, FaTrash } from 'react-icons/fa';
 
-import { useAction, useQuery } from "convex/react";
+import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function Project() {
@@ -19,6 +19,8 @@ export default function Project() {
   const [droppedFiles, setDroppedFiles] = useState<any[]>([]);
 
   const [isUploading, setIsUploading] = useState(false);
+
+  const performMutation_createFile_ProjectSrcDoc = useMutation(api.dbOps.createFile_ProjectSrcDoc);
 
   const performAction_generateUploadUrl = useAction(api.uploadedFiles.generateUploadUrl);
 
@@ -43,7 +45,8 @@ export default function Project() {
             body: file,
           });
           const { storageId } = await result.json();
-          return resolve(storageId);
+          const storedFileData = await performMutation_createFile_ProjectSrcDoc({ projectId: currProject._id, storedFileId: storageId })
+          return resolve(storedFileData);
         });
     }));
 
