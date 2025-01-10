@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useParams } from "react-router-dom";
-import { Button, Divider, Flex, Text, rem } from '@mantine/core';
+import { Button, Card, Divider, Flex, Text, UnstyledButton, rem } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 
 import { FaFileDownload, FaFileImport, FaMinusCircle, FaTrash } from 'react-icons/fa';
@@ -23,6 +23,9 @@ export default function Project() {
   const performMutation_createFile_ProjectSrcDoc = useMutation(api.dbOps.createFile_ProjectSrcDoc);
 
   const performAction_generateUploadUrl = useAction(api.uploadedFiles.generateUploadUrl);
+
+  const curProjectSrcDocs = useQuery(api.dbOps.getFiles_ProjectSrcDocs, projectId ? { projectId } : "skip");
+  console.log(curProjectSrcDocs);
 
   const openRef = useRef<() => void>(null);
 
@@ -181,6 +184,32 @@ export default function Project() {
         </Button>
 
         <Divider w="100%" />
+
+        <Flex w="100%" direction="column" align="center" gap="xs">
+          <Text fz="md" fw="bold">Project Files</Text>
+          {
+            (curProjectSrcDocs ?? [])
+              .map((srcDoc: any) => {
+                return (
+                  <UnstyledButton
+                    component="a"
+                    w="100%"
+                    href={srcDoc.fileUrl}
+                    target="_blank"
+                  >
+
+                    <Card
+                      w="100%"
+                      withBorder
+                      radius="xl"
+                    >
+                      <Text key={srcDoc._id}>{srcDoc._id}</Text>
+                    </Card>
+                  </UnstyledButton>
+                );
+              })
+          }
+        </Flex>
       </Flex>
     </Flex>
   );

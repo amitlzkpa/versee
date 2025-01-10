@@ -85,6 +85,31 @@ export const createNewProject = internalMutation({
 
 // FILE
 
+export const getFiles_ProjectSrcDocs = query(
+  {
+    args: { projectId: v.optional(v.string()) },
+    handler: async (ctx, { projectId }) => {
+      if (!projectId) return [];
+      const dbRecs = await ctx.db
+        .query("vsFile")
+        .filter((q) => q.and(q.eq(q.field("projectId"), projectId), q.eq(q.field("type"), "srcdoc")))
+        .order("desc")
+        .collect();
+      const ps = dbRecs.map((dbRec) => new Promise((resolve, reject) => {
+        const storageId = dbRec.storedFileId as Id<"_storage">;
+        ctx.storage.getUrl(storageId).then((fileUrl) => {
+          resolve({
+            ...dbRec,
+            fileUrl
+          });
+        });
+      }));
+      const projectSrcDocs = (await Promise.allSettled(ps)).filter(p => p.status === "fulfilled").map(p => p.value);
+      return projectSrcDocs;
+    }
+  }
+);
+
 export const createFile_ProjectSrcDoc = mutation({
   args: {
     storedFileId: v.string(),
