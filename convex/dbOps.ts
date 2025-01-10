@@ -2,7 +2,6 @@ import {
   query,
   internalQuery,
   internalMutation,
-  mutation
 } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 import { v } from "convex/values";
@@ -110,7 +109,7 @@ export const getFiles_ProjectSrcDocs = query(
   }
 );
 
-export const createFile_ProjectSrcDoc = mutation({
+export const createFile_ProjectSrcDoc = internalMutation({
   args: {
     storedFileId: v.string(),
     projectId: v.id("vsProjects")

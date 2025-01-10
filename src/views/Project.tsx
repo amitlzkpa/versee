@@ -20,12 +20,11 @@ export default function Project() {
 
   const [isUploading, setIsUploading] = useState(false);
 
-  const performMutation_createFile_ProjectSrcDoc = useMutation(api.dbOps.createFile_ProjectSrcDoc);
+  const performAction_saveAndAnalyseUploadedFile = useAction(api.vsActions.testAction_saveAndAnalyseUploadedFile);
 
   const performAction_generateUploadUrl = useAction(api.uploadedFiles.generateUploadUrl);
 
   const curProjectSrcDocs = useQuery(api.dbOps.getFiles_ProjectSrcDocs, projectId ? { projectId } : "skip");
-  console.log(curProjectSrcDocs);
 
   const openRef = useRef<() => void>(null);
 
@@ -48,7 +47,7 @@ export default function Project() {
             body: file,
           });
           const { storageId } = await result.json();
-          const storedFileData = await performMutation_createFile_ProjectSrcDoc({ projectId: currProject._id, storedFileId: storageId })
+          const storedFileData = await performAction_saveAndAnalyseUploadedFile({ projectId: currProject._id, storedFileId: storageId })
           return resolve(storedFileData);
         });
     }));
@@ -197,7 +196,6 @@ export default function Project() {
                     href={srcDoc.fileUrl}
                     target="_blank"
                   >
-
                     <Card
                       w="100%"
                       withBorder

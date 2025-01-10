@@ -148,3 +148,14 @@ export const testAction_sendSigningEmail = action({
     return JSON.stringify(envelopeSummary);
   },
 });
+
+export const testAction_saveAndAnalyseUploadedFile = action({
+  args: {
+    storedFileId: v.string(),
+    projectId: v.id("vsProjects")
+  },
+  handler: async (ctx, { storedFileId, projectId }) => {
+    const newUploadedFile: any = await ctx.runMutation(internal.dbOps.createFile_ProjectSrcDoc, { storedFileId, projectId });
+    return newUploadedFile;
+  }
+});
