@@ -44,7 +44,6 @@ export default function Home() {
                     w="100%"
                     withBorder
                     radius="xl"
-                    onClick={() => navigate(`/p/${prj._id}`)}
                   >
                     <Text key={prj._id}>{prj._id}</Text>
                   </Card>
