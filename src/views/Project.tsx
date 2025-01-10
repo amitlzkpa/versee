@@ -42,13 +42,17 @@ export default function Project() {
     const ps = droppedFiles.map((file: any) => new Promise((resolve, reject) => {
       performAction_generateUploadUrl()
         .then(async (uploadUrl) => {
-          const result = await fetch(uploadUrl, {
-            method: "POST",
-            body: file,
-          });
-          const { storageId } = await result.json();
-          const storedFileData = await performAction_saveAndAnalyseUploadedFile({ projectId: currProject._id, storedFileId: storageId })
-          return resolve(storedFileData);
+          try {
+            const result = await fetch(uploadUrl, {
+              method: "POST",
+              body: file,
+            });
+            const { storageId } = await result.json();
+            const storedFileData = await performAction_saveAndAnalyseUploadedFile({ projectId: currProject._id, storedFileId: storageId })
+            return resolve(storedFileData);
+          } catch (err) {
+            return reject(err);
+          }
         });
     }));
 

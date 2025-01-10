@@ -96,12 +96,16 @@ export const getFiles_ProjectSrcDocs = query(
         .collect();
       const ps = dbRecs.map((dbRec) => new Promise((resolve, reject) => {
         const storageId = dbRec.storedFileId as Id<"_storage">;
-        ctx.storage.getUrl(storageId).then((fileUrl) => {
-          resolve({
-            ...dbRec,
-            fileUrl
+        ctx.storage.getUrl(storageId)
+          .then((fileUrl) => {
+            resolve({
+              ...dbRec,
+              fileUrl
+            });
+          })
+          .catch((err) => {
+            reject(err);
           });
-        });
       }));
       const projectSrcDocs = (await Promise.allSettled(ps)).filter(p => p.status === "fulfilled").map(p => p.value);
       return projectSrcDocs;
