@@ -46,6 +46,21 @@ export const upsertDocusignDataForUser = internalMutation({
 
 // PROJECT
 
+export const getAllProjectsForCurrUser = query(
+  {
+    handler: async (ctx) => {
+      const currUser = await ctx.auth.getUserIdentity();
+      if (!currUser) return [];
+      const projects = await ctx.db
+        .query("vsProjects")
+        .filter((q) => q.eq(q.field("user.subject"), currUser.subject))
+        .order("desc")
+        .collect();
+      return projects;
+    }
+  }
+);
+
 export const getProject = query(
   {
     args: { projectId: v.optional(v.string()) },
