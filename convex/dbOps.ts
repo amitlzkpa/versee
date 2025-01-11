@@ -124,3 +124,15 @@ export const createFile_ProjectSrcDoc = internalMutation({
     return newUploadedFile;
   }
 });
+
+export const updateFile_ProjectSrcDoc = internalMutation({
+  args: {
+    uploadedFileId: v.id("vsFile"),
+    updateDataStr: v.string()
+  },
+  handler: async (ctx, { uploadedFileId, updateDataStr }) => {
+    const writeData = JSON.parse(updateDataStr);
+    const updatedFileData = await ctx.db.patch(uploadedFileId, writeData);
+    return updatedFileData;
+  }
+});
