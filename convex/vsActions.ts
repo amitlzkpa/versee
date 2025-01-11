@@ -176,7 +176,7 @@ const generateForPDF_title = async (pdfArrayBuffer, model) => {
         mimeType: "application/pdf",
       },
     },
-    "Give a short title for this document",
+    "Give a short title for this document. Keep it simple and don't use any formatting. Reply directly with one single suitable title.",
   ]);
   const titleText = result.response.text();
   return titleText;
@@ -190,7 +190,7 @@ const generateForPDF_summary = async (pdfArrayBuffer, model) => {
         mimeType: "application/pdf",
       },
     },
-    "Summarize this document in 300 words",
+    "Give a very short outline of the contents of this document in 2-3 sentences.",
   ]);
   const summaryText = result.response.text();
   return summaryText;
