@@ -6,6 +6,7 @@ import { api, internal } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import * as docusign from "docusign-esign";
 
 export const testAction_createNewProject = action({
@@ -170,6 +171,14 @@ export const testAction_analyseUploadedFile = action({
   handler: async (ctx, { storedFileId, projectId }) => {
     const storageId = storedFileId as Id<"_storage">;
     const fileUrl = await ctx.storage.getUrl(storageId);
+
+    const GEMINI_API_KEY = "AIzaSyCRnimTZQK20xAebLjS96efb4uDIwbtl4Y";
+    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const prompt = "Explain how AI works";
+    const result = await model.generateContent(prompt);
+    console.log(result.response.text());
+
     const strings = "TODO: analyse pdf";
     return strings;
   }
