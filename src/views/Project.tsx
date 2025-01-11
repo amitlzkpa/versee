@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useParams } from "react-router-dom";
-import { Button, Card, Divider, Flex, Text, UnstyledButton, rem } from '@mantine/core';
+import { Button, Card, Divider, Flex, Text, rem } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 
 import { FaFileDownload, FaFileImport, FaMinusCircle, FaTrash } from 'react-icons/fa';
@@ -95,6 +95,8 @@ export default function Project() {
             'application/msword',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
           ]}
+          maxSize={15 * 1024 * 1024}
+          disabled={!projectId}
         >
           <div
             style={{
@@ -185,7 +187,7 @@ export default function Project() {
           onClick={onClick_uploadDroppedFilesToSrcDocs}
           w="100%"
           size="lg"
-          disabled={droppedFiles.length < 1}
+          disabled={!projectId && droppedFiles.length < 1}
         >
           Upload Files
         </Button>
