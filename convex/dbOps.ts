@@ -95,7 +95,7 @@ export const getFiles_ProjectSrcDocs = query(
         .order("desc")
         .collect();
       const ps = dbRecs.map((dbRec) => new Promise((resolve, reject) => {
-        const storageId = dbRec.storedFileId as Id<"_storage">;
+        const storageId = dbRec.cvxStoredFileId as Id<"_storage">;
         ctx.storage.getUrl(storageId)
           .then((fileUrl) => {
             resolve({
@@ -115,24 +115,32 @@ export const getFiles_ProjectSrcDocs = query(
 
 export const createFile_ProjectSrcDoc = internalMutation({
   args: {
-    storedFileId: v.string(),
+    cvxStoredFileId: v.id("_storage"),
     projectId: v.id("vsProjects")
   },
-  handler: async (ctx, { storedFileId, projectId }) => {
-    const uploadedFileData = { storedFileId, projectId, type: "srcdoc" };
-    const newUploadedFile = await ctx.db.insert("vsFile", uploadedFileData);
-    return newUploadedFile;
+  handler: async (ctx, { cvxStoredFileId, projectId }) => {
+    const srcDocData = {
+      cvxStoredFileId,
+      projectId,
+      type: "srcdoc",
+      titleStatus: "not_generated",
+      titleStatusText: "",
+      summaryStatus: "not_generated",
+      summaryText: "",
+    };
+    const newSrcDocId = await ctx.db.insert("vsFile", srcDocData);
+    return newSrcDocId;
   }
 });
 
 export const updateFile_ProjectSrcDoc = internalMutation({
   args: {
-    uploadedFileId: v.id("vsFile"),
+    srcDocId: v.id("vsFile"),
     updateDataStr: v.string()
   },
-  handler: async (ctx, { uploadedFileId, updateDataStr }) => {
+  handler: async (ctx, { srcDocId, updateDataStr }) => {
     const writeData = JSON.parse(updateDataStr);
-    const updatedFileData = await ctx.db.patch(uploadedFileId, writeData);
-    return updatedFileData;
+    const updatedSrcDocId = await ctx.db.patch(srcDocId, writeData);
+    return updatedSrcDocId;
   }
 });

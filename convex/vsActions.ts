@@ -150,23 +150,21 @@ export const testAction_sendSigningEmail = action({
   },
 });
 
-export const testAction_saveAndAnalyseUploadedFile = action({
+export const testAction_createUploadedSrcDoc = action({
   args: {
-    storedFileId: v.string(),
-    projectId: v.id("vsProjects")
+    cvxStoredFileId: v.string(),
+    projectId: v.string()
   },
-  handler: async (ctx, { storedFileId, projectId }) => {
+  handler: async (ctx, { cvxStoredFileId, projectId }) => {
+    const _cvxStoredFileId = cvxStoredFileId as Id<"_storage">;
+    const _projectId = projectId as Id<"vsProjects">;
     const writeData = {
-      storedFileId,
-      projectId,
-      titleStatus: "not_generated",
-      titleStatusText: "",
-      summaryStatus: "not_generated",
-      summaryText: "",
+      cvxStoredFileId: _cvxStoredFileId,
+      projectId: _projectId
     };
-    const newUploadedFile: any = await ctx.runMutation(internal.dbOps.createFile_ProjectSrcDoc, writeData);
-    ctx.runAction(api.vsActions.analyseUploadedFile, { uploadedFileId, storedFileId });
-    return newUploadedFile;
+    const newSrcDocId: any = await ctx.runMutation(internal.dbOps.createFile_ProjectSrcDoc, writeData);
+    ctx.runAction(api.vsActions.testAction_analyseUploadedSrcDoc, { srcDocId: newSrcDocId, cvxStoredFileId });
+    return newSrcDocId;
   }
 });
 
@@ -198,13 +196,13 @@ const generateForPDF_summary = async (pdfArrayBuffer, model) => {
   return summaryText;
 };
 
-export const testAction_analyseUploadedFile = action({
+export const testAction_analyseUploadedSrcDoc = action({
   args: {
-    storedFileId: v.string(),
-    uploadedFileId: v.id("vsFile")
+    cvxStoredFileId: v.string(),
+    srcDocId: v.id("vsFile")
   },
-  handler: async (ctx, { uploadedFileId, storedFileId }) => {
-    const storageId = storedFileId as Id<"_storage">;
+  handler: async (ctx, { srcDocId, cvxStoredFileId }) => {
+    const storageId = cvxStoredFileId as Id<"_storage">;
     const fileUrl = await ctx.storage.getUrl(storageId);
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -215,27 +213,27 @@ export const testAction_analyseUploadedFile = action({
 
     const writeData = { titleStatus: "generating" };
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateFile_ProjectSrcDoc, {
-      uploadedFileId,
+      srcDocId,
       updateDataStr: JSON.stringify(writeData)
     });
     const titleText = await generateForPDF_title(pdfArrayBuffer, model);
     writeData.titleStatus = "generated";
     writeData.titleText = titleText;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateFile_ProjectSrcDoc, {
-      uploadedFileId,
+      srcDocId,
       updateDataStr: JSON.stringify(writeData)
     });
 
     writeData.summaryStatus = "generating";
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateFile_ProjectSrcDoc, {
-      uploadedFileId,
+      srcDocId,
       updateDataStr: JSON.stringify(writeData)
     });
     const summaryText = await generateForPDF_summary(pdfArrayBuffer, model);
     writeData.summaryStatus = "generated";
     writeData.summaryText = summaryText;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateFile_ProjectSrcDoc, {
-      uploadedFileId,
+      srcDocId,
       updateDataStr: JSON.stringify(writeData)
     });
   }

@@ -20,9 +20,9 @@ export default function Project() {
 
   const [isUploading, setIsUploading] = useState(false);
 
-  const performAction_saveAndAnalyseUploadedFile = useAction(api.vsActions.testAction_saveAndAnalyseUploadedFile);
+  const performAction_createUploadedSrcDoc = useAction(api.vsActions.testAction_createUploadedSrcDoc);
 
-  const performAction_analyseUploadedFile = useAction(api.vsActions.testAction_analyseUploadedFile);
+  const performAction_analyseUploadedSrcDoc = useAction(api.vsActions.testAction_analyseUploadedSrcDoc);
 
   const performAction_generateUploadUrl = useAction(api.uploadedFiles.generateUploadUrl);
 
@@ -38,7 +38,7 @@ export default function Project() {
     setDroppedFiles(droppedFiles.filter((f) => f !== file));
   };
 
-  const onClick_uploadFiles = async () => {
+  const onClick_uploadDroppedFilesToSrcDocs = async () => {
     setIsUploading(true);
 
     const ps = droppedFiles.map((file: any) => new Promise((resolve, reject) => {
@@ -49,16 +49,17 @@ export default function Project() {
               method: "POST",
               body: file,
             });
-            const { storageId } = await result.json();
-            const storedFileData = await performAction_saveAndAnalyseUploadedFile({ projectId: currProject._id, storedFileId: storageId })
-            return resolve(storedFileData);
+            const uploadedCvxFile = await result.json();
+            const cvxStoredFileId = uploadedCvxFile.storageId;
+            const newSrcDocId = await performAction_createUploadedSrcDoc({ projectId: currProject._id, cvxStoredFileId })
+            return resolve(newSrcDocId);
           } catch (err) {
             return reject(err);
           }
         });
     }));
 
-    const uploadIds = (await Promise.allSettled(ps)).filter(r => r.status === "fulfilled").map(r => r.value);
+    const srcDocIds = (await Promise.allSettled(ps)).filter(r => r.status === "fulfilled").map(r => r.value);
     setDroppedFiles([]);
     setIsUploading(false);
   };
@@ -180,7 +181,7 @@ export default function Project() {
         </Dropzone>
 
         <Button
-          onClick={onClick_uploadFiles}
+          onClick={onClick_uploadDroppedFilesToSrcDocs}
           w="100%"
           size="lg"
           disabled={droppedFiles.length < 1}
@@ -218,9 +219,9 @@ export default function Project() {
                       </Button>
                       <Button
                         onClick={() => {
-                          performAction_analyseUploadedFile({
-                            storedFileId: srcDoc.storedFileId,
-                            uploadedFileId: srcDoc._id
+                          performAction_analyseUploadedSrcDoc({
+                            cvxStoredFileId: srcDoc.cvxStoredFileId,
+                            srcDocId: srcDoc._id
                           });
                         }}
                         w="100%"
