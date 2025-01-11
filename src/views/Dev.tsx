@@ -12,11 +12,11 @@ export default function Dev() {
     window.location.href = redirectUri;
   };
 
-  const performAction_sendSigningEmail = useAction(api.vsActions.sendSigningEmail);
+  const performAction_sendDocusignSigningEmail = useAction(api.vsActions.sendDocusignSigningEmail);
 
-  const onClickTest_sendSigningEmail = async () => {
+  const onClickTest_sendDocusignSigningEmail = async () => {
     console.log("Sending signing email...");
-    const res = await performAction_sendSigningEmail();
+    const res = await performAction_sendDocusignSigningEmail();
     const sentEnvelopSummary = JSON.parse(res);
     console.log(sentEnvelopSummary);
   };
@@ -41,7 +41,7 @@ export default function Dev() {
             Start Docusign OAuth
           </Button>
           <Button
-            onClick={onClickTest_sendSigningEmail}
+            onClick={onClickTest_sendDocusignSigningEmail}
             w="100%"
             size="lg"
           >

@@ -34,7 +34,7 @@ export const startDocusignOAuth = action({
   }
 });
 
-export const getAccessToken = action({
+export const getDocusignAccessToken = action({
   args: {
     authCode: v.string(),
   },
@@ -77,7 +77,7 @@ async function downloadFileAsBytes(url: string): Promise<Buffer> {
   });
 }
 
-export const sendSigningEmail = action({
+export const sendDocusignSigningEmail = action({
   handler: async (ctx) => {
     const restApi = docusign.ApiClient.RestApi;
     const oAuth = docusign.ApiClient.OAuth;
