@@ -5,18 +5,18 @@ import { api } from "../../convex/_generated/api";
 
 export default function Dev() {
 
-  const performAction_testAction_startDocusignOAuth = useAction(api.vsActions.testAction_startDocusignOAuth);
+  const performAction_startDocusignOAuth = useAction(api.vsActions.startDocusignOAuth);
 
   const onClickTest_startDocusignOAuth = async () => {
-    const redirectUri = await performAction_testAction_startDocusignOAuth();
+    const redirectUri = await performAction_startDocusignOAuth();
     window.location.href = redirectUri;
   };
 
-  const performAction_testAction_sendSigningEmail = useAction(api.vsActions.testAction_sendSigningEmail);
+  const performAction_sendSigningEmail = useAction(api.vsActions.sendSigningEmail);
 
   const onClickTest_sendSigningEmail = async () => {
     console.log("Sending signing email...");
-    const res = await performAction_testAction_sendSigningEmail();
+    const res = await performAction_sendSigningEmail();
     const sentEnvelopSummary = JSON.parse(res);
     console.log(sentEnvelopSummary);
   };

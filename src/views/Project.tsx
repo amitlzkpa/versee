@@ -21,9 +21,9 @@ export default function Project() {
 
   const [isUploading, setIsUploading] = useState(false);
 
-  const performAction_createUploadedSrcDoc = useAction(api.vsActions.testAction_createUploadedSrcDoc);
+  const performAction_createUploadedSrcDoc = useAction(api.vsActions.createUploadedSrcDoc);
 
-  const performAction_analyseUploadedSrcDoc = useAction(api.vsActions.testAction_analyseUploadedSrcDoc);
+  const performAction_analyseUploadedSrcDoc = useAction(api.vsActions.analyseUploadedSrcDoc);
 
   const performAction_generateUploadUrl = useAction(api.uploadedFiles.generateUploadUrl);
 

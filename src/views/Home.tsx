@@ -8,7 +8,7 @@ export default function Home() {
 
   const navigate = useNavigate();
 
-  const performAction_createNewProject = useAction(api.vsActions.testAction_createNewProject);
+  const performAction_createNewProject = useAction(api.vsActions.createNewProject);
 
   const onClickTest_createNewProject = async () => {
     const newProject = await performAction_createNewProject();

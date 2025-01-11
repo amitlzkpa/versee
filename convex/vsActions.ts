@@ -9,14 +9,14 @@ import { v } from "convex/values";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import * as docusign from "docusign-esign";
 
-export const testAction_createNewProject = action({
+export const createNewProject = action({
   handler: async (ctx) => {
     const newProject: any = await ctx.runMutation(internal.dbOps.createNewProject);
     return newProject;
   }
 });
 
-export const testAction_startDocusignOAuth = action({
+export const startDocusignOAuth = action({
   handler: async (ctx) => {
     const restApi = docusign.ApiClient.RestApi;
     const oAuth = docusign.ApiClient.OAuth;
@@ -34,7 +34,7 @@ export const testAction_startDocusignOAuth = action({
   }
 });
 
-export const testAction_getAccessToken = action({
+export const getAccessToken = action({
   args: {
     authCode: v.string(),
   },
@@ -77,7 +77,7 @@ async function downloadFileAsBytes(url: string): Promise<Buffer> {
   });
 }
 
-export const testAction_sendSigningEmail = action({
+export const sendSigningEmail = action({
   handler: async (ctx) => {
     const restApi = docusign.ApiClient.RestApi;
     const oAuth = docusign.ApiClient.OAuth;
@@ -150,7 +150,7 @@ export const testAction_sendSigningEmail = action({
   },
 });
 
-export const testAction_createUploadedSrcDoc = action({
+export const createUploadedSrcDoc = action({
   args: {
     cvxStoredFileId: v.string(),
     projectId: v.string()
@@ -163,7 +163,7 @@ export const testAction_createUploadedSrcDoc = action({
       projectId: _projectId
     };
     const newSrcDocId: any = await ctx.runMutation(internal.dbOps.createNewSrcDoc, writeData);
-    ctx.runAction(api.vsActions.testAction_analyseUploadedSrcDoc, { srcDocId: newSrcDocId });
+    ctx.runAction(api.vsActions.analyseUploadedSrcDoc, { srcDocId: newSrcDocId });
     return newSrcDocId;
   }
 });
@@ -196,7 +196,7 @@ const generateForPDF_summary = async (pdfArrayBuffer, model) => {
   return summaryText;
 };
 
-export const testAction_analyseUploadedSrcDoc = action({
+export const analyseUploadedSrcDoc = action({
   args: {
     srcDocId: v.id("vsSrcDoc")
   },

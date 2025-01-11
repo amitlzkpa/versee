@@ -8,12 +8,12 @@ export default function OauthCallback_Docusign() {
 
   const location = useLocation();
 
-  const performAction_testAction_getAccessToken = useAction(api.vsActions.testAction_getAccessToken);
+  const performAction_getAccessToken = useAction(api.vsActions.getAccessToken);
 
   const onClickTest_getAccessToken = async () => {
     const queryParams = new URLSearchParams(location.search);
     const code = queryParams.get("code");
-    const savedRecord = await performAction_testAction_getAccessToken({ authCode: code ?? "" });
+    const savedRecord = await performAction_getAccessToken({ authCode: code ?? "" });
     console.log(savedRecord);
   };
 
