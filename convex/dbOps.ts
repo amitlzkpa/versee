@@ -45,32 +45,30 @@ export const upsertDocusignData_ForUser = internalMutation({
 
 // PROJECT
 
-export const getAllProjects_ForCurrUser = query(
-  {
-    handler: async (ctx) => {
-      const currUser = await ctx.auth.getUserIdentity();
-      if (!currUser) return [];
-      const projects = await ctx.db
-        .query("vsProjects")
-        .filter((q) => q.eq(q.field("user.subject"), currUser.subject))
-        .order("desc")
-        .collect();
-      return projects;
-    }
+export const getAllProjects_ForCurrUser = query({
+  handler: async (ctx) => {
+    const currUser = await ctx.auth.getUserIdentity();
+    if (!currUser) return [];
+    const projects = await ctx.db
+      .query("vsProjects")
+      .filter((q) => q.eq(q.field("user.subject"), currUser.subject))
+      .order("desc")
+      .collect();
+    return projects;
   }
-);
+});
 
-export const getProject_ByProjectId = query(
-  {
-    args: { projectId: v.optional(v.string()) },
-    handler: async (ctx, { projectId }) => {
-      if (!projectId) return null;
-      const dbId = projectId as Id<"vsProjects">;
-      const project = await ctx.db.get(dbId);
-      return project;
-    }
+export const getProject_ByProjectId = query({
+  args: {
+    projectId: v.optional(v.string())
+  },
+  handler: async (ctx, { projectId }) => {
+    if (!projectId) return null;
+    const dbId = projectId as Id<"vsProjects">;
+    const project = await ctx.db.get(dbId);
+    return project;
   }
-);
+});
 
 export const createNewProject = internalMutation({
   handler: async (ctx) => {
@@ -84,46 +82,44 @@ export const createNewProject = internalMutation({
 
 // SRCDOC
 
-export const getAllSrcDocs_ForProject = query(
-  {
-    args: { projectId: v.optional(v.string()) },
-    handler: async (ctx, { projectId }) => {
-      if (!projectId) return [];
-      const dbRecs = await ctx.db
-        .query("vsSrcDoc")
-        .filter((q) => q.eq(q.field("projectId"), projectId))
-        .order("desc")
-        .collect();
-      const ps = dbRecs.map((dbRec) => new Promise((resolve, reject) => {
-        const storageId = dbRec.cvxStoredFileId as Id<"_storage">;
-        ctx.storage.getUrl(storageId)
-          .then((fileUrl) => {
-            resolve({
-              ...dbRec,
-              fileUrl
-            });
-          })
-          .catch((err) => {
-            reject(err);
+export const getAllSrcDocs_ForProject = query({
+  args: {
+    projectId: v.optional(v.string())
+  },
+  handler: async (ctx, { projectId }) => {
+    if (!projectId) return [];
+    const dbRecs = await ctx.db
+      .query("vsSrcDoc")
+      .filter((q) => q.eq(q.field("projectId"), projectId))
+      .order("desc")
+      .collect();
+    const ps = dbRecs.map((dbRec) => new Promise((resolve, reject) => {
+      const storageId = dbRec.cvxStoredFileId as Id<"_storage">;
+      ctx.storage.getUrl(storageId)
+        .then((fileUrl) => {
+          resolve({
+            ...dbRec,
+            fileUrl
           });
-      }));
-      const projectSrcDocs = (await Promise.allSettled(ps)).filter(p => p.status === "fulfilled").map(p => p.value);
-      return projectSrcDocs;
-    }
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }));
+    const projectSrcDocs = (await Promise.allSettled(ps)).filter(p => p.status === "fulfilled").map(p => p.value);
+    return projectSrcDocs;
   }
-);
+});
 
-export const getSrcDoc_BySrcDocId = query(
-  {
-    args: {
-      srcDocId: v.id("vsSrcDoc"),
-    },
-    handler: async (ctx, { srcDocId }) => {
-      const srcDoc = await ctx.db.get(srcDocId);
-      return srcDoc;
-    }
+export const getSrcDoc_BySrcDocId = query({
+  args: {
+    srcDocId: v.id("vsSrcDoc"),
+  },
+  handler: async (ctx, { srcDocId }) => {
+    const srcDoc = await ctx.db.get(srcDocId);
+    return srcDoc;
   }
-);
+});
 
 export const createNewSrcDoc = internalMutation({
   args: {
