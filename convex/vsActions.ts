@@ -54,10 +54,17 @@ export const startDocusignOAuth = action({
       oAuthBasePath: oAuthBasePath
     });
 
-    const oauthLoginUrl = apiClient.getJWTUri(
+    const scopes = [
+      oAuth.Scope.IMPERSONATION,
+      oAuth.Scope.SIGNATURE
+    ];
+
+    const oauthLoginUrl = apiClient.getAuthorizationUri(
       process.env.DOCUSIGN_INTEGRATION_KEY,
+      scopes,
       process.env.DOCUSIGN_REDIRECT_URI,
-      oAuthBasePath
+      // "http://localhost:5173/callback/docusign",
+      "code"
     );
     return oauthLoginUrl;
   }
