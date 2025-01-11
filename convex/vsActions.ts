@@ -9,9 +9,13 @@ import { v } from "convex/values";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import * as docusign from "docusign-esign";
 
+// UTILS
+
 export const generateUploadUrl = action(async (ctx) => {
   return await ctx.storage.generateUploadUrl();
 });
+
+// PROJECT
 
 export const createNewProject = action({
   handler: async (ctx) => {
@@ -19,6 +23,25 @@ export const createNewProject = action({
     return newProject;
   }
 });
+
+// DOCUSIGN
+
+async function downloadFileAsBytes(url: string): Promise<Buffer> {
+  return new Promise<Buffer>((resolve, reject) => {
+    https.get(url, (response) => {
+      const chunks: Buffer[] = [];
+      response.on('data', (chunk) => {
+        chunks.push(chunk);
+      });
+      response.on('end', () => {
+        const buffer = Buffer.concat(chunks);
+        resolve(buffer);
+      });
+    }).on('error', (err) => {
+      reject(err);
+    });
+  });
+}
 
 export const startDocusignOAuth = action({
   handler: async (ctx) => {
@@ -63,23 +86,6 @@ export const getDocusignAccessToken = action({
     return storedData;
   }
 });
-
-async function downloadFileAsBytes(url: string): Promise<Buffer> {
-  return new Promise<Buffer>((resolve, reject) => {
-    https.get(url, (response) => {
-      const chunks: Buffer[] = [];
-      response.on('data', (chunk) => {
-        chunks.push(chunk);
-      });
-      response.on('end', () => {
-        const buffer = Buffer.concat(chunks);
-        resolve(buffer);
-      });
-    }).on('error', (err) => {
-      reject(err);
-    });
-  });
-}
 
 export const sendDocusignSigningEmail = action({
   handler: async (ctx) => {
@@ -154,23 +160,7 @@ export const sendDocusignSigningEmail = action({
   },
 });
 
-export const createNewSrcDoc = action({
-  args: {
-    cvxStoredFileId: v.string(),
-    projectId: v.string()
-  },
-  handler: async (ctx, { cvxStoredFileId, projectId }) => {
-    const _cvxStoredFileId = cvxStoredFileId as Id<"_storage">;
-    const _projectId = projectId as Id<"vsProjects">;
-    const writeData = {
-      cvxStoredFileId: _cvxStoredFileId,
-      projectId: _projectId
-    };
-    const newSrcDocId: any = await ctx.runMutation(internal.dbOps.createNewSrcDoc, writeData);
-    ctx.runAction(api.vsActions.analyseSrcDoc, { srcDocId: newSrcDocId });
-    return newSrcDocId;
-  }
-});
+// SRCDOCS
 
 const generateForPDF_title = async (pdfArrayBuffer, model) => {
   const result = await model.generateContent([
@@ -199,6 +189,24 @@ const generateForPDF_summary = async (pdfArrayBuffer, model) => {
   const summaryText = result.response.text();
   return summaryText;
 };
+
+export const createNewSrcDoc = action({
+  args: {
+    cvxStoredFileId: v.string(),
+    projectId: v.string()
+  },
+  handler: async (ctx, { cvxStoredFileId, projectId }) => {
+    const _cvxStoredFileId = cvxStoredFileId as Id<"_storage">;
+    const _projectId = projectId as Id<"vsProjects">;
+    const writeData = {
+      cvxStoredFileId: _cvxStoredFileId,
+      projectId: _projectId
+    };
+    const newSrcDocId: any = await ctx.runMutation(internal.dbOps.createNewSrcDoc, writeData);
+    ctx.runAction(api.vsActions.analyseSrcDoc, { srcDocId: newSrcDocId });
+    return newSrcDocId;
+  }
+});
 
 export const analyseSrcDoc = action({
   args: {
