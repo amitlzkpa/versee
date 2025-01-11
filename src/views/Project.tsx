@@ -197,12 +197,16 @@ export default function Project() {
               .map((srcDoc: any) => {
                 return (
                   <Card
+                    key={srcDoc._id}
                     w="100%"
                     withBorder
                     radius="xl"
                   >
                     <Flex direction="column" align="stretch" gap="sm">
-                      <Text key={srcDoc._id}>{srcDoc._id}</Text>
+                      <Text fz="sm">{srcDoc._id}</Text>
+                      <Text fw="bold">{srcDoc.titleText}</Text>
+                      <Text>{srcDoc.summaryText}</Text>
+
                       <Button
                         component="a"
                         href={srcDoc.fileUrl}
@@ -216,7 +220,7 @@ export default function Project() {
                         onClick={() => {
                           performAction_analyseUploadedFile({
                             storedFileId: srcDoc.storedFileId,
-                            projectId: srcDoc.projectId
+                            uploadedFileId: srcDoc._id
                           });
                         }}
                         w="100%"
