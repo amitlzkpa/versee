@@ -54,9 +54,11 @@ export const startDocusignOAuth = action({
       oAuthBasePath: oAuthBasePath
     });
 
-    const integratorKey = "e612e007-3539-464a-a972-797c81ce2088";
-    const RedirectURI = "https://versee.vercel.app/callback/docusign";
-    const oauthLoginUrl = apiClient.getJWTUri(integratorKey, RedirectURI, oAuthBasePath);
+    const oauthLoginUrl = apiClient.getJWTUri(
+      process.env.DOCUSIGN_INTEGRATION_KEY,
+      process.env.DOCUSIGN_REDIRECT_URI,
+      oAuthBasePath
+    );
     return oauthLoginUrl;
   }
 });
@@ -75,11 +77,12 @@ export const getDocusignAccessToken = action({
       oAuthBasePath: oAuthBasePath
     });
 
-    const IntegratorKeyAuthCode = "e612e007-3539-464a-a972-797c81ce2088";
-    const ClientSecret = "603aed07-5ede-409c-8246-4539a219e1c2";
     const code = authCode;
-
-    const oAuthToken = await apiClient.generateAccessToken(IntegratorKeyAuthCode, ClientSecret, code);
+    const oAuthToken = await apiClient.generateAccessToken(
+      process.env.DOCUSIGN_INTEGRATION_KEY,
+      process.env.DOCUSIGN_CLIENT_SECRET,
+      code
+    );
     const userInfo = await apiClient.getUserInfo(oAuthToken.accessToken);
     const docusignDataStr = JSON.stringify({ oAuthToken, userInfo });
     const storedData: any = await ctx.runMutation(internal.dbOps.upsertDocusignData_ForUser, { docusignDataStr });
