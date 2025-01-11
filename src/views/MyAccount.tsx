@@ -5,7 +5,7 @@ import { api } from "../../convex/_generated/api";
 
 export default function MyAccount() {
 
-  // const currUserData = useQuery(api.dbOps.getCurrUserData);
+  const docusignData_ForCurrUser = useQuery(api.dbOps.getDocusignData_ForCurrUser);
 
   const performAction_startDocusignOAuth = useAction(api.vsActions.startDocusignOAuth);
 

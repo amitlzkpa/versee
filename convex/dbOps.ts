@@ -8,7 +8,7 @@ import { v } from "convex/values";
 
 // DOCUSIGN
 
-export const getDocusignData_ForCurrUser = internalQuery({
+export const getDocusignData_ForCurrUser = query({
   handler: async (ctx) => {
     const currUser = await ctx.auth.getUserIdentity();
     if (!currUser) return null;

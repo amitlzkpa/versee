@@ -62,8 +62,8 @@ export const startDocusignOAuth = action({
     const oauthLoginUrl = apiClient.getAuthorizationUri(
       process.env.DOCUSIGN_INTEGRATION_KEY,
       scopes,
-      process.env.DOCUSIGN_REDIRECT_URI,
-      // "http://localhost:5173/callback/docusign",
+      // process.env.DOCUSIGN_REDIRECT_URI,
+      "http://localhost:5173/callback/docusign",
       "code"
     );
     return oauthLoginUrl;
@@ -85,13 +85,13 @@ export const getDocusignAccessToken = action({
     });
 
     const code = authCode;
-    const oAuthToken = await apiClient.generateAccessToken(
+    const accessTokenObj = await apiClient.generateAccessToken(
       process.env.DOCUSIGN_INTEGRATION_KEY,
       process.env.DOCUSIGN_CLIENT_SECRET,
       code
     );
-    const userInfo = await apiClient.getUserInfo(oAuthToken.accessToken);
-    const docusignDataStr = JSON.stringify({ oAuthToken, userInfo });
+    const userInfo = await apiClient.getUserInfo(accessTokenObj.accessToken);
+    const docusignDataStr = JSON.stringify({ accessTokenObj, userInfo });
     const storedData: any = await ctx.runMutation(internal.dbOps.upsertDocusignData_ForUser, { docusignDataStr });
     return storedData;
   }
@@ -123,10 +123,10 @@ export const getDocusignUserToken = action({
       expiresIn
     );
 
-    const oAuthToken = res.body;
-    const userInfo = await apiClient.getUserInfo(oAuthToken.access_token);
+    const userTokenObj = res.body;
+    const userInfo = await apiClient.getUserInfo(userTokenObj.access_token);
 
-    const docusignDataStr = JSON.stringify({ oAuthToken, userInfo });
+    const docusignDataStr = JSON.stringify({ userTokenObj, userInfo });
     const storedData: any = await ctx.runMutation(internal.dbOps.upsertDocusignData_ForUser, { docusignDataStr });
     return storedData;
   }
