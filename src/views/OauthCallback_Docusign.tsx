@@ -1,10 +1,12 @@
 import { useLocation } from 'react-router-dom';
 import { Button, Flex } from '@mantine/core';
 
-import { useAction } from "convex/react";
+import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function OauthCallback_Docusign() {
+
+  const docusignData_ForCurrUser = useQuery(api.dbOps.getDocusignData_ForCurrUser);
 
   const location = useLocation();
 
@@ -27,21 +29,37 @@ export default function OauthCallback_Docusign() {
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
       <Flex w="60%" direction="column" align="center" gap="md" p="lg">
-        Docusign OAuth
-        <Button
-          onClick={onClickTest_getDocusignAccessToken}
-          w="100%"
-          size="lg"
-        >
-          Get Access Token
-        </Button>
-        <Button
-          onClick={onClickTest_getDocusignUserToken}
-          w="100%"
-          size="lg"
-        >
-          Get User Token
-        </Button>
+        Docusign Auth
+        {
+          !(docusignData_ForCurrUser?.accessTokenObj)
+            ?
+            <>
+              <Button
+                onClick={onClickTest_getDocusignAccessToken}
+                w="100%"
+                size="lg"
+              >
+                Get Access Token
+              </Button>
+            </>
+            :
+            <></>
+        }
+        {
+          !(docusignData_ForCurrUser?.userTokenObj)
+            ?
+            <>
+              <Button
+                onClick={onClickTest_getDocusignUserToken}
+                w="100%"
+                size="lg"
+              >
+                Get User Token
+              </Button>
+            </>
+            :
+            <></>
+        }
       </Flex>
     </Flex>
   );

@@ -62,8 +62,8 @@ export const startDocusignOAuth = action({
     const oauthLoginUrl = apiClient.getAuthorizationUri(
       process.env.DOCUSIGN_INTEGRATION_KEY,
       scopes,
-      process.env.DOCUSIGN_REDIRECT_URI,
-      // "http://localhost:5173/callback/docusign",
+      // process.env.DOCUSIGN_REDIRECT_URI,
+      "http://localhost:5173/callback/docusign",
       "code"
     );
     return oauthLoginUrl;
