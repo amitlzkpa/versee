@@ -90,8 +90,8 @@ export const getFiles_ProjectSrcDocs = query(
     handler: async (ctx, { projectId }) => {
       if (!projectId) return [];
       const dbRecs = await ctx.db
-        .query("vsFile")
-        .filter((q) => q.and(q.eq(q.field("projectId"), projectId), q.eq(q.field("type"), "srcdoc")))
+        .query("vsSrcDoc")
+        .filter((q) => q.eq(q.field("projectId"), projectId))
         .order("desc")
         .collect();
       const ps = dbRecs.map((dbRec) => new Promise((resolve, reject) => {
@@ -116,7 +116,7 @@ export const getFiles_ProjectSrcDocs = query(
 export const getFile_ProjectSrcDoc = query(
   {
     args: {
-      srcDocId: v.id("vsFile"),
+      srcDocId: v.id("vsSrcDoc"),
     },
     handler: async (ctx, { srcDocId }) => {
       const srcDoc = await ctx.db.get(srcDocId);
@@ -134,20 +134,19 @@ export const createFile_ProjectSrcDoc = internalMutation({
     const srcDocData = {
       cvxStoredFileId,
       projectId,
-      type: "srcdoc",
       titleStatus: "not_generated",
-      titleStatusText: "",
+      titleText: "",
       summaryStatus: "not_generated",
       summaryText: "",
     };
-    const newSrcDocId = await ctx.db.insert("vsFile", srcDocData);
+    const newSrcDocId = await ctx.db.insert("vsSrcDoc", srcDocData);
     return newSrcDocId;
   }
 });
 
 export const updateFile_ProjectSrcDoc = internalMutation({
   args: {
-    srcDocId: v.id("vsFile"),
+    srcDocId: v.id("vsSrcDoc"),
     updateDataStr: v.string()
   },
   handler: async (ctx, { srcDocId, updateDataStr }) => {

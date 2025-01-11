@@ -198,7 +198,7 @@ const generateForPDF_summary = async (pdfArrayBuffer, model) => {
 
 export const testAction_analyseUploadedSrcDoc = action({
   args: {
-    srcDocId: v.id("vsFile")
+    srcDocId: v.id("vsSrcDoc")
   },
   handler: async (ctx, { srcDocId }) => {
     const srcDoc = await ctx.runQuery(internal.dbOps.getFile_ProjectSrcDoc, {
