@@ -15,7 +15,7 @@ export default function Home() {
     navigate(`/p/${newProject}`);
   };
 
-  const currUserProjects = useQuery(api.dbOps.getAllProjectsForCurrUser);
+  const currUserProjects = useQuery(api.dbOps.getAllProjects_ForCurrUser);
 
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
@@ -39,13 +39,14 @@ export default function Home() {
                   component="a"
                   w="100%"
                   href={`/p/${prj._id}`}
+                  key={prj._id}
                 >
                   <Card
                     w="100%"
                     withBorder
                     radius="xl"
                   >
-                    <Text key={prj._id}>{prj._id}</Text>
+                    <Text>{prj._id}</Text>
                   </Card>
                 </UnstyledButton>
               );

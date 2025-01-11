@@ -6,7 +6,7 @@ import {
 import { Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 
-export const getDocusignData = internalQuery({
+export const getDocusignData_ForCurrUser = internalQuery({
   handler: async (ctx) => {
     const currUser = await ctx.auth.getUserIdentity();
     if (!currUser) return null;
@@ -18,7 +18,7 @@ export const getDocusignData = internalQuery({
   },
 });
 
-export const upsertDocusignDataForUser = internalMutation({
+export const upsertDocusignData_ForUser = internalMutation({
   args: {
     docusignDataStr: v.string(),
   },
@@ -45,7 +45,7 @@ export const upsertDocusignDataForUser = internalMutation({
 
 // PROJECT
 
-export const getAllProjectsForCurrUser = query(
+export const getAllProjects_ForCurrUser = query(
   {
     handler: async (ctx) => {
       const currUser = await ctx.auth.getUserIdentity();
@@ -60,7 +60,7 @@ export const getAllProjectsForCurrUser = query(
   }
 );
 
-export const getProject = query(
+export const getProject_ByProjectId = query(
   {
     args: { projectId: v.optional(v.string()) },
     handler: async (ctx, { projectId }) => {
@@ -82,9 +82,9 @@ export const createNewProject = internalMutation({
   },
 });
 
-// FILE
+// SRCDOC
 
-export const getFiles_ProjectSrcDocs = query(
+export const getAllSrcDocs_ForProject = query(
   {
     args: { projectId: v.optional(v.string()) },
     handler: async (ctx, { projectId }) => {
@@ -113,7 +113,7 @@ export const getFiles_ProjectSrcDocs = query(
   }
 );
 
-export const getFile_ProjectSrcDoc = query(
+export const getSrcDoc_BySrcDocId = query(
   {
     args: {
       srcDocId: v.id("vsSrcDoc"),
@@ -125,7 +125,7 @@ export const getFile_ProjectSrcDoc = query(
   }
 );
 
-export const createFile_ProjectSrcDoc = internalMutation({
+export const createNewSrcDoc = internalMutation({
   args: {
     cvxStoredFileId: v.id("_storage"),
     projectId: v.id("vsProjects")
@@ -144,7 +144,7 @@ export const createFile_ProjectSrcDoc = internalMutation({
   }
 });
 
-export const updateFile_ProjectSrcDoc = internalMutation({
+export const updateSrcDoc = internalMutation({
   args: {
     srcDocId: v.id("vsSrcDoc"),
     updateDataStr: v.string()

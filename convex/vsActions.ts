@@ -55,7 +55,7 @@ export const testAction_getAccessToken = action({
     const oAuthToken = await apiClient.generateAccessToken(IntegratorKeyAuthCode, ClientSecret, code);
     const userInfo = await apiClient.getUserInfo(oAuthToken.accessToken);
     const docusignDataStr = JSON.stringify({ oAuthToken, userInfo });
-    const storedData: any = await ctx.runMutation(internal.dbOps.upsertDocusignDataForUser, { docusignDataStr });
+    const storedData: any = await ctx.runMutation(internal.dbOps.upsertDocusignData_ForUser, { docusignDataStr });
     return storedData;
   }
 });
@@ -88,7 +88,7 @@ export const testAction_sendSigningEmail = action({
       oAuthBasePath: oAuthBasePath
     });
 
-    const storedDocusignData = await ctx.runQuery(internal.dbOps.getDocusignData);
+    const storedDocusignData = await ctx.runQuery(internal.dbOps.getDocusignData_ForCurrUser);
     const accountId = storedDocusignData.userInfo.accounts[0].accountId;
     const accessToken = storedDocusignData.oAuthToken.accessToken;
 
@@ -162,7 +162,7 @@ export const testAction_createUploadedSrcDoc = action({
       cvxStoredFileId: _cvxStoredFileId,
       projectId: _projectId
     };
-    const newSrcDocId: any = await ctx.runMutation(internal.dbOps.createFile_ProjectSrcDoc, writeData);
+    const newSrcDocId: any = await ctx.runMutation(internal.dbOps.createNewSrcDoc, writeData);
     ctx.runAction(api.vsActions.testAction_analyseUploadedSrcDoc, { srcDocId: newSrcDocId });
     return newSrcDocId;
   }
@@ -201,7 +201,7 @@ export const testAction_analyseUploadedSrcDoc = action({
     srcDocId: v.id("vsSrcDoc")
   },
   handler: async (ctx, { srcDocId }) => {
-    const srcDoc = await ctx.runQuery(internal.dbOps.getFile_ProjectSrcDoc, {
+    const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
       srcDocId
     });
     const fileUrl = await ctx.storage.getUrl(srcDoc.cvxStoredFileId);
@@ -213,27 +213,27 @@ export const testAction_analyseUploadedSrcDoc = action({
     let uploadedFileData;
 
     const writeData = { titleStatus: "generating" };
-    uploadedFileData = await ctx.runMutation(internal.dbOps.updateFile_ProjectSrcDoc, {
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
       updateDataStr: JSON.stringify(writeData)
     });
     const titleText = await generateForPDF_title(pdfArrayBuffer, model);
     writeData.titleStatus = "generated";
     writeData.titleText = titleText;
-    uploadedFileData = await ctx.runMutation(internal.dbOps.updateFile_ProjectSrcDoc, {
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
       updateDataStr: JSON.stringify(writeData)
     });
 
     writeData.summaryStatus = "generating";
-    uploadedFileData = await ctx.runMutation(internal.dbOps.updateFile_ProjectSrcDoc, {
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
       updateDataStr: JSON.stringify(writeData)
     });
     const summaryText = await generateForPDF_summary(pdfArrayBuffer, model);
     writeData.summaryStatus = "generated";
     writeData.summaryText = summaryText;
-    uploadedFileData = await ctx.runMutation(internal.dbOps.updateFile_ProjectSrcDoc, {
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
       updateDataStr: JSON.stringify(writeData)
     });
