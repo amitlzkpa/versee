@@ -1,14 +1,30 @@
-import { Flex } from '@mantine/core';
+import { Button, Flex } from '@mantine/core';
+
+import { useAction, useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 export default function MyAccount() {
 
+  // const currUserData = useQuery(api.dbOps.getCurrUserData);
+
+  const performAction_startDocusignOAuth = useAction(api.vsActions.startDocusignOAuth);
+
+  const onClick_startDocusignOAuth = async () => {
+    const redirectUri = await performAction_startDocusignOAuth();
+    window.location.href = redirectUri;
+  };
+
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
-      {Array(45)
-        .fill(0)
-        .map((_, index) => (
-          <div key={index}>MyAccount</div>
-        ))}
+      <Flex w="60%" direction="column" align="center" gap="md" p="lg">
+        <Button
+          onClick={onClick_startDocusignOAuth}
+          w="100%"
+          size="lg"
+        >
+          Connect Docusign
+        </Button>
+      </Flex>
     </Flex>
   );
 }

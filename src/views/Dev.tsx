@@ -12,13 +12,6 @@ export default function Dev() {
     console.log(res);
   };
 
-  const performAction_startDocusignOAuth = useAction(api.vsActions.startDocusignOAuth);
-
-  const onClickTest_startDocusignOAuth = async () => {
-    const redirectUri = await performAction_startDocusignOAuth();
-    window.location.href = redirectUri;
-  };
-
   const performAction_sendDocusignSigningEmail = useAction(api.vsActions.sendDocusignSigningEmail);
 
   const onClickTest_sendDocusignSigningEmail = async () => {
@@ -46,13 +39,6 @@ export default function Dev() {
             size="lg"
           >
             Get Docusign Token
-          </Button>
-          <Button
-            onClick={onClickTest_startDocusignOAuth}
-            w="100%"
-            size="lg"
-          >
-            Start Docusign OAuth
           </Button>
           <Button
             onClick={onClickTest_sendDocusignSigningEmail}
