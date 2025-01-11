@@ -5,7 +5,7 @@ import { Dropzone } from '@mantine/dropzone';
 
 import { FaFileDownload, FaFileImport, FaMinusCircle, FaTrash } from 'react-icons/fa';
 
-import { useAction, useMutation, useQuery } from "convex/react";
+import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function Project() {
@@ -21,6 +21,8 @@ export default function Project() {
   const [isUploading, setIsUploading] = useState(false);
 
   const performAction_saveAndAnalyseUploadedFile = useAction(api.vsActions.testAction_saveAndAnalyseUploadedFile);
+
+  const performAction_analyseUploadedFile = useAction(api.vsActions.testAction_analyseUploadedFile);
 
   const performAction_generateUploadUrl = useAction(api.uploadedFiles.generateUploadUrl);
 
@@ -194,20 +196,36 @@ export default function Project() {
             (curProjectSrcDocs ?? [])
               .map((srcDoc: any) => {
                 return (
-                  <UnstyledButton
-                    component="a"
+                  <Card
                     w="100%"
-                    href={srcDoc.fileUrl}
-                    target="_blank"
+                    withBorder
+                    radius="xl"
                   >
-                    <Card
-                      w="100%"
-                      withBorder
-                      radius="xl"
-                    >
+                    <Flex direction="column" align="stretch" gap="sm">
                       <Text key={srcDoc._id}>{srcDoc._id}</Text>
-                    </Card>
-                  </UnstyledButton>
+                      <Button
+                        component="a"
+                        href={srcDoc.fileUrl}
+                        target="_blank"
+                        w="100%"
+                        size="lg"
+                      >
+                        Open
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          performAction_analyseUploadedFile({
+                            storedFileId: srcDoc.storedFileId,
+                            projectId: srcDoc.projectId
+                          });
+                        }}
+                        w="100%"
+                        size="lg"
+                      >
+                        Analyse
+                      </Button>
+                    </Flex>
+                  </Card>
                 );
               })
           }
