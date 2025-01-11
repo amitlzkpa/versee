@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { Button, Flex, Loader } from '@mantine/core';
+import { Button, Flex } from '@mantine/core';
 
 import { useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";

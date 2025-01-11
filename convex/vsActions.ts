@@ -62,8 +62,8 @@ export const startDocusignOAuth = action({
     const oauthLoginUrl = apiClient.getAuthorizationUri(
       process.env.DOCUSIGN_INTEGRATION_KEY,
       scopes,
-      // process.env.DOCUSIGN_REDIRECT_URI,
-      "http://localhost:5173/callback/docusign",
+      process.env.DOCUSIGN_REDIRECT_URI,
+      // "http://localhost:5173/callback/docusign",
       "code"
     );
     return oauthLoginUrl;
@@ -99,6 +99,8 @@ export const getDocusignAccessToken = action({
 
 export const getDocusignUserToken = action({
   handler: async (ctx) => {
+    const storedDocusignData = await ctx.runQuery(api.dbOps.getDocusignData_ForCurrUser);
+
     const restApi = docusign.ApiClient.RestApi;
     const oAuth = docusign.ApiClient.OAuth;
     const basePath = restApi.BasePath.DEMO;
@@ -112,7 +114,7 @@ export const getDocusignUserToken = action({
       oAuth.Scope.IMPERSONATION,
       oAuth.Scope.SIGNATURE
     ];
-    const userId = "64978c53-5769-4126-84ce-e0691954e439";
+    const userId = storedDocusignData.userInfo.sub;
     const expiresIn = 3600;
 
     const res = await apiClient.requestJWTUserToken(
@@ -143,7 +145,7 @@ export const sendDocusignSigningEmail = action({
       oAuthBasePath: oAuthBasePath
     });
 
-    const storedDocusignData = await ctx.runQuery(internal.dbOps.getDocusignData_ForCurrUser);
+    const storedDocusignData = await ctx.runQuery(api.dbOps.getDocusignData_ForCurrUser);
     const accountId = storedDocusignData.userInfo.accounts[0].accountId;
     const accessToken = storedDocusignData.oAuthToken.accessToken;
 
