@@ -163,7 +163,7 @@ export const testAction_createUploadedSrcDoc = action({
       projectId: _projectId
     };
     const newSrcDocId: any = await ctx.runMutation(internal.dbOps.createFile_ProjectSrcDoc, writeData);
-    ctx.runAction(api.vsActions.testAction_analyseUploadedSrcDoc, { srcDocId: newSrcDocId, cvxStoredFileId });
+    ctx.runAction(api.vsActions.testAction_analyseUploadedSrcDoc, { srcDocId: newSrcDocId });
     return newSrcDocId;
   }
 });
@@ -198,12 +198,13 @@ const generateForPDF_summary = async (pdfArrayBuffer, model) => {
 
 export const testAction_analyseUploadedSrcDoc = action({
   args: {
-    cvxStoredFileId: v.string(),
     srcDocId: v.id("vsFile")
   },
-  handler: async (ctx, { srcDocId, cvxStoredFileId }) => {
-    const storageId = cvxStoredFileId as Id<"_storage">;
-    const fileUrl = await ctx.storage.getUrl(storageId);
+  handler: async (ctx, { srcDocId }) => {
+    const srcDoc = await ctx.runQuery(internal.dbOps.getFile_ProjectSrcDoc, {
+      srcDocId
+    });
+    const fileUrl = await ctx.storage.getUrl(srcDoc.cvxStoredFileId);
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });

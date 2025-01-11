@@ -113,6 +113,18 @@ export const getFiles_ProjectSrcDocs = query(
   }
 );
 
+export const getFile_ProjectSrcDoc = query(
+  {
+    args: {
+      srcDocId: v.id("vsFile"),
+    },
+    handler: async (ctx, { srcDocId }) => {
+      const srcDoc = await ctx.db.get(srcDocId);
+      return srcDoc;
+    }
+  }
+);
+
 export const createFile_ProjectSrcDoc = internalMutation({
   args: {
     cvxStoredFileId: v.id("_storage"),

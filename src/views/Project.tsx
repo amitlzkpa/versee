@@ -220,7 +220,6 @@ export default function Project() {
                       <Button
                         onClick={() => {
                           performAction_analyseUploadedSrcDoc({
-                            cvxStoredFileId: srcDoc.cvxStoredFileId,
                             srcDocId: srcDoc._id
                           });
                         }}
