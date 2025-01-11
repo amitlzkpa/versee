@@ -74,7 +74,7 @@ export default function Project() {
             ProjectId: {currProject?._id}
           </Text>
           <Text size="lg" fw="bold">
-            Creator: {currProject?.user.name}
+            Creator: {currProject?.creator.name}
           </Text>
         </Flex>
 

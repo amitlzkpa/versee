@@ -6,6 +6,8 @@ import {
 import { Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 
+// DOCUSIGN
+
 export const getDocusignData_ForCurrUser = internalQuery({
   handler: async (ctx) => {
     const currUser = await ctx.auth.getUserIdentity();
@@ -51,7 +53,7 @@ export const getAllProjects_ForCurrUser = query({
     if (!currUser) return [];
     const projects = await ctx.db
       .query("vsProjects")
-      .filter((q) => q.eq(q.field("user.subject"), currUser.subject))
+      .filter((q) => q.eq(q.field("creator.subject"), currUser.subject))
       .order("desc")
       .collect();
     return projects;
@@ -73,7 +75,7 @@ export const createNewProject = internalMutation({
   handler: async (ctx) => {
     const currUser = await ctx.auth.getUserIdentity();
     if (!currUser) return null;
-    const newProjectData = { user: currUser };
+    const newProjectData = { creator: currUser };
     const newProject = await ctx.db.insert("vsProjects", newProjectData);
     return newProject;
   },
