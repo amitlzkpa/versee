@@ -25,7 +25,7 @@ export default function Project() {
 
   const performAction_analyseUploadedSrcDoc = useAction(api.vsActions.analyseUploadedSrcDoc);
 
-  const performAction_generateUploadUrl = useAction(api.uploadedFiles.generateUploadUrl);
+  const performAction_generateUploadUrl = useAction(api.vsActions.generateUploadUrl);
 
   const curProjectSrcDocs = useQuery(api.dbOps.getAllSrcDocs_ForProject, projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip");
 

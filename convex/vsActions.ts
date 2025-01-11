@@ -9,6 +9,10 @@ import { v } from "convex/values";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import * as docusign from "docusign-esign";
 
+export const generateUploadUrl = action(async (ctx) => {
+  return await ctx.storage.generateUploadUrl();
+});
+
 export const createNewProject = action({
   handler: async (ctx) => {
     const newProject: any = await ctx.runMutation(internal.dbOps.createNewProject);
@@ -93,7 +97,7 @@ export const sendDocusignSigningEmail = action({
     const accessToken = storedDocusignData.oAuthToken.accessToken;
 
     const storageId = "kg20kf8cv8m6stc4nct8cbdbah781b38" as Id<"_storage">;
-    const docUrl = (await ctx.runAction(api.uploadedFiles.generateViewUrl, { storageId })) ?? "";
+    const docUrl = (await ctx.storage.getUrl(storageId));
     const docBytes = await downloadFileAsBytes(docUrl);
     const doc3b64 = Buffer.from(docBytes).toString('base64');
 
