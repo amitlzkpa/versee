@@ -156,30 +156,87 @@ export const testAction_saveAndAnalyseUploadedFile = action({
     projectId: v.id("vsProjects")
   },
   handler: async (ctx, { storedFileId, projectId }) => {
-    const newUploadedFile: any = await ctx.runMutation(internal.dbOps.createFile_ProjectSrcDoc, { storedFileId, projectId });
-    const p = await ctx.runAction(api.vsActions.analyseUploadedFile, { storedFileId, projectId });
-    console.log(p);
+    const writeData = {
+      storedFileId,
+      projectId,
+      titleStatus: "not_generated",
+      titleStatusText: "",
+      summaryStatus: "not_generated",
+      summaryText: "",
+    };
+    const newUploadedFile: any = await ctx.runMutation(internal.dbOps.createFile_ProjectSrcDoc, writeData);
+    ctx.runAction(api.vsActions.analyseUploadedFile, { uploadedFileId, storedFileId });
     return newUploadedFile;
   }
 });
 
+const generateForPDF_title = async (pdfArrayBuffer, model) => {
+  const result = await model.generateContent([
+    {
+      inlineData: {
+        data: Buffer.from(pdfArrayBuffer).toString("base64"),
+        mimeType: "application/pdf",
+      },
+    },
+    "Give a short title for this document",
+  ]);
+  const titleText = result.response.text();
+  return titleText;
+};
+
+const generateForPDF_summary = async (pdfArrayBuffer, model) => {
+  const result = await model.generateContent([
+    {
+      inlineData: {
+        data: Buffer.from(pdfArrayBuffer).toString("base64"),
+        mimeType: "application/pdf",
+      },
+    },
+    "Summarize this document in 300 words",
+  ]);
+  const summaryText = result.response.text();
+  return summaryText;
+};
+
 export const testAction_analyseUploadedFile = action({
   args: {
     storedFileId: v.string(),
-    projectId: v.id("vsProjects")
+    uploadedFileId: v.id("vsFile")
   },
-  handler: async (ctx, { storedFileId, projectId }) => {
+  handler: async (ctx, { uploadedFileId, storedFileId }) => {
     const storageId = storedFileId as Id<"_storage">;
     const fileUrl = await ctx.storage.getUrl(storageId);
 
-    const GEMINI_API_KEY = "AIzaSyCRnimTZQK20xAebLjS96efb4uDIwbtl4Y";
-    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = "Explain how AI works";
-    const result = await model.generateContent(prompt);
-    console.log(result.response.text());
+    const pdfArrayBuffer = await fetch(fileUrl).then((response) => response.arrayBuffer());
 
-    const strings = "TODO: analyse pdf";
-    return strings;
+    let uploadedFileData;
+
+    const writeData = { titleStatus: "generating" };
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateFile_ProjectSrcDoc, {
+      uploadedFileId,
+      updateDataStr: JSON.stringify(writeData)
+    });
+    const titleText = await generateForPDF_title(pdfArrayBuffer, model);
+    writeData.titleStatus = "generated";
+    writeData.titleText = titleText;
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateFile_ProjectSrcDoc, {
+      uploadedFileId,
+      updateDataStr: JSON.stringify(writeData)
+    });
+
+    writeData.summaryStatus = "generating";
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateFile_ProjectSrcDoc, {
+      uploadedFileId,
+      updateDataStr: JSON.stringify(writeData)
+    });
+    const summaryText = await generateForPDF_summary(pdfArrayBuffer, model);
+    writeData.summaryStatus = "generated";
+    writeData.summaryText = summaryText;
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateFile_ProjectSrcDoc, {
+      uploadedFileId,
+      updateDataStr: JSON.stringify(writeData)
+    });
   }
 });
