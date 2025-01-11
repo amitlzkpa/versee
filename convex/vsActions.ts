@@ -90,6 +90,41 @@ export const getDocusignAccessToken = action({
   }
 });
 
+export const getDocusignUserToken = action({
+  handler: async (ctx) => {
+    const restApi = docusign.ApiClient.RestApi;
+    const oAuth = docusign.ApiClient.OAuth;
+    const basePath = restApi.BasePath.DEMO;
+    const oAuthBasePath = oAuth.BasePath.DEMO;
+    const apiClient = new docusign.ApiClient({
+      basePath: basePath,
+      oAuthBasePath: oAuthBasePath
+    });
+
+    const scopes = [
+      oAuth.Scope.IMPERSONATION,
+      oAuth.Scope.SIGNATURE
+    ];
+    const userId = "64978c53-5769-4126-84ce-e0691954e439";
+    const expiresIn = 3600;
+
+    const res = await apiClient.requestJWTUserToken(
+      process.env.DOCUSIGN_INTEGRATION_KEY,
+      userId,
+      scopes,
+      Buffer.from(process.env.DOCUSIGN_RSA_KEY.replace(/\\n/g, '\n')),
+      expiresIn
+    );
+
+    const oAuthToken = res.body;
+    const userInfo = await apiClient.getUserInfo(oAuthToken.access_token);
+
+    const docusignDataStr = JSON.stringify({ oAuthToken, userInfo });
+    const storedData: any = await ctx.runMutation(internal.dbOps.upsertDocusignData_ForUser, { docusignDataStr });
+    return storedData;
+  }
+});
+
 export const sendDocusignSigningEmail = action({
   handler: async (ctx) => {
     const restApi = docusign.ApiClient.RestApi;
