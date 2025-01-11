@@ -1,7 +1,6 @@
 // @ts-nocheck
 "use node";
 import * as https from "https";
-// import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.js";
 import { action } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
@@ -159,7 +158,6 @@ export const testAction_saveAndAnalyseUploadedFile = action({
     const newUploadedFile: any = await ctx.runMutation(internal.dbOps.createFile_ProjectSrcDoc, { storedFileId, projectId });
     const p = await ctx.runAction(api.vsActions.analyseUploadedFile, { storedFileId, projectId });
     console.log(p);
-    console.log("foo");
     return newUploadedFile;
   }
 });
@@ -172,12 +170,7 @@ export const testAction_analyseUploadedFile = action({
   handler: async (ctx, { storedFileId, projectId }) => {
     const storageId = storedFileId as Id<"_storage">;
     const fileUrl = await ctx.storage.getUrl(storageId);
-    // const doc = await pdfjsLib.getDocument(filePath).promise;
-    // const page = await doc.getPage(1);
-    // const content = await page.getTextContent();
-    // const strings = content.items.map((it) => it.str);
-    const strings = "pdfjs not working on convex";
-    console.log(strings);
+    const strings = "TODO: analyse pdf";
     return strings;
   }
 });
