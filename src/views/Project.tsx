@@ -7,12 +7,13 @@ import { FaFileDownload, FaFileImport, FaMinusCircle, FaTrash } from 'react-icon
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { Id } from '../../convex/_generated/dataModel';
 
 export default function Project() {
   // PROJECT
   const { projectId } = useParams();
 
-  const currProject = useQuery(api.dbOps.getProject_ByProjectId, projectId ? { projectId } : "skip");
+  const currProject = useQuery(api.dbOps.getProject_ByProjectId, projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip");
 
   // FILE UPLOAD
 
@@ -26,7 +27,7 @@ export default function Project() {
 
   const performAction_generateUploadUrl = useAction(api.uploadedFiles.generateUploadUrl);
 
-  const curProjectSrcDocs = useQuery(api.dbOps.getAllSrcDocs_ForProject, projectId ? { projectId } : "skip");
+  const curProjectSrcDocs = useQuery(api.dbOps.getAllSrcDocs_ForProject, projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip");
 
   const openRef = useRef<() => void>(null);
 

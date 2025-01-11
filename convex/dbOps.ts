@@ -60,12 +60,11 @@ export const getAllProjects_ForCurrUser = query({
 
 export const getProject_ByProjectId = query({
   args: {
-    projectId: v.optional(v.string())
+    projectId: v.optional(v.id("vsProjects"))
   },
   handler: async (ctx, { projectId }) => {
     if (!projectId) return null;
-    const dbId = projectId as Id<"vsProjects">;
-    const project = await ctx.db.get(dbId);
+    const project = await ctx.db.get(projectId);
     return project;
   }
 });
@@ -84,7 +83,7 @@ export const createNewProject = internalMutation({
 
 export const getAllSrcDocs_ForProject = query({
   args: {
-    projectId: v.optional(v.string())
+    projectId: v.optional(v.id("vsProjects"))
   },
   handler: async (ctx, { projectId }) => {
     if (!projectId) return [];
@@ -113,9 +112,10 @@ export const getAllSrcDocs_ForProject = query({
 
 export const getSrcDoc_BySrcDocId = query({
   args: {
-    srcDocId: v.id("vsSrcDoc"),
+    srcDocId: v.optional(v.id("vsSrcDoc")),
   },
   handler: async (ctx, { srcDocId }) => {
+    if (!srcDocId) return null;
     const srcDoc = await ctx.db.get(srcDocId);
     return srcDoc;
   }
