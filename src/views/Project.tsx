@@ -21,9 +21,9 @@ export default function Project() {
 
   const [isUploading, setIsUploading] = useState(false);
 
-  const performAction_createUploadedSrcDoc = useAction(api.vsActions.createUploadedSrcDoc);
+  const performAction_createNewSrcDoc = useAction(api.vsActions.createNewSrcDoc);
 
-  const performAction_analyseUploadedSrcDoc = useAction(api.vsActions.analyseUploadedSrcDoc);
+  const performAction_analyseSrcDoc = useAction(api.vsActions.analyseSrcDoc);
 
   const performAction_generateUploadUrl = useAction(api.vsActions.generateUploadUrl);
 
@@ -52,7 +52,7 @@ export default function Project() {
             });
             const uploadedCvxFile = await result.json();
             const cvxStoredFileId = uploadedCvxFile.storageId;
-            const newSrcDocId = await performAction_createUploadedSrcDoc({ projectId: currProject._id, cvxStoredFileId })
+            const newSrcDocId = await performAction_createNewSrcDoc({ projectId: currProject._id, cvxStoredFileId })
             return resolve(newSrcDocId);
           } catch (err) {
             return reject(err);
@@ -220,7 +220,7 @@ export default function Project() {
                       </Button>
                       <Button
                         onClick={() => {
-                          performAction_analyseUploadedSrcDoc({
+                          performAction_analyseSrcDoc({
                             srcDocId: srcDoc._id
                           });
                         }}

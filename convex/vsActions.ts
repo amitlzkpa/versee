@@ -154,7 +154,7 @@ export const sendDocusignSigningEmail = action({
   },
 });
 
-export const createUploadedSrcDoc = action({
+export const createNewSrcDoc = action({
   args: {
     cvxStoredFileId: v.string(),
     projectId: v.string()
@@ -167,7 +167,7 @@ export const createUploadedSrcDoc = action({
       projectId: _projectId
     };
     const newSrcDocId: any = await ctx.runMutation(internal.dbOps.createNewSrcDoc, writeData);
-    ctx.runAction(api.vsActions.analyseUploadedSrcDoc, { srcDocId: newSrcDocId });
+    ctx.runAction(api.vsActions.analyseSrcDoc, { srcDocId: newSrcDocId });
     return newSrcDocId;
   }
 });
@@ -200,7 +200,7 @@ const generateForPDF_summary = async (pdfArrayBuffer, model) => {
   return summaryText;
 };
 
-export const analyseUploadedSrcDoc = action({
+export const analyseSrcDoc = action({
   args: {
     srcDocId: v.id("vsSrcDoc")
   },
