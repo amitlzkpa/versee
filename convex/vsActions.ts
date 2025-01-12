@@ -71,7 +71,7 @@ async function getAccessToken(ctx, storedDocusignData) {
       process.env.DOCUSIGN_INTEGRATION_KEY,
       userId,
       scopes,
-      Buffer.from(process.env.DOCUSIGN_RSA_KEY.replace(/\\n/g, '\n')),
+      Buffer.from(process.env.DOCUSIGN_RSA_PRV_KEY.replace(/\\n/g, '\n')),
       expiresIn
     );
 
@@ -164,7 +164,7 @@ export const retrieveDocusignUserToken = action({
       process.env.DOCUSIGN_INTEGRATION_KEY,
       userId,
       scopes,
-      Buffer.from(process.env.DOCUSIGN_RSA_KEY.replace(/\\n/g, '\n')),
+      Buffer.from(process.env.DOCUSIGN_RSA_PRV_KEY.replace(/\\n/g, '\n')),
       expiresIn
     );
 
