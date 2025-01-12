@@ -25,6 +25,8 @@ export default function Project() {
 
   const performAction_analyseSrcDoc = useAction(api.vsActions.analyseSrcDoc);
 
+  const performAction_sendDocusignSigningEmail = useAction(api.vsActions.sendDocusignSigningEmail);
+
   const performAction_generateUploadUrl = useAction(api.vsActions.generateUploadUrl);
 
   const curProjectSrcDocs = useQuery(api.dbOps.getAllSrcDocs_ForProject, projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip");
@@ -230,6 +232,17 @@ export default function Project() {
                         size="lg"
                       >
                         Analyse
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          performAction_sendDocusignSigningEmail({
+                            srcDocId: srcDoc._id
+                          });
+                        }}
+                        w="100%"
+                        size="lg"
+                      >
+                        Send
                       </Button>
                     </Flex>
                   </Card>

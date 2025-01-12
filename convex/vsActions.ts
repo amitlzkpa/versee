@@ -135,7 +135,10 @@ export const getDocusignUserToken = action({
 });
 
 export const sendDocusignSigningEmail = action({
-  handler: async (ctx) => {
+  args: {
+    srcDocId: v.id("vsSrcDoc")
+  },
+  handler: async (ctx, { srcDocId }) => {
     const restApi = docusign.ApiClient.RestApi;
     const oAuth = docusign.ApiClient.OAuth;
     const basePath = restApi.BasePath.DEMO;
@@ -147,19 +150,21 @@ export const sendDocusignSigningEmail = action({
 
     const storedDocusignData = await ctx.runQuery(api.dbOps.getDocusignData_ForCurrUser);
     const accountId = storedDocusignData.userInfo.accounts[0].accountId;
-    const accessToken = storedDocusignData.oAuthToken.accessToken;
+    const accessToken = storedDocusignData.accessTokenObj.accessToken;
 
-    const storageId = "kg20kf8cv8m6stc4nct8cbdbah781b38" as Id<"_storage">;
-    const docUrl = (await ctx.storage.getUrl(storageId));
-    const docBytes = await downloadFileAsBytes(docUrl);
+    const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
+      srcDocId
+    });
+    const fileUrl = await ctx.storage.getUrl(srcDoc.cvxStoredFileId);
+    const docBytes = await downloadFileAsBytes(fileUrl);
     const doc3b64 = Buffer.from(docBytes).toString('base64');
 
     dsApiClient.addDefaultHeader('Authorization', 'Bearer ' + accessToken);
     const envelopesApi = new docusign.EnvelopesApi(dsApiClient);
 
     const envDef = new docusign.EnvelopeDefinition();
-    envDef.emailSubject = 'Please Sign my Node SDK Envelope';
-    envDef.emailBlurb = 'Hello, Please sign my Node SDK Envelope.';
+    envDef.emailSubject = `Please Sign: ${srcDoc.titleText}`;
+    envDef.emailBlurb = srcDoc.summaryText;
 
     // add a document to the envelope
     const doc = new docusign.Document();
