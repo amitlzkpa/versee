@@ -46,7 +46,7 @@ export default function OauthCallback_Docusign() {
             <></>
         }
         {
-          !(docusignData_ForCurrUser?.userTokenObj)
+          ((docusignData_ForCurrUser?.accessTokenObj) && !(docusignData_ForCurrUser?.userTokenObj))
             ?
             <>
               <Button
