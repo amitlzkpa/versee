@@ -7,6 +7,7 @@ import { Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
+// import jwt from "jsonwebtoken";
 import * as docusign from "docusign-esign";
 
 // UTILS
@@ -42,6 +43,26 @@ async function downloadFileAsBytes(url: string): Promise<Buffer> {
     });
   });
 }
+
+// https://developers.docusign.com/platform/auth/jwt/jwt-get-token/
+// function createJWT(integrationKey, userId, privateKey, publicKey) {
+//   const header = {
+//     alg: "RS256",
+//     typ: "JWT"
+//   };
+
+//   const currentTime = Math.floor(Date.now() / 1000);
+//   const body = {
+//     iss: integrationKey,
+//     sub: userId,
+//     aud: "account-d.docusign.com",
+//     iat: currentTime,
+//     exp: currentTime + 6000,
+//     scope: "signature impersonation"
+//   };
+
+//   return jwt.sign(body, privateKey, { algorithm: "RS256", header });
+// };
 
 async function getAccessToken(ctx, storedDocusignData) {
   let userTokenObj = storedDocusignData.userTokenObj;
