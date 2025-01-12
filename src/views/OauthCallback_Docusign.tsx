@@ -10,19 +10,19 @@ export default function OauthCallback_Docusign() {
 
   const location = useLocation();
 
-  const performAction_getDocusignAccessToken = useAction(api.vsActions.getDocusignAccessToken);
+  const performAction_retrieveDocusignAccessToken = useAction(api.vsActions.retrieveDocusignAccessToken);
 
-  const onClickTest_getDocusignAccessToken = async () => {
+  const onClickTest_retrieveDocusignAccessToken = async () => {
     const queryParams = new URLSearchParams(location.search);
     const code = queryParams.get("code");
-    const savedRecord = await performAction_getDocusignAccessToken({ authCode: code ?? "" });
+    const savedRecord = await performAction_retrieveDocusignAccessToken({ authCode: code ?? "" });
     console.log(savedRecord);
   };
 
-  const performAction_getDocusignUserToken = useAction(api.vsActions.getDocusignUserToken);
+  const performAction_retrieveDocusignUserToken = useAction(api.vsActions.retrieveDocusignUserToken);
 
-  const onClickTest_getDocusignUserToken = async () => {
-    const savedRecord = await performAction_getDocusignUserToken();
+  const onClickTest_retrieveDocusignUserToken = async () => {
+    const savedRecord = await performAction_retrieveDocusignUserToken();
     console.log(savedRecord);
   };
 
@@ -35,7 +35,7 @@ export default function OauthCallback_Docusign() {
             ?
             <>
               <Button
-                onClick={onClickTest_getDocusignAccessToken}
+                onClick={onClickTest_retrieveDocusignAccessToken}
                 w="100%"
                 size="lg"
               >
@@ -50,7 +50,7 @@ export default function OauthCallback_Docusign() {
             ?
             <>
               <Button
-                onClick={onClickTest_getDocusignUserToken}
+                onClick={onClickTest_retrieveDocusignUserToken}
                 w="100%"
                 size="lg"
               >

@@ -70,7 +70,7 @@ export const startDocusignOAuth = action({
   }
 });
 
-export const getDocusignAccessToken = action({
+export const retrieveDocusignAccessToken = action({
   args: {
     authCode: v.string(),
   },
@@ -97,7 +97,7 @@ export const getDocusignAccessToken = action({
   }
 });
 
-export const getDocusignUserToken = action({
+export const retrieveDocusignUserToken = action({
   handler: async (ctx) => {
     const storedDocusignData = await ctx.runQuery(api.dbOps.getDocusignData_ForCurrUser);
 
