@@ -90,6 +90,7 @@ export const retrieveDocusignAccessToken = action({
       process.env.DOCUSIGN_CLIENT_SECRET,
       code
     );
+    accessTokenObj.issuedAt = new Date().toISOString();
     const userInfo = await apiClient.getUserInfo(accessTokenObj.accessToken);
     const docusignDataStr = JSON.stringify({ accessTokenObj, userInfo });
     const storedData: any = await ctx.runMutation(internal.dbOps.upsertDocusignData_ForUser, { docusignDataStr });
@@ -126,6 +127,7 @@ export const retrieveDocusignUserToken = action({
     );
 
     const userTokenObj = res.body;
+    userTokenObj.issuedAt = new Date().toISOString();
     const userInfo = await apiClient.getUserInfo(userTokenObj.access_token);
 
     const docusignDataStr = JSON.stringify({ userTokenObj, userInfo });
