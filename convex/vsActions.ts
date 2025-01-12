@@ -150,7 +150,7 @@ export const sendDocusignSigningEmail = action({
 
     const storedDocusignData = await ctx.runQuery(api.dbOps.getDocusignData_ForCurrUser);
     const accountId = storedDocusignData.userInfo.accounts[0].accountId;
-    const accessToken = storedDocusignData.accessTokenObj.accessToken;
+    const accessToken = storedDocusignData.userTokenObj.access_token;
 
     const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
       srcDocId
