@@ -51,6 +51,7 @@ export default function OauthCallback_Docusign() {
             <>
               <Button
                 onClick={onClickTest_retrieveDocusignUserToken}
+                variant="outline"
                 w="100%"
                 size="lg"
               >

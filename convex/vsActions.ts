@@ -43,6 +43,48 @@ async function downloadFileAsBytes(url: string): Promise<Buffer> {
   });
 }
 
+async function getAccessToken(ctx, storedDocusignData) {
+  let userTokenObj = storedDocusignData.userTokenObj;
+  const issuedAt = userTokenObj.issuedAt;
+  const tokenDurationInSecs = parseInt(userTokenObj.expires_in);
+  const expirtyTs = new Date(new Date(issuedAt).getTime() + (tokenDurationInSecs - (10 * 60)) * 1000);
+  const tokenNeedsRefresh = new Date(expirtyTs).getTime() < new Date().getTime();
+  if (tokenNeedsRefresh) {
+    const restApi = docusign.ApiClient.RestApi;
+    const oAuth = docusign.ApiClient.OAuth;
+    const basePath = restApi.BasePath.DEMO;
+    const oAuthBasePath = oAuth.BasePath.DEMO;
+    const apiClient = new docusign.ApiClient({
+      basePath: basePath,
+      oAuthBasePath: oAuthBasePath
+    });
+    apiClient.addDefaultHeader('Authorization', 'Bearer ' + userTokenObj.access_token);
+
+    const scopes = [
+      oAuth.Scope.IMPERSONATION,
+      oAuth.Scope.SIGNATURE
+    ];
+    const userId = storedDocusignData.userInfo.sub;
+    const expiresIn = 60 * 60;
+
+    const res = await apiClient.requestJWTUserToken(
+      process.env.DOCUSIGN_INTEGRATION_KEY,
+      userId,
+      scopes,
+      Buffer.from(process.env.DOCUSIGN_RSA_KEY.replace(/\\n/g, '\n')),
+      expiresIn
+    );
+
+    userTokenObj = res.body;
+    userTokenObj.issuedAt = new Date().toISOString();
+
+    const userInfo = await apiClient.getUserInfo(userTokenObj.access_token);
+    const docusignDataStr = JSON.stringify({ userTokenObj, userInfo });
+    const storedData: any = await ctx.runMutation(internal.dbOps.upsertDocusignData_ForUser, { docusignDataStr });
+  }
+  return userTokenObj;
+}
+
 export const startDocusignOAuth = action({
   handler: async (ctx) => {
     const restApi = docusign.ApiClient.RestApi;
@@ -152,7 +194,9 @@ export const sendDocusignSigningEmail = action({
 
     const storedDocusignData = await ctx.runQuery(api.dbOps.getDocusignData_ForCurrUser);
     const accountId = storedDocusignData.userInfo.accounts[0].accountId;
-    const accessToken = storedDocusignData.userTokenObj.access_token;
+
+    const userTokenObj = await getAccessToken(ctx, storedDocusignData);
+    const accessToken = userTokenObj.access_token;
 
     const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
       srcDocId
