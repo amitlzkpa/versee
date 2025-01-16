@@ -19,8 +19,6 @@ export default function FileUploader({ projectId = null }: any) {
 
   const performAction_generateUploadUrl = useAction(api.vsActions.generateUploadUrl);
 
-
-
   const addToDroppedFiles = (files: any) => {
     setDroppedFiles(prev => [...prev, ...files]);
   };
@@ -137,6 +135,7 @@ export default function FileUploader({ projectId = null }: any) {
                   :
                   (
                     <Flex
+                      w="100%"
                       direction="column"
                       justify="center"
                       align="center"
