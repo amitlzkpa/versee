@@ -82,6 +82,20 @@ export default function Project() {
 
         <Divider w="100%" />
 
+        <Flex direction="column">
+          <Text size="md" fw="bold">
+            Upload Agreement
+          </Text>
+        </Flex>
+
+        <Divider w="100%" />
+
+        <Flex direction="column">
+          <Text size="md" fw="bold">
+            Upload Project Files
+          </Text>
+        </Flex>
+
         <Dropzone
           openRef={openRef}
           activateOnClick={false}
@@ -196,8 +210,13 @@ export default function Project() {
 
         <Divider w="100%" />
 
+        <Flex direction="column">
+          <Text size="md" fw="bold">
+            Existing Project Files
+          </Text>
+        </Flex>
+
         <Flex w="100%" direction="column" align="center" gap="xs">
-          <Text fz="md" fw="bold">Project Files</Text>
           {
             (curProjectSrcDocs ?? [])
               .map((srcDoc: any) => {
