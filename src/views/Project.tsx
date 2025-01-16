@@ -18,17 +18,17 @@ export default function Project() {
 
   // FILE UPLOAD
 
-  const performAction_analyseSrcDoc = useAction(api.vsActions.analyseSrcDoc);
+  const performAction_generateUploadUrl = useAction(api.vsActions.generateUploadUrl);
 
   const performAction_sendDocusignSigningEmail = useAction(api.vsActions.sendDocusignSigningEmail);
+
+  // SRCDOC
 
   const curProjectSrcDocs = useQuery(api.dbOps.getAllSrcDocs_ForProject, projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip");
 
   const performAction_createNewSrcDoc = useAction(api.vsActions.createNewSrcDoc);
 
-  const performAction_createNewPrjFile = useAction(api.vsActions.createNewPrjFile);
-
-  const performAction_generateUploadUrl = useAction(api.vsActions.generateUploadUrl);
+  const performAction_analyseSrcDoc = useAction(api.vsActions.analyseSrcDoc);
 
   const onClick_uploadFiles_SrcDoc = async (droppedFiles: any) => {
     const ps = droppedFiles.map((file: any) => new Promise((resolve, reject) => {
@@ -53,6 +53,10 @@ export default function Project() {
 
     const srcDocIds = (await Promise.allSettled(ps)).filter(r => r.status === "fulfilled").map(r => r.value);
   };
+
+  // PRJFILE
+
+  const performAction_createNewPrjFile = useAction(api.vsActions.createNewPrjFile);
 
   const onClick_uploadFiles_PrjFiles = async (droppedFiles: any) => {
     const ps = droppedFiles.map((file: any) => new Promise((resolve, reject) => {
