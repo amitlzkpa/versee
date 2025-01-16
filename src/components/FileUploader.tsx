@@ -6,7 +6,8 @@ import { FaFileDownload, FaFileImport, FaMinusCircle, FaTrash } from 'react-icon
 
 export default function FileUploader({
   projectId = null,
-  onClick_uploadFiles = (droppedFiles: any[]) => { }
+  onClick_uploadFiles = (droppedFiles: any[]) => { },
+  allowMultiple = true
 }: any) {
 
   const openRef = useRef<() => void>(null);
@@ -16,7 +17,11 @@ export default function FileUploader({
   const [isUploading, setIsUploading] = useState(false);
 
   const addToDroppedFiles = (files: any) => {
-    setDroppedFiles(prev => [...prev, ...files]);
+    if (allowMultiple) {
+      setDroppedFiles(prev => [...prev, ...files]);
+    } else {
+      setDroppedFiles(files);
+    }
   };
 
   const removeFromDroppedFiles = (file: any) => {
@@ -39,6 +44,9 @@ export default function FileUploader({
   return (
     <>
       <Dropzone
+        w="100%"
+        h="100%"
+        multiple={allowMultiple}
         openRef={openRef}
         activateOnClick={false}
         loading={isUploading}
@@ -92,7 +100,9 @@ export default function FileUploader({
                   ?
                   (
                     <Flex w="100%" direction="column" align="center" gap="sm">
-                      <Text fz="md" fw="bold">Selected Files</Text>
+                      <Text fz="md" fw="bold">
+                        {droppedFiles.length > 1 ? "Selected Files" : "Selected File"}
+                      </Text>
                       <Flex w="100%" direction="column" gap="xs" style={{ overflowY: "auto", pointerEvents: "auto" }}>
                         {droppedFiles.map((f, i) =>
                         (
@@ -119,6 +129,7 @@ export default function FileUploader({
                   (
                     <Flex
                       w="100%"
+                      h="100%"
                       direction="column"
                       justify="center"
                       align="center"
@@ -129,10 +140,22 @@ export default function FileUploader({
                         style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-dimmed)' }}
                       />
                       <Text size="xl" inline>
-                        Drag files here or click to select files
+                        {
+                          allowMultiple
+                            ?
+                            "Drag files here or click to select files"
+                            :
+                            "Drag your file here or click to select"
+                        }
                       </Text>
                       <Text size="sm" c="dimmed" inline>
-                        Attach as many files as you like
+                        {
+                          allowMultiple
+                            ?
+                            "Attach as many files as you like"
+                            :
+                            "Select 1 file"
+                        }
                       </Text>
                     </Flex>
                   )
@@ -148,7 +171,7 @@ export default function FileUploader({
         size="lg"
         disabled={!projectId && droppedFiles.length < 1}
       >
-        Upload Files
+        Upload
       </Button>
     </>
   );
