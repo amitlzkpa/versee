@@ -1,9 +1,6 @@
 import { useRef, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { Accordion, Button, Card, Divider, Flex, Text, rem } from '@mantine/core';
-import { Dropzone } from '@mantine/dropzone';
-
-import { FaFileDownload, FaFileImport, FaMinusCircle, FaTrash } from 'react-icons/fa';
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
