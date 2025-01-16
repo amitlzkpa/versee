@@ -26,6 +26,8 @@ export default function Project() {
 
   const performAction_createNewSrcDoc = useAction(api.vsActions.createNewSrcDoc);
 
+  const performAction_createNewPrjFile = useAction(api.vsActions.createNewPrjFile);
+
   const performAction_generateUploadUrl = useAction(api.vsActions.generateUploadUrl);
 
   const onClick_uploadFiles_SrcDoc = async (droppedFiles: any) => {
@@ -40,7 +42,7 @@ export default function Project() {
             const uploadedCvxFile = await result.json();
             const cvxStoredFileId = uploadedCvxFile.storageId;
             const newSrcDocId = await performAction_createNewSrcDoc({
-              projectId: currProject._id, cvxStoredFileId
+              projectId: currProject?._id, cvxStoredFileId
             })
             return resolve(newSrcDocId);
           } catch (err) {
@@ -50,6 +52,30 @@ export default function Project() {
     }));
 
     const srcDocIds = (await Promise.allSettled(ps)).filter(r => r.status === "fulfilled").map(r => r.value);
+  };
+
+  const onClick_uploadFiles_PrjFiles = async (droppedFiles: any) => {
+    const ps = droppedFiles.map((file: any) => new Promise((resolve, reject) => {
+      performAction_generateUploadUrl()
+        .then(async (uploadUrl) => {
+          try {
+            const result = await fetch(uploadUrl, {
+              method: "POST",
+              body: file,
+            });
+            const uploadedCvxFile = await result.json();
+            const cvxStoredFileId = uploadedCvxFile.storageId;
+            const newPrjFileId = await performAction_createNewPrjFile({
+              projectId: currProject?._id, cvxStoredFileId
+            })
+            return resolve(newPrjFileId);
+          } catch (err) {
+            return reject(err);
+          }
+        });
+    }));
+
+    const newPrjFileIds = (await Promise.allSettled(ps)).filter(r => r.status === "fulfilled").map(r => r.value);
   };
 
   return (
@@ -74,7 +100,7 @@ export default function Project() {
         </Flex>
 
         <FileUploader
-          projectId={currProject._id}
+          projectId={currProject?._id}
           onClick_uploadFiles={onClick_uploadFiles_SrcDoc}
         />
 
@@ -143,7 +169,10 @@ export default function Project() {
           </Text>
         </Flex>
 
-        {/* UPLOAD FILE */}
+        <FileUploader
+          projectId={currProject?._id}
+          onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
+        />
       </Flex>
     </Flex>
   );

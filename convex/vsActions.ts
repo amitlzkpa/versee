@@ -370,3 +370,23 @@ export const analyseSrcDoc = action({
     });
   }
 });
+
+// PRJFILE
+
+export const createNewPrjFile = action({
+  args: {
+    cvxStoredFileId: v.string(),
+    projectId: v.string()
+  },
+  handler: async (ctx, { cvxStoredFileId, projectId }) => {
+    const _cvxStoredFileId = cvxStoredFileId as Id<"_storage">;
+    const _projectId = projectId as Id<"vsProjects">;
+    const writeData = {
+      cvxStoredFileId: _cvxStoredFileId,
+      projectId: _projectId
+    };
+    const newPrjFileId: any = await ctx.runMutation(internal.dbOps.createNewPrjFile, writeData);
+    // ctx.runAction(api.vsActions.analyseSrcDoc, { prjFileId: newPrjFileId });
+    return newPrjFileId;
+  }
+});
