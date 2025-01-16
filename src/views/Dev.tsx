@@ -45,6 +45,10 @@ export default function Dev() {
     const srcDocIds = (await Promise.allSettled(ps)).filter(r => r.status === "fulfilled").map(r => r.value);
   };
 
+  const onClick_openSenderView = async () => {
+    console.log("foo");
+  };
+
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
       <AuthLoading>
@@ -90,6 +94,13 @@ export default function Dev() {
                     style={{ width: "100%", height: "100%", minHeight: "400px" }}
                     src={curProjectSrcDocs![0]!.fileUrl}
                   />
+                  <Button
+                    variant="outline"
+                    onClick={onClick_openSenderView}
+                    size="lg"
+                  >
+                    Configure
+                  </Button>
                 </Flex>
               </>
           }
