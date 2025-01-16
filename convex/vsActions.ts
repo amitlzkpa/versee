@@ -279,6 +279,112 @@ export const sendDocusignSigningEmail = action({
   },
 });
 
+export const openDocusignSenderView = action({
+  args: {
+    srcDocId: v.id("vsSrcDoc"),
+    returnUrl: v.string(),
+  },
+  handler: async (ctx, { srcDocId, returnUrl }) => {
+    const restApi = docusign.ApiClient.RestApi;
+    const oAuth = docusign.ApiClient.OAuth;
+    const basePath = restApi.BasePath.DEMO;
+    const oAuthBasePath = oAuth.BasePath.DEMO;
+    const dsApiClient = new docusign.ApiClient({
+      basePath: basePath,
+      oAuthBasePath: oAuthBasePath
+    });
+
+    const storedDocusignData = await ctx.runQuery(api.dbOps.getDocusignData_ForCurrUser);
+    const accountId = storedDocusignData.userInfo.accounts[0].accountId;
+
+    const userTokenObj = await getAccessToken(ctx, storedDocusignData);
+    const accessToken = userTokenObj.access_token;
+
+    const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
+      srcDocId
+    });
+
+    console.log("================srcDoc================");
+    console.log(srcDoc);
+
+    const fileUrl = await ctx.storage.getUrl(srcDoc.cvxStoredFileId);
+    const docBytes = await downloadFileAsBytes(fileUrl);
+    const doc3b64 = Buffer.from(docBytes).toString('base64');
+
+    dsApiClient.addDefaultHeader('Authorization', 'Bearer ' + accessToken);
+    const envelopesApi = new docusign.EnvelopesApi(dsApiClient);
+
+    const envDef = new docusign.EnvelopeDefinition();
+    envDef.emailSubject = `Please Sign: ${srcDoc.titleText}`;
+    envDef.emailBlurb = srcDoc.summaryText;
+
+    // add a document to the envelope
+    const doc = new docusign.Document();
+    const base64Doc = doc3b64;
+    doc.documentBase64 = base64Doc;
+    doc.name = 'TestFile.pdf';
+    doc.documentId = '1';
+
+    const docs = [];
+    docs.push(doc);
+    envDef.documents = docs;
+
+    // Add a recipient to sign the document
+    const signer = new docusign.Signer();
+    signer.email = "amit.lzkpa@gmail.com";
+    signer.name = 'Amit N';
+    signer.recipientId = '1';
+
+    // Above causes issue
+    envDef.recipients = new docusign.Recipients();
+    envDef.recipients.signers = [];
+    envDef.recipients.signers.push(signer);
+
+    envDef.status = 'created';
+
+    const envelopeSummary = await envelopesApi.createEnvelope(accountId, { envelopeDefinition: envDef });
+
+    console.log("================envelopeSummary================");
+    console.log(envelopeSummary);
+
+    const envelopeId = envelopeSummary.envelopeId;
+
+    const viewRequest = new docusign.EnvelopeViewRequest();
+    viewRequest.returnUrl = returnUrl;
+    viewRequest.viewAccess = "envelope";
+    // EnvelopeViewSettings
+    viewRequest.settings = {
+      startingScreen: "Tagger",
+      showBackButton: false,
+      showHeaderActions: false,
+      showDiscardAction: false,
+    };
+    // EnvelopeViewRecipientSettings
+    viewRequest.recipientSettings = {
+      showContactsList: false,
+      showEditRecipients: false,
+    };
+    // EnvelopeViewDocumentSettings
+    viewRequest.documentSettings = {
+      showEditDocuments: false,
+      showEditDocumentVisibility: false,
+      showEditPages: false,
+    };
+
+    console.log("================viewRequest================");
+    console.log(viewRequest);
+
+    const viewRequestResults = await envelopesApi.createSenderView(accountId, envelopeId, {
+      envelopeViewRequest: viewRequest,
+    });
+
+    console.log("================viewRequestResults================");
+    console.log(viewRequestResults);
+
+    return viewRequestResults.url;
+  },
+});
+
 // SRCDOCS
 
 const generateForPDF_title = async (pdfArrayBuffer, model) => {

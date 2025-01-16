@@ -9,7 +9,7 @@ import { api } from "../../convex/_generated/api";
 export default function Dev() {
 
   // const projectId = "jd7cj5q3yk8zt1kpjtz54h7zt5786v79";
-  const projectId = "jd7ev21cmw62ezxfx58bjfwmfn78h8kx";
+  const projectId = "jd77gfkk4k57yb70vcxn92d10178hv8b";
 
   const currProject = useQuery(api.dbOps.getProject_ByProjectId, projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip");
 
@@ -45,8 +45,20 @@ export default function Dev() {
     const srcDocIds = (await Promise.allSettled(ps)).filter(r => r.status === "fulfilled").map(r => r.value);
   };
 
+  // SENDER VIEW
+
+  const performAction_openDocusignSenderView = useAction(api.vsActions.openDocusignSenderView);
+
   const onClick_openSenderView = async () => {
-    console.log("foo");
+    const viewRequestUrl = await performAction_openDocusignSenderView({
+      srcDocId: curProjectSrcDocs![0]!._id,
+      returnUrl: `${window.location.origin}/completed-sending`
+    });
+
+    const taggingIframe = document.getElementById("tagging-iframe-target");
+    taggingIframe!.setAttribute("src", viewRequestUrl!);
+    taggingIframe!.style.visibility = "visible";
+
   };
 
   return (
@@ -101,6 +113,11 @@ export default function Dev() {
                   >
                     Configure
                   </Button>
+                  <iframe
+                    style={{ width: "100%", minHeight: 400, height: "100%", visibility: "hidden" }}
+                    src=""
+                    id="tagging-iframe-target"
+                  />
                 </Flex>
               </>
           }
