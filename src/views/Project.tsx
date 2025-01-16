@@ -56,6 +56,8 @@ export default function Project() {
 
   // PRJFILE
 
+  const curProjectPrjFiles = useQuery(api.dbOps.getAllPrjFiles_ForProject, projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip");
+
   const performAction_createNewPrjFile = useAction(api.vsActions.createNewPrjFile);
 
   const onClick_uploadFiles_PrjFiles = async (droppedFiles: any) => {
@@ -177,6 +179,37 @@ export default function Project() {
           projectId={currProject?._id}
           onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
         />
+
+        <Flex w="100%" direction="column" align="center" gap="xs">
+          {
+            (curProjectPrjFiles ?? [])
+              .map((prjFile: any) => {
+                return (
+                  <Card
+                    key={prjFile._id}
+                    w="100%"
+                    withBorder
+                    radius="xl"
+                  >
+                    <Flex direction="column" align="stretch" gap="sm">
+                      <Text fz="sm">{prjFile._id}</Text>
+
+                      <Button
+                        component="a"
+                        variant="outline"
+                        href={prjFile.fileUrl}
+                        target="_blank"
+                        w="100%"
+                        size="lg"
+                      >
+                        Open
+                      </Button>
+                    </Flex>
+                  </Card>
+                );
+              })
+          }
+        </Flex>
       </Flex>
     </Flex>
   );

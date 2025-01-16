@@ -156,6 +156,35 @@ export const updateSrcDoc = internalMutation({
 
 // PRJFILE
 
+export const getAllPrjFiles_ForProject = query({
+  args: {
+    projectId: v.optional(v.id("vsProjects"))
+  },
+  handler: async (ctx, { projectId }) => {
+    if (!projectId) return [];
+    const dbRecs = await ctx.db
+      .query("vsPrjFile")
+      .filter((q) => q.eq(q.field("projectId"), projectId))
+      .order("desc")
+      .collect();
+    const ps = dbRecs.map((dbRec) => new Promise((resolve, reject) => {
+      const storageId = dbRec.cvxStoredFileId as Id<"_storage">;
+      ctx.storage.getUrl(storageId)
+        .then((fileUrl) => {
+          resolve({
+            ...dbRec,
+            fileUrl
+          });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    }));
+    const projectPrjFiles = (await Promise.allSettled(ps)).filter(p => p.status === "fulfilled").map(p => p.value);
+    return projectPrjFiles;
+  }
+});
+
 export const createNewPrjFile = internalMutation({
   args: {
     cvxStoredFileId: v.id("_storage"),
