@@ -153,3 +153,20 @@ export const updateSrcDoc = internalMutation({
     return updatedSrcDocId;
   }
 });
+
+// PRJFILE
+
+export const createNewPrjFile = internalMutation({
+  args: {
+    cvxStoredFileId: v.id("_storage"),
+    projectId: v.id("vsProjects")
+  },
+  handler: async (ctx, { cvxStoredFileId, projectId }) => {
+    const prjFileData = {
+      cvxStoredFileId,
+      projectId,
+    };
+    const newPrjFileId = await ctx.db.insert("vsPrjFile", prjFileData);
+    return newPrjFileId;
+  }
+});
