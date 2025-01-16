@@ -4,9 +4,6 @@ import { Dropzone } from '@mantine/dropzone';
 
 import { FaFileDownload, FaFileImport, FaMinusCircle, FaTrash } from 'react-icons/fa';
 
-import { useAction } from "convex/react";
-import { api } from "../../convex/_generated/api";
-
 export default function FileUploader({
   projectId = null,
   onClick_uploadFiles = (droppedFiles: any[]) => { }
@@ -26,7 +23,7 @@ export default function FileUploader({
     setDroppedFiles(droppedFiles.filter((f) => f !== file));
   };
 
-  const onClick_uploadDroppedFilesToSrcDocs = async () => {
+  const onClick_uploadBtn = async () => {
     setIsUploading(true);
 
     try {
@@ -132,7 +129,7 @@ export default function FileUploader({
                         style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-dimmed)' }}
                       />
                       <Text size="xl" inline>
-                        Drag images here or click to select files
+                        Drag files here or click to select files
                       </Text>
                       <Text size="sm" c="dimmed" inline>
                         Attach as many files as you like
@@ -146,7 +143,7 @@ export default function FileUploader({
       </Dropzone>
 
       <Button
-        onClick={onClick_uploadDroppedFilesToSrcDocs}
+        onClick={onClick_uploadBtn}
         w="100%"
         size="lg"
         disabled={!projectId && droppedFiles.length < 1}
