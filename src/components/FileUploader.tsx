@@ -7,17 +7,16 @@ import { FaFileDownload, FaFileImport, FaMinusCircle, FaTrash } from 'react-icon
 import { useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
-export default function FileUploader({ projectId = null }: any) {
+export default function FileUploader({
+  projectId = null,
+  onClick_uploadFiles = (droppedFiles: any[]) => { }
+}: any) {
 
   const openRef = useRef<() => void>(null);
 
   const [droppedFiles, setDroppedFiles] = useState<any[]>([]);
 
   const [isUploading, setIsUploading] = useState(false);
-
-  const performAction_createNewSrcDoc = useAction(api.vsActions.createNewSrcDoc);
-
-  const performAction_generateUploadUrl = useAction(api.vsActions.generateUploadUrl);
 
   const addToDroppedFiles = (files: any) => {
     setDroppedFiles(prev => [...prev, ...files]);
@@ -30,25 +29,12 @@ export default function FileUploader({ projectId = null }: any) {
   const onClick_uploadDroppedFilesToSrcDocs = async () => {
     setIsUploading(true);
 
-    const ps = droppedFiles.map((file: any) => new Promise((resolve, reject) => {
-      performAction_generateUploadUrl()
-        .then(async (uploadUrl) => {
-          try {
-            const result = await fetch(uploadUrl, {
-              method: "POST",
-              body: file,
-            });
-            const uploadedCvxFile = await result.json();
-            const cvxStoredFileId = uploadedCvxFile.storageId;
-            const newSrcDocId = await performAction_createNewSrcDoc({ projectId: projectId, cvxStoredFileId })
-            return resolve(newSrcDocId);
-          } catch (err) {
-            return reject(err);
-          }
-        });
-    }));
+    try {
+      await onClick_uploadFiles(droppedFiles);
+    } catch (err) {
+      console.log(err);
+    }
 
-    const srcDocIds = (await Promise.allSettled(ps)).filter(r => r.status === "fulfilled").map(r => r.value);
     setDroppedFiles([]);
     setIsUploading(false);
   };
