@@ -25,6 +25,20 @@ export const createNewProject = action({
   }
 });
 
+export const updateProject = action({
+  args: {
+    projectId: v.id("vsProject"),
+    updateData: v.string()
+  },
+  handler: async (ctx, { projectId, updateData }) => {
+    const updatedProject: any = await ctx.runMutation(
+      internal.dbOps.updateProject,
+      { projectId, updateData }
+    );
+    return updatedProject;
+  }
+});
+
 // DOCUSIGN
 
 async function downloadFileAsBytes(url: string): Promise<Buffer> {

@@ -1,5 +1,6 @@
 import {
   query,
+  mutation,
   internalQuery,
   internalMutation,
 } from "./_generated/server";
@@ -75,9 +76,21 @@ export const createNewProject = internalMutation({
   handler: async (ctx) => {
     const currUser = await ctx.auth.getUserIdentity();
     if (!currUser) return null;
-    const newProjectData = { creator: currUser };
+    const newProjectData = { creator: currUser, initializationStatus: "uninitialized" };
     const newProject = await ctx.db.insert("vsProjects", newProjectData);
     return newProject;
+  },
+});
+
+export const updateProject = internalMutation({
+  args: {
+    projectId: v.id("vsProjects"),
+    updateData: v.string()
+  },
+  handler: async (ctx, { projectId, updateData }) => {
+    const _updateData = JSON.parse(updateData);
+    const updatedProject = await ctx.db.patch(projectId, _updateData);
+    return updatedProject;
   },
 });
 
