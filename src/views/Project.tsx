@@ -32,10 +32,6 @@ export default function Project() {
 
   const currProject = useQuery(api.dbOps.getProject_ByProjectId, projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip");
 
-  // FILE UPLOAD
-
-  const performAction_sendDocusignSigningEmail = useAction(api.vsActions.sendDocusignSigningEmail);
-
   // SRCDOC
 
   const curProjectSrcDocs = useQuery(api.dbOps.getAllSrcDocs_ForProject, projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip");
@@ -187,7 +183,7 @@ export default function Project() {
                                   <Button
                                     variant="outline"
                                     onClick={() => {
-                                      performAction_sendDocusignSigningEmail({
+                                      cvxUtils.performAction_sendDocusignSigningEmail({
                                         srcDocId: srcDoc._id
                                       });
                                     }}
