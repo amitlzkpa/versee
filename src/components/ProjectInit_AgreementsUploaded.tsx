@@ -37,12 +37,14 @@ export default function ProjectInit_AgreementsUploaded({
       >
         <Flex
           w="100%"
+          h="100%"
           mih="400"
           direction="column"
           align="center"
           gap="sm"
           style={{ border: "1px solid red" }}
         >
+          <Text fz="xl" fw="bold" w="100%">Agreement Papers</Text>
           <Carousel
             w="100%"
             h="100%"
@@ -50,93 +52,58 @@ export default function ProjectInit_AgreementsUploaded({
             slideGap="md"
             style={{ border: "1px solid green" }}
           >
-            <Carousel.Slide>
-              <Flex
-                w="100%"
-                h="400"
-                direction="column"
-                align="center"
-                gap="sm"
-                style={{ border: "1px solid blue" }}
-              >
-                A
-              </Flex>
-            </Carousel.Slide>
-            <Carousel.Slide>
-              <Flex
-                w="100%"
-                h="100%"
-                direction="column"
-                align="center"
-                gap="sm"
-                style={{ border: "1px solid blue" }}
-              >
-                B
-              </Flex>
-            </Carousel.Slide>
-            <Carousel.Slide>
-              <Flex
-                w="100%"
-                h="100%"
-                direction="column"
-                align="center"
-                gap="sm"
-                style={{ border: "1px solid blue" }}
-              >
-                C
-              </Flex>
-            </Carousel.Slide>
+            {
+              (curProjectSrcDocs ?? [])
+                .map((srcDoc: any) => {
+                  return (
+                    <Carousel.Slide key={srcDoc._id}>
+                      <Flex
+                        w="100%"
+                        h="100%"
+                        direction="column"
+                        align="center"
+                        gap="sm"
+                        style={{ border: "1px solid blue", overflowY: "auto" }}
+                      >
+                        <Text fz="sm">{srcDoc._id}</Text>
+                        <Text fw="bold">{srcDoc.titleText}</Text>
+
+                        <embed
+                          style={{ width: "100%", height: "100%", minHeight: "400px" }}
+                          src={srcDoc.fileUrl}
+                        />
+
+                        <Text>{srcDoc.summaryText}</Text>
+
+                        <Button
+                          component="a"
+                          variant="outline"
+                          href={srcDoc.fileUrl}
+                          target="_blank"
+                          w="100%"
+                          size="lg"
+                        >
+                          Open
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            cvxUtils.performAction_sendDocusignSigningEmail({
+                              srcDocId: srcDoc._id
+                            });
+                          }}
+                          w="100%"
+                          size="lg"
+                        >
+                          Send
+                        </Button>
+                      </Flex>
+                    </Carousel.Slide>
+                  );
+                })
+            }
           </Carousel>
         </Flex>
-
-        {
-          (curProjectSrcDocs ?? [])
-            .map((srcDoc: any) => {
-              return (
-                <Card
-                  key={srcDoc._id}
-                  w="100%"
-                  withBorder
-                  radius="xl"
-                >
-                  <Flex direction="column" align="stretch" gap="sm">
-                    <Text fz="sm">{srcDoc._id}</Text>
-                    <Text fw="bold">{srcDoc.titleText}</Text>
-
-                    <embed
-                      style={{ width: "100%", height: "100%", minHeight: "400px" }}
-                      src={srcDoc.fileUrl}
-                    />
-
-                    <Text>{srcDoc.summaryText}</Text>
-
-                    <Button
-                      component="a"
-                      variant="outline"
-                      href={srcDoc.fileUrl}
-                      target="_blank"
-                      w="100%"
-                      size="lg"
-                    >
-                      Open
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        cvxUtils.performAction_sendDocusignSigningEmail({
-                          srcDocId: srcDoc._id
-                        });
-                      }}
-                      w="100%"
-                      size="lg"
-                    >
-                      Send
-                    </Button>
-                  </Flex>
-                </Card>
-              );
-            })
-        }
       </Flex>
     </>
   );
