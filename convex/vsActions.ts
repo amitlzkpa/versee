@@ -27,7 +27,7 @@ export const createNewProject = action({
 
 export const updateProject = action({
   args: {
-    projectId: v.id("vsProject"),
+    projectId: v.id("vsProjects"),
     updateData: v.string()
   },
   handler: async (ctx, { projectId, updateData }) => {
