@@ -399,6 +399,17 @@ export const openDocusignSenderView = action({
   },
 });
 
+export const createSenderViewFromDoc = action({
+  args: {
+    projectId: v.id("vsProjects"),
+    signers: v.string(),
+    returnUrl: v.string(),
+  },
+  handler: async (ctx, { projectId, signers, returnUrl }) => {
+
+  }
+});
+
 // SRCDOCS
 
 const generateForPDF_title = async (pdfArrayBuffer, model) => {

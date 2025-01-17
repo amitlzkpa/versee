@@ -51,6 +51,12 @@ export default function ProjectInit_AgreementsReviewed({
     const signers = JSON.parse(JSON.stringify(signersList));
     console.log(signers);
 
+    const urlToAnnotateDocsForSigning = await cvxUtils.performAction_createSenderViewFromDoc({
+      projectId,
+      signers,
+      returnUrl: `${window.location.origin}/completed-signing-annotation`
+    });
+
     // TODO: Create envelop and move to hosted annotation process
 
     // const updateData = JSON.stringify({ initializationStatus: "agreements_reviewed" });

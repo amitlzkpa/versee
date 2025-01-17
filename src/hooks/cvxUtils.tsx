@@ -10,9 +10,12 @@ export default function useCvxUtils() {
 
   const performAction_updateProject = useAction(api.vsActions.updateProject);
 
+  const performAction_createSenderViewFromDoc = useAction(api.vsActions.createSenderViewFromDoc);
+
   return {
     performAction_generateUploadUrl,
     performAction_sendDocusignSigningEmail,
-    performAction_updateProject
+    performAction_updateProject,
+    performAction_createSenderViewFromDoc
   };
 }
