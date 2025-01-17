@@ -8,8 +8,11 @@ export default function useCvxUtils() {
 
   const performAction_sendDocusignSigningEmail = useAction(api.vsActions.sendDocusignSigningEmail);
 
+  const performAction_updateProject = useAction(api.vsActions.updateProject);
+
   return {
     performAction_generateUploadUrl,
-    performAction_sendDocusignSigningEmail
+    performAction_sendDocusignSigningEmail,
+    performAction_updateProject
   };
 }

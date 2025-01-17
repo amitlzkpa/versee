@@ -27,8 +27,6 @@ export default function ProjectInit_Uninit({
 
   const performAction_createNewSrcDoc = useAction(api.vsActions.createNewSrcDoc);
 
-  const performAction_updateProject = useAction(api.vsActions.updateProject);
-
   const performAction_analyseSrcDoc = useAction(api.vsActions.analyseSrcDoc);
 
   const onClick_uploadFiles_SrcDoc = async (droppedFiles: any) => {
@@ -56,7 +54,7 @@ export default function ProjectInit_Uninit({
 
     const updateData = JSON.stringify({ initializationStatus: "agreements_uploaded" });
 
-    await performAction_updateProject({ projectId, updateData })
+    await cvxUtils.performAction_updateProject({ projectId, updateData })
   };
 
 
