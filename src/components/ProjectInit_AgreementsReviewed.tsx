@@ -120,43 +120,63 @@ export default function ProjectInit_AgreementsReviewed({
           style={{ overflowY: "auto" }}
         >
           {
-            signersList.map((signerObj: any, idx: number) => {
-              return (
-                <Flex
-                  key={signerObj.signerEmail}
-                  w="100%"
-                  direction="row"
-                  align="center"
-                  gap="md"
-                >
+            signersList.length < 1
+              ?
+              <Flex
+                w="100%"
+                h="100%"
+                maw="400"
+                direction="column"
+                justify="center"
+                align="center"
+                gap="sm"
+                style={{ textAlign: "center" }}
+              >
+                <Text>
+                  Time to bring others on board!
+                </Text>
+                <Text fz="lg">
+                  Add your signers to start the signing process.
+                </Text>
+              </Flex>
+              :
+              signersList.map((signerObj: any, idx: number) => {
+                return (
                   <Flex
-                    h="100%"
-                    p="md"
-                    align="center"
-                    justify="center"
-                  >
-                    <FaTrashAlt
-                      color="#ababab"
-                      onClick={() => { handleDeleteSigner(signerObj) }}
-                      style={{ cursor: "pointer" }}
-                    />
-                  </Flex>
-                  <Flex
+                    key={signerObj.signerEmail}
                     w="100%"
-                    h="100%"
-                    direction="column"
-                    justify="center"
+                    direction="row"
+                    align="center"
+                    gap="md"
                   >
-                    <Text fw="bold" lh="0.8">
-                      {signerObj.signerName}
-                    </Text>
-                    <Text fz="sm">
-                      {signerObj.signerEmail}
-                    </Text>
+                    <Flex
+                      h="100%"
+                      p="md"
+                      align="center"
+                      justify="center"
+                    >
+                      <FaTrashAlt
+                        color="#ababab"
+                        onClick={() => { handleDeleteSigner(signerObj) }}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </Flex>
+                    <Flex
+                      w="100%"
+                      h="100%"
+                      direction="column"
+                      justify="center"
+                    >
+                      <Text fw="bold" lh="0.8">
+                        {signerObj.signerName}
+                      </Text>
+                      <Text fz="sm">
+                        {signerObj.signerEmail}
+                      </Text>
+                    </Flex>
                   </Flex>
-                </Flex>
-              );
-            })
+                );
+              })
           }
         </Flex>
       </Flex>
