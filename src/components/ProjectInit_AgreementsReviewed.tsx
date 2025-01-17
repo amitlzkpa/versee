@@ -10,6 +10,7 @@ import {
   Text,
   rem
 } from '@mantine/core';
+import { FaTrashAlt } from 'react-icons/fa';
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -35,6 +36,7 @@ export default function ProjectInit_AgreementsReviewed({
       signerName: newSignerName,
       signerEmail: newSignerEmail
     }];
+    console.log(updSignersList);
     setSignersList(updSignersList);
     setNewSignerName("");
     setNewSignerEmail("");
@@ -45,7 +47,6 @@ export default function ProjectInit_AgreementsReviewed({
     setSignersList(updSignersList);
   };
 
-
   return (
     <>
       <Flex
@@ -55,7 +56,54 @@ export default function ProjectInit_AgreementsReviewed({
         align="center"
         gap="sm"
       >
-
+        <Flex
+          w="100%"
+          h="100%"
+          direction="column"
+          align="center"
+          gap="sm"
+        >
+          {
+            signersList.map((signerObj: any, idx: number) => {
+              return (
+                <Flex
+                  key={signerObj.signerEmail}
+                  w="100%"
+                  h="100%"
+                  direction="row"
+                  align="center"
+                  gap="md"
+                >
+                  <Flex
+                    h="100%"
+                    p="md"
+                    align="center"
+                    justify="center"
+                  >
+                    <FaTrashAlt
+                      color="#ababab"
+                      onClick={() => { handleDeleteSigner(signerObj) }}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </Flex>
+                  <Flex
+                    w="100%"
+                    h="100%"
+                    direction="column"
+                    justify="center"
+                  >
+                    <Text fw="bold" lh="0.8">
+                      {signerObj.signerName}
+                    </Text>
+                    <Text fz="sm">
+                      {signerObj.signerEmail}
+                    </Text>
+                  </Flex>
+                </Flex>
+              );
+            })
+          }
+        </Flex>
 
         <Accordion w="100%" variant="filled" chevron={null}>
           <Accordion.Item key="first" value="first">
@@ -109,9 +157,6 @@ export default function ProjectInit_AgreementsReviewed({
           </Accordion.Item>
         </Accordion>
 
-
-        <Divider w="100%" my="sm" />
-        <Divider w="100%" my="sm" />
       </Flex>
     </>
   );
