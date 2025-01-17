@@ -27,6 +27,8 @@ export default function ProjectInit_Uninit({
 
   const performAction_createNewSrcDoc = useAction(api.vsActions.createNewSrcDoc);
 
+  const performAction_updateProject = useAction(api.vsActions.updateProject);
+
   const performAction_analyseSrcDoc = useAction(api.vsActions.analyseSrcDoc);
 
   const onClick_uploadFiles_SrcDoc = async (droppedFiles: any) => {
@@ -51,6 +53,10 @@ export default function ProjectInit_Uninit({
     }));
 
     const srcDocIds = (await Promise.allSettled(ps)).filter(r => r.status === "fulfilled").map(r => r.value);
+
+    const updateData = JSON.stringify({ initializationStatus: "agreements_uploaded" });
+
+    await performAction_updateProject({ projectId, updateData })
   };
 
 
