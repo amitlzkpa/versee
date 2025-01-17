@@ -423,7 +423,7 @@ const generateForPDF_summary = async (pdfArrayBuffer, model) => {
         mimeType: "application/pdf",
       },
     },
-    "Give a very short outline of the contents of this document in 2-3 sentences.",
+    "Give a very short description of the contents of this document in 1-2 sentences. Keep it simple and don't use any formatting. Reply directly with the answer.",
   ]);
   const summaryText = result.response.text();
   return summaryText;
