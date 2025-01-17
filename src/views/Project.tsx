@@ -18,15 +18,18 @@ import { Id } from '../../convex/_generated/dataModel';
 import ProjectInit_Uninit from '../components/ProjectInit_Uninit';
 import FileUploader from '../components/FileUploader';
 
+import useCvxUtils from '../hooks/cvxUtils';
+
 export default function Project() {
+
+  const cvxUtils = useCvxUtils();
+
   // PROJECT
   const { projectId } = useParams();
 
   const currProject = useQuery(api.dbOps.getProject_ByProjectId, projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip");
 
   // FILE UPLOAD
-
-  const performAction_generateUploadUrl = useAction(api.vsActions.generateUploadUrl);
 
   const performAction_sendDocusignSigningEmail = useAction(api.vsActions.sendDocusignSigningEmail);
 
@@ -40,7 +43,7 @@ export default function Project() {
 
   const onClick_uploadFiles_SrcDoc = async (droppedFiles: any) => {
     const ps = droppedFiles.map((file: any) => new Promise((resolve, reject) => {
-      performAction_generateUploadUrl()
+      cvxUtils.performAction_generateUploadUrl()
         .then(async (uploadUrl) => {
           try {
             const result = await fetch(uploadUrl, {
@@ -70,7 +73,7 @@ export default function Project() {
 
   const onClick_uploadFiles_PrjFiles = async (droppedFiles: any) => {
     const ps = droppedFiles.map((file: any) => new Promise((resolve, reject) => {
-      performAction_generateUploadUrl()
+      cvxUtils.performAction_generateUploadUrl()
         .then(async (uploadUrl) => {
           try {
             const result = await fetch(uploadUrl, {
@@ -260,7 +263,6 @@ export default function Project() {
               <Divider w="100%" />
             </>
         }
-
 
       </Flex>
     </Flex>
