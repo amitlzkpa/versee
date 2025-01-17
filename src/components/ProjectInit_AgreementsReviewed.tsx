@@ -47,6 +47,16 @@ export default function ProjectInit_AgreementsReviewed({
     setSignersList(updSignersList);
   };
 
+  const onClick_completeAddingSigners = async () => {
+    const signers = JSON.parse(JSON.stringify(signersList));
+    console.log(signers);
+
+    // TODO: Create envelop and move to hosted annotation process
+
+    // const updateData = JSON.stringify({ initializationStatus: "agreements_reviewed" });
+    // await cvxUtils.performAction_updateProject({ projectId, updateData })
+  };
+
   return (
     <>
       <Flex
@@ -55,8 +65,8 @@ export default function ProjectInit_AgreementsReviewed({
         direction="column"
         align="center"
         gap="sm"
+        py="lg"
       >
-
         <Accordion w="100%" variant="filled" chevron={null}>
           <Accordion.Item key="first" value="first">
             <Accordion.Control icon="+">
@@ -179,6 +189,15 @@ export default function ProjectInit_AgreementsReviewed({
               })
           }
         </Flex>
+
+        <Button
+          w="100%"
+          size="lg"
+          onClick={onClick_completeAddingSigners}
+          disabled={signersList.length < 1}
+        >
+          Annotate Document
+        </Button>
       </Flex>
     </>
   );
