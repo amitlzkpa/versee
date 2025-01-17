@@ -26,6 +26,12 @@ export default function ProjectInit_AgreementsUploaded({
 
   const curProjectSrcDocs = useQuery(api.dbOps.getAllSrcDocs_ForProject, projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip");
 
+  const onClick_confirmAgreementReview = async () => {
+    const updateData = JSON.stringify({ initializationStatus: "agreements_reviewed" });
+
+    await cvxUtils.performAction_updateProject({ projectId, updateData })
+  };
+
   return (
     <>
       <Flex
@@ -40,6 +46,7 @@ export default function ProjectInit_AgreementsUploaded({
           Agreement Papers
           ({(curProjectSrcDocs ?? []).length})
         </Text>
+
         <Carousel
           w="100%"
           h="100%"
@@ -90,6 +97,14 @@ export default function ProjectInit_AgreementsUploaded({
               })
           }
         </Carousel>
+
+        <Button
+          w="100%"
+          size="lg"
+          onClick={onClick_confirmAgreementReview}
+        >
+          Add Signers
+        </Button>
       </Flex>
     </>
   );
