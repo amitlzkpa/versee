@@ -169,7 +169,7 @@ export default function FileUploader({
         onClick={onClick_uploadBtn}
         w="100%"
         size="lg"
-        disabled={!projectId && droppedFiles.length < 1}
+        disabled={!projectId || droppedFiles.length < 1 || isUploading}
       >
         Upload
       </Button>
