@@ -16,6 +16,7 @@ import { api } from "../../convex/_generated/api";
 import { Id } from '../../convex/_generated/dataModel';
 
 import ProjectInit_Uninit from '../components/ProjectInit_Uninit';
+import ProjectInit_AgreementsUploaded from '../components/ProjectInit_AgreementsUploaded';
 import FileUploader from '../components/FileUploader';
 
 import useCvxUtils from '../hooks/cvxUtils';
@@ -97,6 +98,17 @@ export default function Project() {
   return (
     <Flex w="100%" direction="column" gap="sm" p="lg">
       <Flex w="40%" direction="column" gap="sm" my="lg">
+
+        {(() => {
+          switch (currProject?.initializationStatus) {
+            case "uninitialized":
+              return <ProjectInit_Uninit projectId={currProject?._id} />
+            case "agreements_uploaded":
+              return <ProjectInit_AgreementsUploaded projectId={currProject?._id} />
+            default:
+              return null
+          }
+        })()}
 
         {
           (currProject?.initializationStatus === "uninitialized")
