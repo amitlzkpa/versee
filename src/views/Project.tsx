@@ -20,11 +20,14 @@ import FileUploader from '../components/FileUploader';
 
 import useCvxUtils from '../hooks/cvxUtils';
 
+
+
 export default function Project() {
 
   const cvxUtils = useCvxUtils();
 
   // PROJECT
+
   const { projectId } = useParams();
 
   const currProject = useQuery(api.dbOps.getProject_ByProjectId, projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip");
