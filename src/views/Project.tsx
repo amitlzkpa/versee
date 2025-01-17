@@ -99,9 +99,9 @@ export default function Project() {
       <Flex w="40%" direction="column" gap="sm" my="lg">
 
         {
-          (curProjectSrcDocs ?? []).length < 1
+          (currProject?.initializationStatus === "uninitialized")
             ?
-            <ProjectInit_Uninit projectId={currProject._id} />
+            <ProjectInit_Uninit projectId={currProject?._id} />
             :
             <>
               <Divider w="100%" />
