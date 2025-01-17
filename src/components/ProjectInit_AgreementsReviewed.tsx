@@ -57,8 +57,6 @@ export default function ProjectInit_AgreementsReviewed({
       returnUrl: `${window.location.origin}/completed-signing-annotation`
     });
 
-    // TODO: Create envelop and move to hosted annotation process
-
     // const updateData = JSON.stringify({ initializationStatus: "agreements_reviewed" });
     // await cvxUtils.performAction_updateProject({ projectId, updateData })
   };

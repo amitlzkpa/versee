@@ -406,6 +406,51 @@ export const createSenderViewFromDoc = action({
     returnUrl: v.string(),
   },
   handler: async (ctx, { projectId, signers, returnUrl }) => {
+    const restApi = docusign.ApiClient.RestApi;
+    const oAuth = docusign.ApiClient.OAuth;
+    const basePath = restApi.BasePath.DEMO;
+    const oAuthBasePath = oAuth.BasePath.DEMO;
+    const dsApiClient = new docusign.ApiClient({
+      basePath: basePath,
+      oAuthBasePath: oAuthBasePath
+    });
+
+    const storedDocusignData = await ctx.runQuery(api.dbOps.getDocusignData_ForCurrUser);
+    const accountId = storedDocusignData.userInfo.accounts[0].accountId;
+
+    const userTokenObj = await getAccessToken(ctx, storedDocusignData);
+    const accessToken = userTokenObj.access_token;
+
+    const srcDocs = await ctx.runQuery(api.dbOps.getAllSrcDocs_ForProject, { projectId });
+
+    const ps = srcDocs.map((srcDoc, idx) => new Promise((resolve, reject) => {
+
+      downloadFileAsBytes(srcDoc.fileUrl)
+        .then((docBytes) => {
+          const doc3b64 = Buffer.from(docBytes).toString('base64');
+          const doc = new docusign.Document();
+          const base64Doc = doc3b64;
+          doc.documentBase64 = base64Doc;
+          doc.name = `File_${idx}.pdf`;
+          doc.documentId = idx;
+          resolve(doc);
+        })
+        .catch((err) => {
+          reject(err);
+        })
+
+    }));
+
+    const docs = (await Promise.allSettled(ps)).filter(p => p.status === "fulfilled").map(p => p.value);
+
+    const envDef = new docusign.EnvelopeDefinition();
+    envDef.emailSubject = `Please Sign: ${srcDoc.titleText}`;
+    envDef.emailBlurb = srcDoc.summaryText;
+
+    envDef.documents = docs;
+
+    // CONTINUE HERE
+
 
   }
 });
