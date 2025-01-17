@@ -1,5 +1,6 @@
 import '@mantine/core/styles.css';
 import '@mantine/dropzone/styles.css';
+import '@mantine/carousel/styles.css';
 import './index.css';
 import { createBrowserRouter, RouterProvider, Navigate, Outlet } from "react-router-dom";
 import { useConvexAuth } from "convex/react";

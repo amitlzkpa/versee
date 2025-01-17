@@ -8,6 +8,7 @@ import {
   Text,
   rem
 } from '@mantine/core';
+import { Carousel } from '@mantine/carousel';
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -34,6 +35,60 @@ export default function ProjectInit_AgreementsUploaded({
         align="center"
         gap="sm"
       >
+        <Flex
+          w="100%"
+          mih="400"
+          direction="column"
+          align="center"
+          gap="sm"
+          style={{ border: "1px solid red" }}
+        >
+          <Carousel
+            w="100%"
+            h="100%"
+            slideSize="80%"
+            slideGap="md"
+            style={{ border: "1px solid green" }}
+          >
+            <Carousel.Slide>
+              <Flex
+                w="100%"
+                h="400"
+                direction="column"
+                align="center"
+                gap="sm"
+                style={{ border: "1px solid blue" }}
+              >
+                A
+              </Flex>
+            </Carousel.Slide>
+            <Carousel.Slide>
+              <Flex
+                w="100%"
+                h="100%"
+                direction="column"
+                align="center"
+                gap="sm"
+                style={{ border: "1px solid blue" }}
+              >
+                B
+              </Flex>
+            </Carousel.Slide>
+            <Carousel.Slide>
+              <Flex
+                w="100%"
+                h="100%"
+                direction="column"
+                align="center"
+                gap="sm"
+                style={{ border: "1px solid blue" }}
+              >
+                C
+              </Flex>
+            </Carousel.Slide>
+          </Carousel>
+        </Flex>
+
         {
           (curProjectSrcDocs ?? [])
             .map((srcDoc: any) => {
@@ -47,6 +102,12 @@ export default function ProjectInit_AgreementsUploaded({
                   <Flex direction="column" align="stretch" gap="sm">
                     <Text fz="sm">{srcDoc._id}</Text>
                     <Text fw="bold">{srcDoc.titleText}</Text>
+
+                    <embed
+                      style={{ width: "100%", height: "100%", minHeight: "400px" }}
+                      src={srcDoc.fileUrl}
+                    />
+
                     <Text>{srcDoc.summaryText}</Text>
 
                     <Button

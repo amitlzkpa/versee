@@ -12,6 +12,7 @@
   "dependencies": {
     "@clerk/clerk-react": "^5.21.0",
     "@google/generative-ai": "^0.21.0",
+    "@mantine/carousel": "^7.16.0",
     "@mantine/core": "^7.15.2",
     "@mantine/dates": "^7.15.2",
     "@mantine/dropzone": "^7.15.2",
@@ -25,6 +26,7 @@
     "convex": "^1.17.4",
     "dayjs": "^1.11.13",
     "docusign-esign": "^8.0.1",
+    "embla-carousel-react": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
