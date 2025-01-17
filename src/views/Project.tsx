@@ -14,6 +14,7 @@ import {
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from '../../convex/_generated/dataModel';
+
 import ProjectInit_Uninit from '../components/ProjectInit_Uninit';
 import FileUploader from '../components/FileUploader';
 
@@ -98,7 +99,7 @@ export default function Project() {
         {
           (curProjectSrcDocs ?? []).length < 1
             ?
-            <ProjectInit_Uninit />
+            <ProjectInit_Uninit projectId={currProject._id} />
             :
             <>
               <Divider w="100%" />
