@@ -10,16 +10,21 @@ export default function OauthCallback_Docusign() {
   //   api.dbOps.getDocusignData_ForCurrUser
   // );
 
-  // const location = useLocation();
+  const location = useLocation();
 
-  // const performAction_retrieveDocusignAccessToken = useAction(
-  //   api.vsActions.retrieveDocusignAccessToken
-  // );
+  const performAction_retrieveGSheetsToken = useAction(
+    api.vsActions.retrieveGSheetsToken
+  );
 
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   const onClickTest_retrieveGSheetsAccessToken = async () => {
-    console.log("onClickTest_retrieveGSheetsAccessToken");
+    const queryParams = new URLSearchParams(location.search);
+    const code = queryParams.get("code");
+    const callbackUrl = `${window.location.origin}/callback/google-sheets`;
+    const token = await performAction_retrieveGSheetsToken({ authCode: code ?? "", callbackUrl });
+    console.log(token);
+    setIsAuthorized(true);
   };
 
   return (
