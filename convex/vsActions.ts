@@ -283,7 +283,20 @@ export const retrieveGSheetsToken = action({
       callbackUrl
     );
     const { tokens } = await oauth2Client.getToken(authCode);
-    return tokens;
+
+    const googleDriveTknObj = {
+      tokens,
+      issuedAt: new Date().toISOString(),
+    };
+
+    const userDataStr = JSON.stringify({
+      googleDriveTknObj,
+    });
+    const storedData: any = await ctx.runMutation(
+      internal.dbOps.upsertUserData_ForUser,
+      { userDataStr }
+    );
+    return storedData;
   },
 });
 

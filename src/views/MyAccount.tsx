@@ -55,11 +55,26 @@ export default function MyAccount() {
       <Divider w="60%" my="lg" />
 
       <Flex w="60%" direction="column" align="center" gap="md" p="lg">
-        <Flex w="100%" justify="center" align="center" gap="sm">
-          <Button onClick={onClick_startGSheetsOAuth} w="100%" size="lg">
-            Connect Google Sheets
-          </Button>
-        </Flex>
+        {!storedUserData?.googleDriveTknObj ? (
+          <>
+            <Button onClick={onClick_startGSheetsOAuth} w="100%" size="lg">
+              Connect Google Drive
+            </Button>
+          </>
+        ) : (
+          <>
+            <Flex justify="center" align="center" gap="sm">
+              <FaCheckCircle
+                style={{
+                  width: rem(12),
+                  height: rem(12),
+                  color: "var(--mantine-color-gray-5)",
+                }}
+              />
+              <Text>Google Drive Account Connected</Text>
+            </Flex>
+          </>
+        )}
       </Flex>
     </Flex>
   );
