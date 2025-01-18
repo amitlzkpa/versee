@@ -19,6 +19,7 @@ import ProjectInit_Uninit from "../components/ProjectInit_Uninit";
 import ProjectInit_AgreementsUploaded from "../components/ProjectInit_AgreementsUploaded";
 import ProjectInit_AgreementsReviewed from "../components/ProjectInit_AgreementsReviewed";
 import ProjectInit_SignersAssigned from "../components/ProjectInit_SignersAssigned";
+import ProjectInit_TaggingCompleted from "../components/ProjectInit_TaggingCompleted";
 import FileUploader from "../components/FileUploader";
 
 import useCvxUtils from "../hooks/cvxUtils";
@@ -146,6 +147,10 @@ export default function Project() {
             case "signers_assigned":
               return (
                 <ProjectInit_SignersAssigned projectId={currProject?._id} />
+              );
+            case "tagging_completed":
+              return (
+                <ProjectInit_TaggingCompleted projectId={currProject?._id} />
               );
             default:
               return null;
