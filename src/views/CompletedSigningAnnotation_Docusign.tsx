@@ -6,9 +6,6 @@ export default function CompletedSigningAnnotation_Docusign() {
   const location = useLocation();
 
   useEffect(() => {
-    console.log("iframe foo");
-    console.log(location);
-
     const queryParams = new URLSearchParams(location.search);
     const envelopeId = queryParams.get("envelopeId");
 
