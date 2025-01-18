@@ -26,13 +26,20 @@ export default function ProjectInit_SignersAssigned({ projectId = null }: any) {
     (async () => {
       if (docusignSenderConfigUrl) return;
 
-      const urlToAnnotateDocsForSigning =
-        await cvxUtils.performAction_createSenderViewFromDoc({
+      const envelopeData = await cvxUtils.performAction_createSenderViewFromDoc(
+        {
           projectId,
           returnUrl: `${window.location.origin}/completed-signing-annotation`,
-        });
+        }
+      );
 
-      setDocusignSenderConfigUrl(urlToAnnotateDocsForSigning ?? "");
+      setDocusignSenderConfigUrl(envelopeData.taggingUrl ?? "");
+
+      const updateData = JSON.stringify({
+        envelopeId: envelopeData.envelopeId,
+      });
+
+      await cvxUtils.performAction_updateProject({ projectId, updateData });
     })();
   }, [projectId, docusignSenderConfigUrl, cvxUtils]);
 

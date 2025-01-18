@@ -521,7 +521,10 @@ export const createSenderViewFromDoc = action({
       { envelopeViewRequest: viewRequest }
     );
 
-    return viewRequestResults.url;
+    return {
+      envelopeId,
+      taggingUrl: viewRequestResults.url,
+    };
   },
 });
 
