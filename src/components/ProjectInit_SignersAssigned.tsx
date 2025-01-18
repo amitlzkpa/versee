@@ -48,6 +48,19 @@ export default function ProjectInit_SignersAssigned({ projectId = null }: any) {
     console.log("foo");
   };
 
+  useEffect(() => {
+    const msgListener = (e: MessageEvent) => {
+      console.log("recd message");
+      console.log(e.data);
+    };
+
+    window.addEventListener("message", msgListener);
+
+    return () => {
+      window.removeEventListener("message", msgListener);
+    };
+  }, []);
+
   return (
     <>
       <Flex
