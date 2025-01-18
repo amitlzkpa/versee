@@ -14,6 +14,7 @@ import { Flex, Loader, MantineProvider, createTheme, rem } from "@mantine/core";
 
 import Dev from "./views/Dev";
 import OauthCallback_Docusign from "./views/OauthCallback_Docusign";
+import CompletedSigningAnnotation_Docusign from "./views/CompletedSigningAnnotation_Docusign";
 import Landing from "./views/Landing";
 import MyAccount from "./views/MyAccount";
 import Home from "./views/Home";
@@ -123,6 +124,14 @@ function App() {
           element: (
             <ProtectedRoute>
               <OauthCallback_Docusign />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "completed-signing-annotation",
+          element: (
+            <ProtectedRoute>
+              <CompletedSigningAnnotation_Docusign />
             </ProtectedRoute>
           ),
         },
