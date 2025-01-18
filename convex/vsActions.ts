@@ -455,7 +455,9 @@ export const createSenderViewFromDoc = action({
     envDef.emailBlurb = `ENVELOP_BLURB`;
 
     // Get project data
-    const projectData = await ctx.runQuery(api.dbOps.getProject_ByProjectId, { projectId });
+    const projectData = await ctx.runQuery(api.dbOps.getProject_ByProjectId, {
+      projectId,
+    });
 
     // Gather all docs
     const srcDocs = await ctx.runQuery(api.dbOps.getAllSrcDocs_ForProject, {
@@ -511,9 +513,30 @@ export const createSenderViewFromDoc = action({
     const envelopeId = envelopeSummary.envelopeId;
 
     // Generate url to add tabs to envelope
+
+    const envelopeViewSettings = new docusign.EnvelopeViewSettings();
+    envelopeViewSettings.startingScreen = "Tagger";
+    envelopeViewSettings.sendButtonAction = "redirect";
+    envelopeViewSettings.showBackButton = false;
+    envelopeViewSettings.showHeaderActions = false;
+    envelopeViewSettings.showDiscardAction = false;
+
+    const envelopeViewRecipientSettings =
+      new docusign.EnvelopeViewRecipientSettings();
+    envelopeViewRecipientSettings.showEditRecipients = false;
+    envelopeViewSettings.recipientSettings = envelopeViewRecipientSettings;
+
+    const envelopeViewDocumentSettings =
+      new docusign.EnvelopeViewDocumentSettings();
+    envelopeViewDocumentSettings.showEditDocuments = false;
+    envelopeViewDocumentSettings.showEditDocumentVisibility = false;
+    envelopeViewDocumentSettings.showEditPages = false;
+    envelopeViewSettings.documentSettings = envelopeViewDocumentSettings;
+
     const viewRequest = new docusign.EnvelopeViewRequest();
     viewRequest.returnUrl = returnUrl;
     viewRequest.viewAccess = "envelope";
+    viewRequest.settings = envelopeViewSettings;
 
     const viewRequestResults = await envelopesApi.createSenderView(
       accountId,
