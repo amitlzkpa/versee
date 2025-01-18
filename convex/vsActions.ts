@@ -6,6 +6,7 @@ import { api, internal } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 
+import { google } from "googleapis";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 // import jwt from "jsonwebtoken";
 import * as docusign from "docusign-esign";
@@ -182,6 +183,33 @@ export const retrieveDocusignAccessToken = action({
       { docusignDataStr }
     );
     return storedData;
+  },
+});
+
+export const startGSheetsOAuth = action({
+  handler: async (ctx) => {
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_SHEETS_CLIENT_ID,
+      process.env.GOOGLE_SHEETS_SECRET,
+      `${process.env.CLIENT_ORIGIN}/callback?kp_app=google-sheets`
+    );
+
+    const sheetsSdk = google.sheets({ version: "v4", auth: oauth2Client });
+
+    const scopes = [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/spreadsheets",
+    ];
+
+    const oauthLoginUrl = oauth2Client.generateAuthUrl({
+      access_type: "offline",
+      scope: scopes,
+    });
+
+    return oauthLoginUrl;
   },
 });
 
