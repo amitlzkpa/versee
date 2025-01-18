@@ -188,7 +188,7 @@ export const retrieveDocusignAccessToken = action({
 
 export const startGSheetsOAuth = action({
   args: {
-    callbackUrl: v.string()
+    callbackUrl: v.string(),
   },
   handler: async (ctx, { callbackUrl }) => {
     const oauth2Client = new google.auth.OAuth2(
@@ -217,7 +217,7 @@ export const startGSheetsOAuth = action({
 export const retrieveDocusignUserToken = action({
   handler: async (ctx) => {
     const storedDocusignData = await ctx.runQuery(
-      api.dbOps.getDocusignData_ForCurrUser
+      api.dbOps.getUserData_ForCurrUser
     );
 
     const restApi = docusign.ApiClient.RestApi;
@@ -257,7 +257,7 @@ export const retrieveDocusignUserToken = action({
 export const retrieveGSheetsToken = action({
   args: {
     authCode: v.string(),
-    callbackUrl: v.string()
+    callbackUrl: v.string(),
   },
   handler: async (ctx, { authCode, callbackUrl }) => {
     const oauth2Client = new google.auth.OAuth2(
@@ -285,7 +285,7 @@ export const sendDocusignSigningEmail = action({
     });
 
     const storedDocusignData = await ctx.runQuery(
-      api.dbOps.getDocusignData_ForCurrUser
+      api.dbOps.getUserData_ForCurrUser
     );
     const accountId = storedDocusignData.userInfo.accounts[0].accountId;
 
@@ -370,7 +370,7 @@ export const openDocusignSenderView = action({
     });
 
     const storedDocusignData = await ctx.runQuery(
-      api.dbOps.getDocusignData_ForCurrUser
+      api.dbOps.getUserData_ForCurrUser
     );
     const accountId = storedDocusignData.userInfo.accounts[0].accountId;
 
@@ -485,7 +485,7 @@ export const createSenderViewFromDoc = action({
     });
 
     const storedDocusignData = await ctx.runQuery(
-      api.dbOps.getDocusignData_ForCurrUser
+      api.dbOps.getUserData_ForCurrUser
     );
     const accountId = storedDocusignData.userInfo.accounts[0].accountId;
 

@@ -5,9 +5,7 @@ import { api } from "../../convex/_generated/api";
 import { FaCheckCircle } from "react-icons/fa";
 
 export default function MyAccount() {
-  const docusignData_ForCurrUser = useQuery(
-    api.dbOps.getDocusignData_ForCurrUser
-  );
+  const docusignData_ForCurrUser = useQuery(api.dbOps.getUserData_ForCurrUser);
 
   const performAction_startDocusignOAuth = useAction(
     api.vsActions.startDocusignOAuth

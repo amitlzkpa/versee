@@ -9,12 +9,12 @@ import { v } from "convex/values";
 
 // DOCUSIGN
 
-export const getDocusignData_ForCurrUser = query({
+export const getUserData_ForCurrUser = query({
   handler: async (ctx) => {
     const currUser = await ctx.auth.getUserIdentity();
     if (!currUser) return null;
     const docusignData = await ctx.db
-      .query("docusignDataForUser")
+      .query("vsUser")
       .filter((q) => q.eq(q.field("user.subject"), currUser.subject))
       .first();
     return docusignData;
@@ -31,7 +31,7 @@ export const upsertDocusignData_ForUser = internalMutation({
     if (!currUser) return null;
     const upsertData = { ...docusignData, user: currUser };
     const exData = await ctx.db
-      .query("docusignDataForUser")
+      .query("vsUser")
       .filter((q) => q.eq(q.field("user.subject"), currUser.subject))
       .first();
     let retVal;
@@ -39,7 +39,7 @@ export const upsertDocusignData_ForUser = internalMutation({
       await ctx.db.patch(exData._id, upsertData);
       retVal = exData._id;
     } else {
-      const newRecord = await ctx.db.insert("docusignDataForUser", upsertData);
+      const newRecord = await ctx.db.insert("vsUser", upsertData);
       retVal = newRecord;
     }
     return retVal;

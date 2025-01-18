@@ -5,9 +5,7 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function OauthCallback_Docusign() {
-  const docusignData_ForCurrUser = useQuery(
-    api.dbOps.getDocusignData_ForCurrUser
-  );
+  const docusignData_ForCurrUser = useQuery(api.dbOps.getUserData_ForCurrUser);
 
   const location = useLocation();
 

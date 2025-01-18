@@ -7,7 +7,7 @@ import { useState } from "react";
 
 export default function OauthCallback_Docusign() {
   // const docusignData_ForCurrUser = useQuery(
-  //   api.dbOps.getDocusignData_ForCurrUser
+  //   api.dbOps.getUserData_ForCurrUser
   // );
 
   const location = useLocation();
@@ -22,7 +22,10 @@ export default function OauthCallback_Docusign() {
     const queryParams = new URLSearchParams(location.search);
     const code = queryParams.get("code");
     const callbackUrl = `${window.location.origin}/callback/google-sheets`;
-    const token = await performAction_retrieveGSheetsToken({ authCode: code ?? "", callbackUrl });
+    const token = await performAction_retrieveGSheetsToken({
+      authCode: code ?? "",
+      callbackUrl,
+    });
     console.log(token);
     setIsAuthorized(true);
   };
