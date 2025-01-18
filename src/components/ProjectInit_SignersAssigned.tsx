@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Accordion,
   Button,
@@ -10,7 +10,6 @@ import {
   Text,
   rem,
 } from "@mantine/core";
-import { FaTrashAlt } from "react-icons/fa";
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -21,17 +20,32 @@ import useCvxUtils from "../hooks/cvxUtils";
 export default function ProjectInit_SignersAssigned({ projectId = null }: any) {
   const cvxUtils = useCvxUtils();
 
+  const [docusignSenderConfigUrl, setDocusignSenderConfigUrl] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      if (docusignSenderConfigUrl) return;
+
+      const urlToAnnotateDocsForSigning =
+        await cvxUtils.performAction_createSenderViewFromDoc({
+          projectId,
+          returnUrl: `${window.location.origin}/completed-signing-annotation`,
+        });
+
+      setDocusignSenderConfigUrl(urlToAnnotateDocsForSigning ?? "");
+    })();
+  }, [projectId, docusignSenderConfigUrl, cvxUtils]);
+
+  useEffect(() => {
+    if (!docusignSenderConfigUrl) return;
+
+    const taggingIframe = document.getElementById("tagging-iframe-target");
+    taggingIframe!.setAttribute("src", docusignSenderConfigUrl!);
+    taggingIframe!.style.visibility = "visible";
+  }, [docusignSenderConfigUrl]);
+
   const onClick_sendDocument = async () => {
     console.log("foo");
-    // const urlToAnnotateDocsForSigning =
-    //   await cvxUtils.performAction_createSenderViewFromDoc({
-    //     projectId,
-    //     signers,
-    //     returnUrl: `${window.location.origin}/completed-signing-annotation`,
-    //   });
-    // if (urlToAnnotateDocsForSigning) {
-    //   window.location.href = urlToAnnotateDocsForSigning;
-    // }
   };
 
   return (
@@ -45,6 +59,21 @@ export default function ProjectInit_SignersAssigned({ projectId = null }: any) {
         py="lg"
       >
         <Text>Complete tagging</Text>
+
+        <iframe
+          style={{
+            width: "100%",
+            minHeight: 400,
+            height: "100%",
+            visibility: "hidden",
+            border: 0,
+            borderRadius: rem(20),
+            resize: "vertical",
+          }}
+          src=""
+          id="tagging-iframe-target"
+        />
+
         <Button w="100%" size="lg" onClick={onClick_sendDocument}>
           Send
         </Button>
