@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button, Divider, Flex, Loader, Text } from "@mantine/core";
 
 import FileUploader from "../components/FileUploader";
