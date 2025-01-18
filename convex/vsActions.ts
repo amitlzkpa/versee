@@ -107,7 +107,7 @@ async function getAccessToken(ctx, storedUserData) {
     );
 
     const scopes = [oAuth.Scope.IMPERSONATION, oAuth.Scope.SIGNATURE];
-    const userId = storedUserData.userInfo.sub;
+    const userId = storedUserData.docusignUserInfo.sub;
     const expiresIn = 60 * 60;
 
     const res = await apiClient.requestJWTUserToken(
@@ -121,10 +121,13 @@ async function getAccessToken(ctx, storedUserData) {
     docusignUserTknObj = res.body;
     docusignUserTknObj.issuedAt = new Date().toISOString();
 
-    const userInfo = await apiClient.getUserInfo(
+    const docusignUserInfo = await apiClient.getUserInfo(
       docusignUserTknObj.access_token
     );
-    const userDataStr = JSON.stringify({ docusignUserTknObj, userInfo });
+    const userDataStr = JSON.stringify({
+      docusignUserTknObj,
+      docusignUserInfo,
+    });
     const storedData: any = await ctx.runMutation(
       internal.dbOps.upsertUserData_ForUser,
       { userDataStr }
@@ -180,10 +183,13 @@ export const retrieveDocusignAccessToken = action({
       code
     );
     docusignAccessTknObj.issuedAt = new Date().toISOString();
-    const userInfo = await apiClient.getUserInfo(
+    const docusignUserInfo = await apiClient.getUserInfo(
       docusignAccessTknObj.accessToken
     );
-    const userDataStr = JSON.stringify({ docusignAccessTknObj, userInfo });
+    const userDataStr = JSON.stringify({
+      docusignAccessTknObj,
+      docusignUserInfo,
+    });
     const storedData: any = await ctx.runMutation(
       internal.dbOps.upsertUserData_ForUser,
       { userDataStr }
@@ -236,7 +242,7 @@ export const retrieveDocusignUserToken = action({
     });
 
     const scopes = [oAuth.Scope.IMPERSONATION, oAuth.Scope.SIGNATURE];
-    const userId = storedUserData.userInfo.sub;
+    const userId = storedUserData.docusignUserInfo.sub;
     const expiresIn = 3600;
 
     const res = await apiClient.requestJWTUserToken(
@@ -249,11 +255,14 @@ export const retrieveDocusignUserToken = action({
 
     const docusignUserTknObj = res.body;
     docusignUserTknObj.issuedAt = new Date().toISOString();
-    const userInfo = await apiClient.getUserInfo(
+    const docusignUserInfo = await apiClient.getUserInfo(
       docusignUserTknObj.access_token
     );
 
-    const userDataStr = JSON.stringify({ docusignUserTknObj, userInfo });
+    const userDataStr = JSON.stringify({
+      docusignUserTknObj,
+      docusignUserInfo,
+    });
     const storedData: any = await ctx.runMutation(
       internal.dbOps.upsertUserData_ForUser,
       { userDataStr }
@@ -295,7 +304,7 @@ export const sendDocusignSigningEmail = action({
     const storedUserData = await ctx.runQuery(
       api.dbOps.getUserData_ForCurrUser
     );
-    const accountId = storedUserData.userInfo.accounts[0].accountId;
+    const accountId = storedUserData.docusignUserInfo.accounts[0].accountId;
 
     const docusignUserTknObj = await getAccessToken(ctx, storedUserData);
     const accessToken = docusignUserTknObj.access_token;
@@ -380,7 +389,7 @@ export const openDocusignSenderView = action({
     const storedUserData = await ctx.runQuery(
       api.dbOps.getUserData_ForCurrUser
     );
-    const accountId = storedUserData.userInfo.accounts[0].accountId;
+    const accountId = storedUserData.docusignUserInfo.accounts[0].accountId;
 
     const docusignUserTknObj = await getAccessToken(ctx, storedUserData);
     const accessToken = docusignUserTknObj.access_token;
@@ -495,7 +504,7 @@ export const createSenderViewFromDoc = action({
     const storedUserData = await ctx.runQuery(
       api.dbOps.getUserData_ForCurrUser
     );
-    const accountId = storedUserData.userInfo.accounts[0].accountId;
+    const accountId = storedUserData.docusignUserInfo.accounts[0].accountId;
 
     const docusignUserTknObj = await getAccessToken(ctx, storedUserData);
     const accessToken = docusignUserTknObj.access_token;
