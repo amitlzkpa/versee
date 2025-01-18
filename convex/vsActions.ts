@@ -580,7 +580,7 @@ export const createSenderViewFromDoc = action({
 
 // GOOGLE WORKSPACE
 
-export const startGSheetsOAuth = action({
+export const startGWspcOAuth = action({
   args: {
     callbackUrl: v.string(),
   },
@@ -608,7 +608,7 @@ export const startGSheetsOAuth = action({
   },
 });
 
-export const retrieveGSheetsToken = action({
+export const retrieveGWspcToken = action({
   args: {
     authCode: v.string(),
     callbackUrl: v.string(),

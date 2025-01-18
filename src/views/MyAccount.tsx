@@ -17,13 +17,13 @@ export default function MyAccount() {
     window.location.href = redirectUri;
   };
 
-  const performAction_startGSheetsOAuth = useAction(
-    api.vsActions.startGSheetsOAuth
+  const performAction_startGWspcOAuth = useAction(
+    api.vsActions.startGWspcOAuth
   );
 
-  const onClick_startGSheetsOAuth = async () => {
+  const onClick_startGWspcOAuth = async () => {
     const callbackUrl = `${window.location.origin}/callback/google-sheets`;
-    const redirectUri = await performAction_startGSheetsOAuth({ callbackUrl });
+    const redirectUri = await performAction_startGWspcOAuth({ callbackUrl });
     window.location.href = redirectUri;
   };
 
@@ -57,7 +57,7 @@ export default function MyAccount() {
       <Flex w="60%" direction="column" align="center" gap="md" p="lg">
         {!storedUserData?.googleDriveTknObj ? (
           <>
-            <Button onClick={onClick_startGSheetsOAuth} w="100%" size="lg">
+            <Button onClick={onClick_startGWspcOAuth} w="100%" size="lg">
               Connect Google Drive
             </Button>
           </>

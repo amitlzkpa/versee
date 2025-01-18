@@ -10,15 +10,15 @@ export default function OauthCallback_Docusign() {
 
   const location = useLocation();
 
-  const performAction_retrieveGSheetsToken = useAction(
-    api.vsActions.retrieveGSheetsToken
+  const performAction_retrieveGWspcToken = useAction(
+    api.vsActions.retrieveGWspcToken
   );
 
-  const onClickTest_retrieveGSheetsAccessToken = async () => {
+  const onClickTest_retrieveGWspcAccessToken = async () => {
     const queryParams = new URLSearchParams(location.search);
     const code = queryParams.get("code");
     const callbackUrl = `${window.location.origin}/callback/google-sheets`;
-    const savedRecord = await performAction_retrieveGSheetsToken({
+    const savedRecord = await performAction_retrieveGWspcToken({
       authCode: code ?? "",
       callbackUrl,
     });
@@ -32,7 +32,7 @@ export default function OauthCallback_Docusign() {
         {!storedUserData?.googleDriveTknObj ? (
           <>
             <Button
-              onClick={onClickTest_retrieveGSheetsAccessToken}
+              onClick={onClickTest_retrieveGWspcAccessToken}
               w="100%"
               size="lg"
             >
