@@ -586,8 +586,8 @@ export const startGWspcOAuth = action({
   },
   handler: async (ctx, { callbackUrl }) => {
     const oauth2Client = new google.auth.OAuth2(
-      process.env.GOOGLE_SHEETS_CLIENT_ID,
-      process.env.GOOGLE_SHEETS_SECRET,
+      process.env.GOOGLE_WORKSPACE_CLIENT_ID,
+      process.env.GOOGLE_WORKSPACE_SECRET,
       callbackUrl
     );
 
@@ -615,8 +615,8 @@ export const retrieveGWspcToken = action({
   },
   handler: async (ctx, { authCode, callbackUrl }) => {
     const oauth2Client = new google.auth.OAuth2(
-      process.env.GOOGLE_SHEETS_CLIENT_ID,
-      process.env.GOOGLE_SHEETS_SECRET,
+      process.env.GOOGLE_WORKSPACE_CLIENT_ID,
+      process.env.GOOGLE_WORKSPACE_SECRET,
       callbackUrl
     );
     const { tokens } = await oauth2Client.getToken(authCode);
