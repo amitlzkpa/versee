@@ -1,7 +1,6 @@
-import { Flex } from '@mantine/core';
+import { Flex } from "@mantine/core";
 
 export default function Landing() {
-
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
       {Array(45)

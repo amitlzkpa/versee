@@ -1,11 +1,16 @@
-import '@mantine/core/styles.css';
-import '@mantine/dropzone/styles.css';
-import '@mantine/carousel/styles.css';
-import './index.css';
-import { createBrowserRouter, RouterProvider, Navigate, Outlet } from "react-router-dom";
+import "@mantine/core/styles.css";
+import "@mantine/dropzone/styles.css";
+import "@mantine/carousel/styles.css";
+import "./index.css";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import { useConvexAuth } from "convex/react";
 
-import { Flex, Loader, MantineProvider, createTheme, rem } from '@mantine/core';
+import { Flex, Loader, MantineProvider, createTheme, rem } from "@mantine/core";
 
 import Dev from "./views/Dev";
 import OauthCallback_Docusign from "./views/OauthCallback_Docusign";
@@ -21,13 +26,7 @@ const ProtectedRoute = ({ children }: any) => {
 
   if (isLoading) {
     return (
-      <Flex
-        w="100%"
-        direction="column"
-        justify="center"
-        align="center"
-        p="xl"
-      >
+      <Flex w="100%" direction="column" justify="center" align="center" p="xl">
         <Loader size="md" type="bars" />
       </Flex>
     );
@@ -41,20 +40,19 @@ const ProtectedRoute = ({ children }: any) => {
 };
 
 function App() {
-
   const theme = createTheme({
-    fontFamily: 'Nunito, sans-serif',
-    fontFamilyMonospace: 'Monaco, Courier, monospace',
+    fontFamily: "Nunito, sans-serif",
+    fontFamilyMonospace: "Monaco, Courier, monospace",
     headings: {
-      fontWeight: '800',
-      fontFamily: 'Bitter',
+      fontWeight: "800",
+      fontFamily: "Bitter",
       sizes: {
-        h1: { fontSize: rem(38), lineHeight: '0.9' },
-        h2: { fontSize: rem(34), lineHeight: '0.9' },
-        h3: { fontSize: rem(30), lineHeight: '0.9' },
-        h4: { fontSize: rem(26), lineHeight: '0.9' },
-        h5: { fontSize: rem(22), lineHeight: '0.9' },
-        h6: { fontSize: rem(18), lineHeight: '0.9' },
+        h1: { fontSize: rem(38), lineHeight: "0.9" },
+        h2: { fontSize: rem(34), lineHeight: "0.9" },
+        h3: { fontSize: rem(30), lineHeight: "0.9" },
+        h4: { fontSize: rem(26), lineHeight: "0.9" },
+        h5: { fontSize: rem(22), lineHeight: "0.9" },
+        h6: { fontSize: rem(18), lineHeight: "0.9" },
       },
     },
     fontSizes: {
@@ -65,16 +63,16 @@ function App() {
       xl: rem(26),
     },
     lineHeights: {
-      xs: '1.6',
-      sm: '1.65',
-      md: '1.75',
-      lg: '1.8',
-      xl: '1.85',
+      xs: "1.6",
+      sm: "1.65",
+      md: "1.75",
+      lg: "1.8",
+      xl: "1.85",
     },
-    defaultRadius: 'xl',
-    primaryColor: 'versee-purple',
+    defaultRadius: "xl",
+    primaryColor: "versee-purple",
     colors: {
-      'versee-purple': [
+      "versee-purple": [
         "#f3edff",
         "#e1d7fb",
         "#beabf0",
@@ -84,10 +82,9 @@ function App() {
         "#5f30d8",
         "#4f23c0",
         "#461eac",
-        "#3b1898"
+        "#3b1898",
       ],
     },
-
   });
 
   const router = createBrowserRouter([
@@ -135,13 +132,7 @@ function App() {
 
   return (
     <MantineProvider theme={theme}>
-      <Flex
-        w="100%"
-        h="100%"
-        direction="column"
-        align="center"
-        gap="sm"
-      >
+      <Flex w="100%" h="100%" direction="column" align="center" gap="sm">
         <Flex w="100%" p="sm">
           <Navbar />
         </Flex>
@@ -150,7 +141,7 @@ function App() {
         </Flex>
       </Flex>
     </MantineProvider>
-  )
-};
+  );
+}
 
 export default App;
