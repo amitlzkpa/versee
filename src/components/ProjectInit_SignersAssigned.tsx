@@ -53,12 +53,15 @@ export default function ProjectInit_SignersAssigned({ projectId = null }: any) {
 
   const onClick_sendDocument = async () => {
     console.log("foo");
+    // TODO: Trigger new action to trigger send
   };
 
   useEffect(() => {
-    const msgListener = (e: MessageEvent) => {
-      console.log("recd message");
-      console.log(e.data);
+    const msgListener = async (e: MessageEvent) => {
+      const updateData = JSON.stringify({
+        initializationStatus: "tagging_completed",
+      });
+      await cvxUtils.performAction_updateProject({ projectId, updateData });
     };
 
     window.addEventListener("message", msgListener);
@@ -66,7 +69,7 @@ export default function ProjectInit_SignersAssigned({ projectId = null }: any) {
     return () => {
       window.removeEventListener("message", msgListener);
     };
-  }, []);
+  }, [projectId, cvxUtils]);
 
   return (
     <>
