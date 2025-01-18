@@ -21,7 +21,7 @@ export const getUserData_ForCurrUser = query({
   },
 });
 
-export const upsertDocusignData_ForUser = internalMutation({
+export const upsertUserData_ForUser = internalMutation({
   args: {
     docusignDataStr: v.string(),
   },
