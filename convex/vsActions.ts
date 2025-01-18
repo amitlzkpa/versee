@@ -6,6 +6,7 @@ import { api, internal } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 
+import { google } from "googleapis";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 // import jwt from "jsonwebtoken";
 import * as docusign from "docusign-esign";
@@ -185,6 +186,34 @@ export const retrieveDocusignAccessToken = action({
   },
 });
 
+export const startGSheetsOAuth = action({
+  args: {
+    callbackUrl: v.string()
+  },
+  handler: async (ctx, { callbackUrl }) => {
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_SHEETS_CLIENT_ID,
+      process.env.GOOGLE_SHEETS_SECRET,
+      callbackUrl
+    );
+
+    const scopes = [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/spreadsheets",
+    ];
+
+    const oauthLoginUrl = oauth2Client.generateAuthUrl({
+      access_type: "offline",
+      scope: scopes,
+    });
+
+    return oauthLoginUrl;
+  },
+});
+
 export const retrieveDocusignUserToken = action({
   handler: async (ctx) => {
     const storedDocusignData = await ctx.runQuery(
@@ -222,6 +251,22 @@ export const retrieveDocusignUserToken = action({
       { docusignDataStr }
     );
     return storedData;
+  },
+});
+
+export const retrieveGSheetsToken = action({
+  args: {
+    authCode: v.string(),
+    callbackUrl: v.string()
+  },
+  handler: async (ctx, { authCode, callbackUrl }) => {
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_SHEETS_CLIENT_ID,
+      process.env.GOOGLE_SHEETS_SECRET,
+      callbackUrl
+    );
+    const { tokens } = await oauth2Client.getToken(authCode);
+    return tokens;
   },
 });
 
