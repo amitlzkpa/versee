@@ -83,7 +83,7 @@ async function downloadFileAsBytes(url: string): Promise<Buffer> {
 //   return jwt.sign(body, privateKey, { algorithm: "RS256", header });
 // };
 
-async function getAccessToken(ctx, storedUserData) {
+async function getActiveTokenForDocusign(ctx, storedUserData) {
   let docusignUserTknObj = storedUserData.docusignUserTknObj;
   const issuedAt = docusignUserTknObj.issuedAt;
   const tokenDurationInSecs = parseInt(docusignUserTknObj.expires_in);
@@ -319,7 +319,10 @@ export const sendDocusignSigningEmail = action({
     );
     const accountId = storedUserData.docusignUserInfo.accounts[0].accountId;
 
-    const docusignUserTknObj = await getAccessToken(ctx, storedUserData);
+    const docusignUserTknObj = await getActiveTokenForDocusign(
+      ctx,
+      storedUserData
+    );
     const accessToken = docusignUserTknObj.access_token;
 
     const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
@@ -404,7 +407,10 @@ export const openDocusignSenderView = action({
     );
     const accountId = storedUserData.docusignUserInfo.accounts[0].accountId;
 
-    const docusignUserTknObj = await getAccessToken(ctx, storedUserData);
+    const docusignUserTknObj = await getActiveTokenForDocusign(
+      ctx,
+      storedUserData
+    );
     const accessToken = docusignUserTknObj.access_token;
 
     const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
@@ -519,7 +525,10 @@ export const createSenderViewFromDoc = action({
     );
     const accountId = storedUserData.docusignUserInfo.accounts[0].accountId;
 
-    const docusignUserTknObj = await getAccessToken(ctx, storedUserData);
+    const docusignUserTknObj = await getActiveTokenForDocusign(
+      ctx,
+      storedUserData
+    );
     const accessToken = docusignUserTknObj.access_token;
     dsApiClient.addDefaultHeader("Authorization", "Bearer " + accessToken);
     const envelopesApi = new docusign.EnvelopesApi(dsApiClient);
