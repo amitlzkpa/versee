@@ -18,6 +18,7 @@ import { Id } from "../../convex/_generated/dataModel";
 import ProjectInit_Uninit from "../components/ProjectInit_Uninit";
 import ProjectInit_AgreementsUploaded from "../components/ProjectInit_AgreementsUploaded";
 import ProjectInit_AgreementsReviewed from "../components/ProjectInit_AgreementsReviewed";
+import ProjectInit_SignersAssigned from "../components/ProjectInit_SignersAssigned";
 import FileUploader from "../components/FileUploader";
 
 import useCvxUtils from "../hooks/cvxUtils";
@@ -141,6 +142,10 @@ export default function Project() {
             case "agreements_reviewed":
               return (
                 <ProjectInit_AgreementsReviewed projectId={currProject?._id} />
+              );
+            case "signers_assigned":
+              return (
+                <ProjectInit_SignersAssigned projectId={currProject?._id} />
               );
             default:
               return null;
