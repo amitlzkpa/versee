@@ -198,34 +198,6 @@ export const retrieveDocusignAccessToken = action({
   },
 });
 
-export const startGSheetsOAuth = action({
-  args: {
-    callbackUrl: v.string(),
-  },
-  handler: async (ctx, { callbackUrl }) => {
-    const oauth2Client = new google.auth.OAuth2(
-      process.env.GOOGLE_SHEETS_CLIENT_ID,
-      process.env.GOOGLE_SHEETS_SECRET,
-      callbackUrl
-    );
-
-    const scopes = [
-      "https://www.googleapis.com/auth/userinfo.email",
-      "https://www.googleapis.com/auth/userinfo.profile",
-      "https://www.googleapis.com/auth/drive",
-      "https://www.googleapis.com/auth/drive.readonly",
-      "https://www.googleapis.com/auth/spreadsheets",
-    ];
-
-    const oauthLoginUrl = oauth2Client.generateAuthUrl({
-      access_type: "offline",
-      scope: scopes,
-    });
-
-    return oauthLoginUrl;
-  },
-});
-
 export const retrieveDocusignUserToken = action({
   handler: async (ctx) => {
     const storedUserData = await ctx.runQuery(
@@ -262,35 +234,6 @@ export const retrieveDocusignUserToken = action({
     const userDataStr = JSON.stringify({
       docusignUserTknObj,
       docusignUserInfo,
-    });
-    const storedData: any = await ctx.runMutation(
-      internal.dbOps.upsertUserData_ForUser,
-      { userDataStr }
-    );
-    return storedData;
-  },
-});
-
-export const retrieveGSheetsToken = action({
-  args: {
-    authCode: v.string(),
-    callbackUrl: v.string(),
-  },
-  handler: async (ctx, { authCode, callbackUrl }) => {
-    const oauth2Client = new google.auth.OAuth2(
-      process.env.GOOGLE_SHEETS_CLIENT_ID,
-      process.env.GOOGLE_SHEETS_SECRET,
-      callbackUrl
-    );
-    const { tokens } = await oauth2Client.getToken(authCode);
-
-    const googleDriveTknObj = {
-      tokens,
-      issuedAt: new Date().toISOString(),
-    };
-
-    const userDataStr = JSON.stringify({
-      googleDriveTknObj,
     });
     const storedData: any = await ctx.runMutation(
       internal.dbOps.upsertUserData_ForUser,
@@ -632,6 +575,65 @@ export const createSenderViewFromDoc = action({
       envelopeId,
       taggingUrl: viewRequestResults.url,
     };
+  },
+});
+
+// GOOGLE WORKSPACE
+
+export const startGSheetsOAuth = action({
+  args: {
+    callbackUrl: v.string(),
+  },
+  handler: async (ctx, { callbackUrl }) => {
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_SHEETS_CLIENT_ID,
+      process.env.GOOGLE_SHEETS_SECRET,
+      callbackUrl
+    );
+
+    const scopes = [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/spreadsheets",
+    ];
+
+    const oauthLoginUrl = oauth2Client.generateAuthUrl({
+      access_type: "offline",
+      scope: scopes,
+    });
+
+    return oauthLoginUrl;
+  },
+});
+
+export const retrieveGSheetsToken = action({
+  args: {
+    authCode: v.string(),
+    callbackUrl: v.string(),
+  },
+  handler: async (ctx, { authCode, callbackUrl }) => {
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_SHEETS_CLIENT_ID,
+      process.env.GOOGLE_SHEETS_SECRET,
+      callbackUrl
+    );
+    const { tokens } = await oauth2Client.getToken(authCode);
+
+    const googleDriveTknObj = {
+      tokens,
+      issuedAt: new Date().toISOString(),
+    };
+
+    const userDataStr = JSON.stringify({
+      googleDriveTknObj,
+    });
+    const storedData: any = await ctx.runMutation(
+      internal.dbOps.upsertUserData_ForUser,
+      { userDataStr }
+    );
+    return storedData;
   },
 });
 
