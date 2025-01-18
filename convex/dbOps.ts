@@ -58,25 +58,28 @@ export const getAllProjects_ForCurrUser = query({
       .order("desc")
       .collect();
     return projects;
-  }
+  },
 });
 
 export const getProject_ByProjectId = query({
   args: {
-    projectId: v.optional(v.id("vsProjects"))
+    projectId: v.optional(v.id("vsProjects")),
   },
   handler: async (ctx, { projectId }) => {
     if (!projectId) return null;
     const project = await ctx.db.get(projectId);
     return project;
-  }
+  },
 });
 
 export const createNewProject = internalMutation({
   handler: async (ctx) => {
     const currUser = await ctx.auth.getUserIdentity();
     if (!currUser) return null;
-    const newProjectData = { creator: currUser, initializationStatus: "uninitialized" };
+    const newProjectData = {
+      creator: currUser,
+      initializationStatus: "uninitialized",
+    };
     const newProject = await ctx.db.insert("vsProjects", newProjectData);
     return newProject;
   },
@@ -85,7 +88,7 @@ export const createNewProject = internalMutation({
 export const updateProject = internalMutation({
   args: {
     projectId: v.id("vsProjects"),
-    updateData: v.string()
+    updateData: v.string(),
   },
   handler: async (ctx, { projectId, updateData }) => {
     const _updateData = JSON.parse(updateData);
@@ -98,7 +101,7 @@ export const updateProject = internalMutation({
 
 export const getAllSrcDocs_ForProject = query({
   args: {
-    projectId: v.optional(v.id("vsProjects"))
+    projectId: v.optional(v.id("vsProjects")),
   },
   handler: async (ctx, { projectId }) => {
     if (!projectId) return [];
@@ -107,22 +110,28 @@ export const getAllSrcDocs_ForProject = query({
       .filter((q) => q.eq(q.field("projectId"), projectId))
       .order("desc")
       .collect();
-    const ps = dbRecs.map((dbRec) => new Promise((resolve, reject) => {
-      const storageId = dbRec.cvxStoredFileId as Id<"_storage">;
-      ctx.storage.getUrl(storageId)
-        .then((fileUrl) => {
-          resolve({
-            ...dbRec,
-            fileUrl
-          });
+    const ps = dbRecs.map(
+      (dbRec) =>
+        new Promise((resolve, reject) => {
+          const storageId = dbRec.cvxStoredFileId as Id<"_storage">;
+          ctx.storage
+            .getUrl(storageId)
+            .then((fileUrl) => {
+              resolve({
+                ...dbRec,
+                fileUrl,
+              });
+            })
+            .catch((err) => {
+              reject(err);
+            });
         })
-        .catch((err) => {
-          reject(err);
-        });
-    }));
-    const projectSrcDocs = (await Promise.allSettled(ps)).filter(p => p.status === "fulfilled").map(p => p.value);
+    );
+    const projectSrcDocs = (await Promise.allSettled(ps))
+      .filter((p) => p.status === "fulfilled")
+      .map((p) => p.value);
     return projectSrcDocs;
-  }
+  },
 });
 
 export const getSrcDoc_BySrcDocId = query({
@@ -133,13 +142,13 @@ export const getSrcDoc_BySrcDocId = query({
     if (!srcDocId) return null;
     const srcDoc = await ctx.db.get(srcDocId);
     return srcDoc;
-  }
+  },
 });
 
 export const createNewSrcDoc = internalMutation({
   args: {
     cvxStoredFileId: v.id("_storage"),
-    projectId: v.id("vsProjects")
+    projectId: v.id("vsProjects"),
   },
   handler: async (ctx, { cvxStoredFileId, projectId }) => {
     const srcDocData = {
@@ -152,26 +161,26 @@ export const createNewSrcDoc = internalMutation({
     };
     const newSrcDocId = await ctx.db.insert("vsSrcDoc", srcDocData);
     return newSrcDocId;
-  }
+  },
 });
 
 export const updateSrcDoc = internalMutation({
   args: {
     srcDocId: v.id("vsSrcDoc"),
-    updateDataStr: v.string()
+    updateDataStr: v.string(),
   },
   handler: async (ctx, { srcDocId, updateDataStr }) => {
     const writeData = JSON.parse(updateDataStr);
     const updatedSrcDocId = await ctx.db.patch(srcDocId, writeData);
     return updatedSrcDocId;
-  }
+  },
 });
 
 // PRJFILE
 
 export const getAllPrjFiles_ForProject = query({
   args: {
-    projectId: v.optional(v.id("vsProjects"))
+    projectId: v.optional(v.id("vsProjects")),
   },
   handler: async (ctx, { projectId }) => {
     if (!projectId) return [];
@@ -180,28 +189,34 @@ export const getAllPrjFiles_ForProject = query({
       .filter((q) => q.eq(q.field("projectId"), projectId))
       .order("desc")
       .collect();
-    const ps = dbRecs.map((dbRec) => new Promise((resolve, reject) => {
-      const storageId = dbRec.cvxStoredFileId as Id<"_storage">;
-      ctx.storage.getUrl(storageId)
-        .then((fileUrl) => {
-          resolve({
-            ...dbRec,
-            fileUrl
-          });
+    const ps = dbRecs.map(
+      (dbRec) =>
+        new Promise((resolve, reject) => {
+          const storageId = dbRec.cvxStoredFileId as Id<"_storage">;
+          ctx.storage
+            .getUrl(storageId)
+            .then((fileUrl) => {
+              resolve({
+                ...dbRec,
+                fileUrl,
+              });
+            })
+            .catch((err) => {
+              reject(err);
+            });
         })
-        .catch((err) => {
-          reject(err);
-        });
-    }));
-    const projectPrjFiles = (await Promise.allSettled(ps)).filter(p => p.status === "fulfilled").map(p => p.value);
+    );
+    const projectPrjFiles = (await Promise.allSettled(ps))
+      .filter((p) => p.status === "fulfilled")
+      .map((p) => p.value);
     return projectPrjFiles;
-  }
+  },
 });
 
 export const createNewPrjFile = internalMutation({
   args: {
     cvxStoredFileId: v.id("_storage"),
-    projectId: v.id("vsProjects")
+    projectId: v.id("vsProjects"),
   },
   handler: async (ctx, { cvxStoredFileId, projectId }) => {
     const prjFileData = {
@@ -210,5 +225,5 @@ export const createNewPrjFile = internalMutation({
     };
     const newPrjFileId = await ctx.db.insert("vsPrjFile", prjFileData);
     return newPrjFileId;
-  }
+  },
 });
