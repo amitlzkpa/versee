@@ -5,7 +5,7 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function OauthCallback_Docusign() {
-  const docusignData_ForCurrUser = useQuery(api.dbOps.getUserData_ForCurrUser);
+  const storedUserData = useQuery(api.dbOps.getUserData_ForCurrUser);
 
   const location = useLocation();
 
@@ -35,7 +35,7 @@ export default function OauthCallback_Docusign() {
     <Flex w="100%" direction="column" align="center" gap="sm">
       <Flex w="60%" direction="column" align="center" gap="md" p="lg">
         Docusign Auth
-        {!docusignData_ForCurrUser?.accessTokenObj ? (
+        {!storedUserData?.accessTokenObj ? (
           <>
             <Button
               onClick={onClickTest_retrieveDocusignAccessToken}
@@ -48,8 +48,7 @@ export default function OauthCallback_Docusign() {
         ) : (
           <></>
         )}
-        {docusignData_ForCurrUser?.accessTokenObj &&
-        !docusignData_ForCurrUser?.userTokenObj ? (
+        {storedUserData?.accessTokenObj && !storedUserData?.userTokenObj ? (
           <>
             <Button
               onClick={onClickTest_retrieveDocusignUserToken}

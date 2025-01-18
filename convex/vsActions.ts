@@ -83,8 +83,8 @@ async function downloadFileAsBytes(url: string): Promise<Buffer> {
 //   return jwt.sign(body, privateKey, { algorithm: "RS256", header });
 // };
 
-async function getAccessToken(ctx, storedDocusignData) {
-  let userTokenObj = storedDocusignData.userTokenObj;
+async function getAccessToken(ctx, storedUserData) {
+  let userTokenObj = storedUserData.userTokenObj;
   const issuedAt = userTokenObj.issuedAt;
   const tokenDurationInSecs = parseInt(userTokenObj.expires_in);
   const expirtyTs = new Date(
@@ -107,7 +107,7 @@ async function getAccessToken(ctx, storedDocusignData) {
     );
 
     const scopes = [oAuth.Scope.IMPERSONATION, oAuth.Scope.SIGNATURE];
-    const userId = storedDocusignData.userInfo.sub;
+    const userId = storedUserData.userInfo.sub;
     const expiresIn = 60 * 60;
 
     const res = await apiClient.requestJWTUserToken(
@@ -216,7 +216,7 @@ export const startGSheetsOAuth = action({
 
 export const retrieveDocusignUserToken = action({
   handler: async (ctx) => {
-    const storedDocusignData = await ctx.runQuery(
+    const storedUserData = await ctx.runQuery(
       api.dbOps.getUserData_ForCurrUser
     );
 
@@ -230,7 +230,7 @@ export const retrieveDocusignUserToken = action({
     });
 
     const scopes = [oAuth.Scope.IMPERSONATION, oAuth.Scope.SIGNATURE];
-    const userId = storedDocusignData.userInfo.sub;
+    const userId = storedUserData.userInfo.sub;
     const expiresIn = 3600;
 
     const res = await apiClient.requestJWTUserToken(
@@ -284,12 +284,12 @@ export const sendDocusignSigningEmail = action({
       oAuthBasePath: oAuthBasePath,
     });
 
-    const storedDocusignData = await ctx.runQuery(
+    const storedUserData = await ctx.runQuery(
       api.dbOps.getUserData_ForCurrUser
     );
-    const accountId = storedDocusignData.userInfo.accounts[0].accountId;
+    const accountId = storedUserData.userInfo.accounts[0].accountId;
 
-    const userTokenObj = await getAccessToken(ctx, storedDocusignData);
+    const userTokenObj = await getAccessToken(ctx, storedUserData);
     const accessToken = userTokenObj.access_token;
 
     const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
@@ -369,12 +369,12 @@ export const openDocusignSenderView = action({
       oAuthBasePath: oAuthBasePath,
     });
 
-    const storedDocusignData = await ctx.runQuery(
+    const storedUserData = await ctx.runQuery(
       api.dbOps.getUserData_ForCurrUser
     );
-    const accountId = storedDocusignData.userInfo.accounts[0].accountId;
+    const accountId = storedUserData.userInfo.accounts[0].accountId;
 
-    const userTokenObj = await getAccessToken(ctx, storedDocusignData);
+    const userTokenObj = await getAccessToken(ctx, storedUserData);
     const accessToken = userTokenObj.access_token;
 
     const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
@@ -484,12 +484,12 @@ export const createSenderViewFromDoc = action({
       oAuthBasePath: oAuthBasePath,
     });
 
-    const storedDocusignData = await ctx.runQuery(
+    const storedUserData = await ctx.runQuery(
       api.dbOps.getUserData_ForCurrUser
     );
-    const accountId = storedDocusignData.userInfo.accounts[0].accountId;
+    const accountId = storedUserData.userInfo.accounts[0].accountId;
 
-    const userTokenObj = await getAccessToken(ctx, storedDocusignData);
+    const userTokenObj = await getAccessToken(ctx, storedUserData);
     const accessToken = userTokenObj.access_token;
     dsApiClient.addDefaultHeader("Authorization", "Bearer " + accessToken);
     const envelopesApi = new docusign.EnvelopesApi(dsApiClient);

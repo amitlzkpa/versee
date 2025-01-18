@@ -6,7 +6,7 @@ import { api } from "../../convex/_generated/api";
 import { useState } from "react";
 
 export default function OauthCallback_Docusign() {
-  // const docusignData_ForCurrUser = useQuery(
+  // const storedUserData = useQuery(
   //   api.dbOps.getUserData_ForCurrUser
   // );
 
