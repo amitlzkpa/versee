@@ -23,7 +23,8 @@ export default function MyAccount() {
   );
 
   const onClick_startGSheetsOAuth = async () => {
-    const redirectUri = await performAction_startGSheetsOAuth();
+    const callbackUrl = `${window.location.origin}/callback/google-sheets`;
+    const redirectUri = await performAction_startGSheetsOAuth({ callbackUrl });
     window.location.href = redirectUri;
   };
 

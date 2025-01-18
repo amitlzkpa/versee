@@ -187,11 +187,14 @@ export const retrieveDocusignAccessToken = action({
 });
 
 export const startGSheetsOAuth = action({
-  handler: async (ctx) => {
+  args: {
+    callbackUrl: v.string()
+  },
+  handler: async (ctx, { callbackUrl }) => {
     const oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_SHEETS_CLIENT_ID,
       process.env.GOOGLE_SHEETS_SECRET,
-      `${process.env.CLIENT_ORIGIN}/callback?kp_app=google-sheets`
+      callbackUrl
     );
 
     const sheetsSdk = google.sheets({ version: "v4", auth: oauth2Client });
