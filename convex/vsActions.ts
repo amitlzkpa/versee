@@ -426,10 +426,9 @@ export const openDocusignSenderView = action({
 export const createSenderViewFromDoc = action({
   args: {
     projectId: v.id("vsProjects"),
-    signers: v.string(),
     returnUrl: v.string(),
   },
-  handler: async (ctx, { projectId, signers, returnUrl }) => {
+  handler: async (ctx, { projectId, returnUrl }) => {
     // Set up docusign API client
     const restApi = docusign.ApiClient.RestApi;
     const oAuth = docusign.ApiClient.OAuth;
@@ -454,6 +453,9 @@ export const createSenderViewFromDoc = action({
     const envDef = new docusign.EnvelopeDefinition();
     envDef.emailSubject = `Please Sign: ENVELOP_TITLE`;
     envDef.emailBlurb = `ENVELOP_BLURB`;
+
+    // Get project data
+    const projectData = await ctx.runQuery(api.dbOps.getProject_ByProjectId, { projectId });
 
     // Gather all docs
     const srcDocs = await ctx.runQuery(api.dbOps.getAllSrcDocs_ForProject, {
@@ -487,7 +489,7 @@ export const createSenderViewFromDoc = action({
     envDef.documents = [...docs];
 
     // Add signers for the document
-    const signerData = JSON.parse(signers);
+    const signerData = projectData.signers ?? [];
     const signerObjs = signerData.map((sg, idx) => {
       const signer = new docusign.Signer();
       signer.name = sg.signerName;
