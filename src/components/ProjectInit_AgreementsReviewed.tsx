@@ -16,8 +16,6 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
-import FileUploader from "./FileUploader";
-
 import useCvxUtils from "../hooks/cvxUtils";
 
 export default function ProjectInit_AgreementsReviewed({
@@ -51,21 +49,23 @@ export default function ProjectInit_AgreementsReviewed({
   };
 
   const onClick_completeAddingSigners = async () => {
-    const signers = JSON.stringify(signersList);
+    const updateData = JSON.stringify({
+      initializationStatus: "signers_assigned",
+      signers: signersList,
+    });
 
-    const urlToAnnotateDocsForSigning =
-      await cvxUtils.performAction_createSenderViewFromDoc({
-        projectId,
-        signers,
-        returnUrl: `${window.location.origin}/completed-signing-annotation`,
-      });
+    await cvxUtils.performAction_updateProject({ projectId, updateData });
 
-    if (urlToAnnotateDocsForSigning) {
-      window.location.href = urlToAnnotateDocsForSigning;
-    }
+    // const urlToAnnotateDocsForSigning =
+    //   await cvxUtils.performAction_createSenderViewFromDoc({
+    //     projectId,
+    //     signers,
+    //     returnUrl: `${window.location.origin}/completed-signing-annotation`,
+    //   });
 
-    // const updateData = JSON.stringify({ initializationStatus: "agreements_reviewed" });
-    // await cvxUtils.performAction_updateProject({ projectId, updateData })
+    // if (urlToAnnotateDocsForSigning) {
+    //   window.location.href = urlToAnnotateDocsForSigning;
+    // }
   };
 
   return (
