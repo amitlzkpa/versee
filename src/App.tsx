@@ -14,7 +14,7 @@ import { Flex, Loader, MantineProvider, createTheme, rem } from "@mantine/core";
 
 import Dev from "./views/Dev";
 import OauthCallback_Docusign from "./views/OauthCallback_Docusign";
-import OauthCallback_GSheets from "./views/OauthCallback_GSheets";
+import OauthCallback_GWspc from "./views/OauthCallback_GWspc";
 import CompletedSigningAnnotation_Docusign from "./views/CompletedSigningAnnotation_Docusign";
 import Landing from "./views/Landing";
 import MyAccount from "./views/MyAccount";
@@ -129,10 +129,10 @@ function App() {
           ),
         },
         {
-          path: "callback/google-sheets",
+          path: "callback/google-workspace",
           element: (
             <ProtectedRoute>
-              <OauthCallback_GSheets />
+              <OauthCallback_GWspc />
             </ProtectedRoute>
           ),
         },

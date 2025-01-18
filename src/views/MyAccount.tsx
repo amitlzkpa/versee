@@ -22,7 +22,7 @@ export default function MyAccount() {
   );
 
   const onClick_startGWspcOAuth = async () => {
-    const callbackUrl = `${window.location.origin}/callback/google-sheets`;
+    const callbackUrl = `${window.location.origin}/callback/google-workspace`;
     const redirectUri = await performAction_startGWspcOAuth({ callbackUrl });
     window.location.href = redirectUri;
   };

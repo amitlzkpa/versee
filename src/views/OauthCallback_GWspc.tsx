@@ -5,7 +5,7 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useState } from "react";
 
-export default function OauthCallback_Docusign() {
+export default function OauthCallback_GWspc() {
   const storedUserData = useQuery(api.dbOps.getUserData_ForCurrUser);
 
   const location = useLocation();
@@ -17,7 +17,7 @@ export default function OauthCallback_Docusign() {
   const onClickTest_retrieveGWspcAccessToken = async () => {
     const queryParams = new URLSearchParams(location.search);
     const code = queryParams.get("code");
-    const callbackUrl = `${window.location.origin}/callback/google-sheets`;
+    const callbackUrl = `${window.location.origin}/callback/google-workspace`;
     const savedRecord = await performAction_retrieveGWspcToken({
       authCode: code ?? "",
       callbackUrl,
@@ -28,7 +28,7 @@ export default function OauthCallback_Docusign() {
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
       <Flex w="60%" direction="column" align="center" gap="md" p="lg">
-        Google Sheets Auth
+        Google Workspace Auth
         {!storedUserData?.googleDriveTknObj ? (
           <>
             <Button
