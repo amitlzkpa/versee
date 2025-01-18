@@ -13,23 +13,23 @@ export const getUserData_ForCurrUser = query({
   handler: async (ctx) => {
     const currUser = await ctx.auth.getUserIdentity();
     if (!currUser) return null;
-    const docusignData = await ctx.db
+    const userData = await ctx.db
       .query("vsUser")
       .filter((q) => q.eq(q.field("user.subject"), currUser.subject))
       .first();
-    return docusignData;
+    return userData;
   },
 });
 
 export const upsertUserData_ForUser = internalMutation({
   args: {
-    docusignDataStr: v.string(),
+    userDataStr: v.string(),
   },
-  handler: async (ctx, { docusignDataStr }) => {
-    const docusignData = JSON.parse(docusignDataStr);
+  handler: async (ctx, { userDataStr }) => {
+    const userData = JSON.parse(userDataStr);
     const currUser = await ctx.auth.getUserIdentity();
     if (!currUser) return null;
-    const upsertData = { ...docusignData, user: currUser };
+    const upsertData = { ...userData, user: currUser };
     const exData = await ctx.db
       .query("vsUser")
       .filter((q) => q.eq(q.field("user.subject"), currUser.subject))

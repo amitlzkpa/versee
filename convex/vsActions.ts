@@ -122,10 +122,10 @@ async function getAccessToken(ctx, storedUserData) {
     userTokenObj.issuedAt = new Date().toISOString();
 
     const userInfo = await apiClient.getUserInfo(userTokenObj.access_token);
-    const docusignDataStr = JSON.stringify({ userTokenObj, userInfo });
+    const userDataStr = JSON.stringify({ userTokenObj, userInfo });
     const storedData: any = await ctx.runMutation(
       internal.dbOps.upsertUserData_ForUser,
-      { docusignDataStr }
+      { userDataStr }
     );
   }
   return userTokenObj;
@@ -177,10 +177,10 @@ export const retrieveDocusignAccessToken = action({
     );
     accessTokenObj.issuedAt = new Date().toISOString();
     const userInfo = await apiClient.getUserInfo(accessTokenObj.accessToken);
-    const docusignDataStr = JSON.stringify({ accessTokenObj, userInfo });
+    const userDataStr = JSON.stringify({ accessTokenObj, userInfo });
     const storedData: any = await ctx.runMutation(
       internal.dbOps.upsertUserData_ForUser,
-      { docusignDataStr }
+      { userDataStr }
     );
     return storedData;
   },
@@ -245,10 +245,10 @@ export const retrieveDocusignUserToken = action({
     userTokenObj.issuedAt = new Date().toISOString();
     const userInfo = await apiClient.getUserInfo(userTokenObj.access_token);
 
-    const docusignDataStr = JSON.stringify({ userTokenObj, userInfo });
+    const userDataStr = JSON.stringify({ userTokenObj, userInfo });
     const storedData: any = await ctx.runMutation(
       internal.dbOps.upsertUserData_ForUser,
-      { docusignDataStr }
+      { userDataStr }
     );
     return storedData;
   },
