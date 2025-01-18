@@ -20,15 +20,17 @@ export const generateUploadUrl = action(async (ctx) => {
 
 export const createNewProject = action({
   handler: async (ctx) => {
-    const newProject: any = await ctx.runMutation(internal.dbOps.createNewProject);
+    const newProject: any = await ctx.runMutation(
+      internal.dbOps.createNewProject
+    );
     return newProject;
-  }
+  },
 });
 
 export const updateProject = action({
   args: {
     projectId: v.id("vsProjects"),
-    updateData: v.string()
+    updateData: v.string(),
   },
   handler: async (ctx, { projectId, updateData }) => {
     const updatedProject: any = await ctx.runMutation(
@@ -36,25 +38,27 @@ export const updateProject = action({
       { projectId, updateData }
     );
     return updatedProject;
-  }
+  },
 });
 
 // DOCUSIGN
 
 async function downloadFileAsBytes(url: string): Promise<Buffer> {
   return new Promise<Buffer>((resolve, reject) => {
-    https.get(url, (response) => {
-      const chunks: Buffer[] = [];
-      response.on('data', (chunk) => {
-        chunks.push(chunk);
+    https
+      .get(url, (response) => {
+        const chunks: Buffer[] = [];
+        response.on("data", (chunk) => {
+          chunks.push(chunk);
+        });
+        response.on("end", () => {
+          const buffer = Buffer.concat(chunks);
+          resolve(buffer);
+        });
+      })
+      .on("error", (err) => {
+        reject(err);
       });
-      response.on('end', () => {
-        const buffer = Buffer.concat(chunks);
-        resolve(buffer);
-      });
-    }).on('error', (err) => {
-      reject(err);
-    });
   });
 }
 
@@ -82,8 +86,11 @@ async function getAccessToken(ctx, storedDocusignData) {
   let userTokenObj = storedDocusignData.userTokenObj;
   const issuedAt = userTokenObj.issuedAt;
   const tokenDurationInSecs = parseInt(userTokenObj.expires_in);
-  const expirtyTs = new Date(new Date(issuedAt).getTime() + (tokenDurationInSecs - (10 * 60)) * 1000);
-  const tokenNeedsRefresh = new Date(expirtyTs).getTime() < new Date().getTime();
+  const expirtyTs = new Date(
+    new Date(issuedAt).getTime() + (tokenDurationInSecs - 10 * 60) * 1000
+  );
+  const tokenNeedsRefresh =
+    new Date(expirtyTs).getTime() < new Date().getTime();
   if (tokenNeedsRefresh) {
     const restApi = docusign.ApiClient.RestApi;
     const oAuth = docusign.ApiClient.OAuth;
@@ -91,14 +98,14 @@ async function getAccessToken(ctx, storedDocusignData) {
     const oAuthBasePath = oAuth.BasePath.DEMO;
     const apiClient = new docusign.ApiClient({
       basePath: basePath,
-      oAuthBasePath: oAuthBasePath
+      oAuthBasePath: oAuthBasePath,
     });
-    apiClient.addDefaultHeader('Authorization', 'Bearer ' + userTokenObj.access_token);
+    apiClient.addDefaultHeader(
+      "Authorization",
+      "Bearer " + userTokenObj.access_token
+    );
 
-    const scopes = [
-      oAuth.Scope.IMPERSONATION,
-      oAuth.Scope.SIGNATURE
-    ];
+    const scopes = [oAuth.Scope.IMPERSONATION, oAuth.Scope.SIGNATURE];
     const userId = storedDocusignData.userInfo.sub;
     const expiresIn = 60 * 60;
 
@@ -106,7 +113,7 @@ async function getAccessToken(ctx, storedDocusignData) {
       process.env.DOCUSIGN_INTEGRATION_KEY,
       userId,
       scopes,
-      Buffer.from(process.env.DOCUSIGN_RSA_PRV_KEY.replace(/\\n/g, '\n')),
+      Buffer.from(process.env.DOCUSIGN_RSA_PRV_KEY.replace(/\\n/g, "\n")),
       expiresIn
     );
 
@@ -115,7 +122,10 @@ async function getAccessToken(ctx, storedDocusignData) {
 
     const userInfo = await apiClient.getUserInfo(userTokenObj.access_token);
     const docusignDataStr = JSON.stringify({ userTokenObj, userInfo });
-    const storedData: any = await ctx.runMutation(internal.dbOps.upsertDocusignData_ForUser, { docusignDataStr });
+    const storedData: any = await ctx.runMutation(
+      internal.dbOps.upsertDocusignData_ForUser,
+      { docusignDataStr }
+    );
   }
   return userTokenObj;
 }
@@ -128,13 +138,10 @@ export const startDocusignOAuth = action({
     const oAuthBasePath = oAuth.BasePath.DEMO;
     const apiClient = new docusign.ApiClient({
       basePath: basePath,
-      oAuthBasePath: oAuthBasePath
+      oAuthBasePath: oAuthBasePath,
     });
 
-    const scopes = [
-      oAuth.Scope.IMPERSONATION,
-      oAuth.Scope.SIGNATURE
-    ];
+    const scopes = [oAuth.Scope.IMPERSONATION, oAuth.Scope.SIGNATURE];
 
     const oauthLoginUrl = apiClient.getAuthorizationUri(
       process.env.DOCUSIGN_INTEGRATION_KEY,
@@ -144,7 +151,7 @@ export const startDocusignOAuth = action({
       "code"
     );
     return oauthLoginUrl;
-  }
+  },
 });
 
 export const retrieveDocusignAccessToken = action({
@@ -158,7 +165,7 @@ export const retrieveDocusignAccessToken = action({
     const oAuthBasePath = oAuth.BasePath.DEMO;
     const apiClient = new docusign.ApiClient({
       basePath: basePath,
-      oAuthBasePath: oAuthBasePath
+      oAuthBasePath: oAuthBasePath,
     });
 
     const code = authCode;
@@ -170,14 +177,19 @@ export const retrieveDocusignAccessToken = action({
     accessTokenObj.issuedAt = new Date().toISOString();
     const userInfo = await apiClient.getUserInfo(accessTokenObj.accessToken);
     const docusignDataStr = JSON.stringify({ accessTokenObj, userInfo });
-    const storedData: any = await ctx.runMutation(internal.dbOps.upsertDocusignData_ForUser, { docusignDataStr });
+    const storedData: any = await ctx.runMutation(
+      internal.dbOps.upsertDocusignData_ForUser,
+      { docusignDataStr }
+    );
     return storedData;
-  }
+  },
 });
 
 export const retrieveDocusignUserToken = action({
   handler: async (ctx) => {
-    const storedDocusignData = await ctx.runQuery(api.dbOps.getDocusignData_ForCurrUser);
+    const storedDocusignData = await ctx.runQuery(
+      api.dbOps.getDocusignData_ForCurrUser
+    );
 
     const restApi = docusign.ApiClient.RestApi;
     const oAuth = docusign.ApiClient.OAuth;
@@ -185,13 +197,10 @@ export const retrieveDocusignUserToken = action({
     const oAuthBasePath = oAuth.BasePath.DEMO;
     const apiClient = new docusign.ApiClient({
       basePath: basePath,
-      oAuthBasePath: oAuthBasePath
+      oAuthBasePath: oAuthBasePath,
     });
 
-    const scopes = [
-      oAuth.Scope.IMPERSONATION,
-      oAuth.Scope.SIGNATURE
-    ];
+    const scopes = [oAuth.Scope.IMPERSONATION, oAuth.Scope.SIGNATURE];
     const userId = storedDocusignData.userInfo.sub;
     const expiresIn = 3600;
 
@@ -199,7 +208,7 @@ export const retrieveDocusignUserToken = action({
       process.env.DOCUSIGN_INTEGRATION_KEY,
       userId,
       scopes,
-      Buffer.from(process.env.DOCUSIGN_RSA_PRV_KEY.replace(/\\n/g, '\n')),
+      Buffer.from(process.env.DOCUSIGN_RSA_PRV_KEY.replace(/\\n/g, "\n")),
       expiresIn
     );
 
@@ -208,14 +217,17 @@ export const retrieveDocusignUserToken = action({
     const userInfo = await apiClient.getUserInfo(userTokenObj.access_token);
 
     const docusignDataStr = JSON.stringify({ userTokenObj, userInfo });
-    const storedData: any = await ctx.runMutation(internal.dbOps.upsertDocusignData_ForUser, { docusignDataStr });
+    const storedData: any = await ctx.runMutation(
+      internal.dbOps.upsertDocusignData_ForUser,
+      { docusignDataStr }
+    );
     return storedData;
-  }
+  },
 });
 
 export const sendDocusignSigningEmail = action({
   args: {
-    srcDocId: v.id("vsSrcDoc")
+    srcDocId: v.id("vsSrcDoc"),
   },
   handler: async (ctx, { srcDocId }) => {
     const restApi = docusign.ApiClient.RestApi;
@@ -224,23 +236,25 @@ export const sendDocusignSigningEmail = action({
     const oAuthBasePath = oAuth.BasePath.DEMO;
     const dsApiClient = new docusign.ApiClient({
       basePath: basePath,
-      oAuthBasePath: oAuthBasePath
+      oAuthBasePath: oAuthBasePath,
     });
 
-    const storedDocusignData = await ctx.runQuery(api.dbOps.getDocusignData_ForCurrUser);
+    const storedDocusignData = await ctx.runQuery(
+      api.dbOps.getDocusignData_ForCurrUser
+    );
     const accountId = storedDocusignData.userInfo.accounts[0].accountId;
 
     const userTokenObj = await getAccessToken(ctx, storedDocusignData);
     const accessToken = userTokenObj.access_token;
 
     const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
-      srcDocId
+      srcDocId,
     });
     const fileUrl = await ctx.storage.getUrl(srcDoc.cvxStoredFileId);
     const docBytes = await downloadFileAsBytes(fileUrl);
-    const doc3b64 = Buffer.from(docBytes).toString('base64');
+    const doc3b64 = Buffer.from(docBytes).toString("base64");
 
-    dsApiClient.addDefaultHeader('Authorization', 'Bearer ' + accessToken);
+    dsApiClient.addDefaultHeader("Authorization", "Bearer " + accessToken);
     const envelopesApi = new docusign.EnvelopesApi(dsApiClient);
 
     const envDef = new docusign.EnvelopeDefinition();
@@ -251,8 +265,8 @@ export const sendDocusignSigningEmail = action({
     const doc = new docusign.Document();
     const base64Doc = doc3b64;
     doc.documentBase64 = base64Doc;
-    doc.name = 'TestFile.pdf';
-    doc.documentId = '1';
+    doc.name = "TestFile.pdf";
+    doc.documentId = "1";
 
     const docs = [];
     docs.push(doc);
@@ -261,17 +275,17 @@ export const sendDocusignSigningEmail = action({
     // Add a recipient to sign the document
     const signer = new docusign.Signer();
     signer.email = "amit.lzkpa@gmail.com";
-    signer.name = 'Amit N';
-    signer.recipientId = '1';
+    signer.name = "Amit N";
+    signer.recipientId = "1";
 
     // create a signHere tab somewhere on the document for the signer to sign
     // default unit of measurement is pixels, can be mms, cms, inches also
     const signHere = new docusign.SignHere();
-    signHere.documentId = '1';
-    signHere.pageNumber = '1';
-    signHere.recipientId = '1';
-    signHere.xPosition = '100';
-    signHere.yPosition = '100';
+    signHere.documentId = "1";
+    signHere.pageNumber = "1";
+    signHere.recipientId = "1";
+    signHere.xPosition = "100";
+    signHere.yPosition = "100";
 
     // can have multiple tabs, so need to add to envelope as a single element list
     const signHereTabs = [];
@@ -286,9 +300,11 @@ export const sendDocusignSigningEmail = action({
     envDef.recipients.signers.push(signer);
 
     // send the envelope (otherwise it will be "created" in the Draft folder
-    envDef.status = 'sent';
+    envDef.status = "sent";
 
-    const envelopeSummary = await envelopesApi.createEnvelope(accountId, { envelopeDefinition: envDef });
+    const envelopeSummary = await envelopesApi.createEnvelope(accountId, {
+      envelopeDefinition: envDef,
+    });
     return JSON.stringify(envelopeSummary);
   },
 });
@@ -305,17 +321,19 @@ export const openDocusignSenderView = action({
     const oAuthBasePath = oAuth.BasePath.DEMO;
     const dsApiClient = new docusign.ApiClient({
       basePath: basePath,
-      oAuthBasePath: oAuthBasePath
+      oAuthBasePath: oAuthBasePath,
     });
 
-    const storedDocusignData = await ctx.runQuery(api.dbOps.getDocusignData_ForCurrUser);
+    const storedDocusignData = await ctx.runQuery(
+      api.dbOps.getDocusignData_ForCurrUser
+    );
     const accountId = storedDocusignData.userInfo.accounts[0].accountId;
 
     const userTokenObj = await getAccessToken(ctx, storedDocusignData);
     const accessToken = userTokenObj.access_token;
 
     const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
-      srcDocId
+      srcDocId,
     });
 
     console.log("================srcDoc================");
@@ -323,9 +341,9 @@ export const openDocusignSenderView = action({
 
     const fileUrl = await ctx.storage.getUrl(srcDoc.cvxStoredFileId);
     const docBytes = await downloadFileAsBytes(fileUrl);
-    const doc3b64 = Buffer.from(docBytes).toString('base64');
+    const doc3b64 = Buffer.from(docBytes).toString("base64");
 
-    dsApiClient.addDefaultHeader('Authorization', 'Bearer ' + accessToken);
+    dsApiClient.addDefaultHeader("Authorization", "Bearer " + accessToken);
     const envelopesApi = new docusign.EnvelopesApi(dsApiClient);
 
     const envDef = new docusign.EnvelopeDefinition();
@@ -336,8 +354,8 @@ export const openDocusignSenderView = action({
     const doc = new docusign.Document();
     const base64Doc = doc3b64;
     doc.documentBase64 = base64Doc;
-    doc.name = 'TestFile.pdf';
-    doc.documentId = '1';
+    doc.name = "TestFile.pdf";
+    doc.documentId = "1";
 
     const docs = [];
     docs.push(doc);
@@ -346,17 +364,19 @@ export const openDocusignSenderView = action({
     // Add a recipient to sign the document
     const signer = new docusign.Signer();
     signer.email = "amit.lzkpa@gmail.com";
-    signer.name = 'Amit N';
-    signer.recipientId = '1';
+    signer.name = "Amit N";
+    signer.recipientId = "1";
 
     // Above causes issue
     envDef.recipients = new docusign.Recipients();
     envDef.recipients.signers = [];
     envDef.recipients.signers.push(signer);
 
-    envDef.status = 'created';
+    envDef.status = "created";
 
-    const envelopeSummary = await envelopesApi.createEnvelope(accountId, { envelopeDefinition: envDef });
+    const envelopeSummary = await envelopesApi.createEnvelope(accountId, {
+      envelopeDefinition: envDef,
+    });
 
     console.log("================envelopeSummary================");
     console.log(envelopeSummary);
@@ -388,9 +408,13 @@ export const openDocusignSenderView = action({
     console.log("================viewRequest================");
     console.log(viewRequest);
 
-    const viewRequestResults = await envelopesApi.createSenderView(accountId, envelopeId, {
-      envelopeViewRequest: viewRequest,
-    });
+    const viewRequestResults = await envelopesApi.createSenderView(
+      accountId,
+      envelopeId,
+      {
+        envelopeViewRequest: viewRequest,
+      }
+    );
 
     console.log("================viewRequestResults================");
     console.log(viewRequestResults);
@@ -406,53 +430,97 @@ export const createSenderViewFromDoc = action({
     returnUrl: v.string(),
   },
   handler: async (ctx, { projectId, signers, returnUrl }) => {
+    // Set up docusign API client
     const restApi = docusign.ApiClient.RestApi;
     const oAuth = docusign.ApiClient.OAuth;
     const basePath = restApi.BasePath.DEMO;
     const oAuthBasePath = oAuth.BasePath.DEMO;
     const dsApiClient = new docusign.ApiClient({
       basePath: basePath,
-      oAuthBasePath: oAuthBasePath
+      oAuthBasePath: oAuthBasePath,
     });
 
-    const storedDocusignData = await ctx.runQuery(api.dbOps.getDocusignData_ForCurrUser);
+    const storedDocusignData = await ctx.runQuery(
+      api.dbOps.getDocusignData_ForCurrUser
+    );
     const accountId = storedDocusignData.userInfo.accounts[0].accountId;
 
     const userTokenObj = await getAccessToken(ctx, storedDocusignData);
     const accessToken = userTokenObj.access_token;
+    dsApiClient.addDefaultHeader("Authorization", "Bearer " + accessToken);
+    const envelopesApi = new docusign.EnvelopesApi(dsApiClient);
 
-    const srcDocs = await ctx.runQuery(api.dbOps.getAllSrcDocs_ForProject, { projectId });
-
-    const ps = srcDocs.map((srcDoc, idx) => new Promise((resolve, reject) => {
-
-      downloadFileAsBytes(srcDoc.fileUrl)
-        .then((docBytes) => {
-          const doc3b64 = Buffer.from(docBytes).toString('base64');
-          const doc = new docusign.Document();
-          const base64Doc = doc3b64;
-          doc.documentBase64 = base64Doc;
-          doc.name = `File_${idx}.pdf`;
-          doc.documentId = idx;
-          resolve(doc);
-        })
-        .catch((err) => {
-          reject(err);
-        })
-
-    }));
-
-    const docs = (await Promise.allSettled(ps)).filter(p => p.status === "fulfilled").map(p => p.value);
-
+    // Create EnvelopeDefinition
     const envDef = new docusign.EnvelopeDefinition();
-    envDef.emailSubject = `Please Sign: ${srcDoc.titleText}`;
-    envDef.emailBlurb = srcDoc.summaryText;
+    envDef.emailSubject = `Please Sign: ENVELOP_TITLE`;
+    envDef.emailBlurb = `ENVELOP_BLURB`;
 
-    envDef.documents = docs;
+    // Gather all docs
+    const srcDocs = await ctx.runQuery(api.dbOps.getAllSrcDocs_ForProject, {
+      projectId,
+    });
 
-    // CONTINUE HERE
+    // Get docs binary data
+    const ps = srcDocs.map(
+      (srcDoc, idx) =>
+        new Promise((resolve, reject) => {
+          downloadFileAsBytes(srcDoc.fileUrl)
+            .then((docBytes) => {
+              const doc3b64 = Buffer.from(docBytes).toString("base64");
+              const doc = new docusign.Document();
+              const base64Doc = doc3b64;
+              doc.documentBase64 = base64Doc;
+              doc.name = `File_${idx + 1}.pdf`;
+              doc.documentId = (idx + 1).toString();
+              resolve(doc);
+            })
+            .catch((err) => {
+              reject(err);
+            });
+        })
+    );
 
+    const docs = (await Promise.allSettled(ps))
+      .filter((p) => p.status === "fulfilled")
+      .map((p) => p.value);
 
-  }
+    envDef.documents = [...docs];
+
+    // Add signers for the document
+    const signerData = JSON.parse(signers);
+    const signerObjs = signerData.map((sg, idx) => {
+      const signer = new docusign.Signer();
+      signer.name = sg.signerName;
+      signer.email = sg.signerEmail;
+      signer.recipientId = (idx + 1).toString();
+      return signer;
+    });
+
+    envDef.recipients = new docusign.Recipients();
+    envDef.recipients.signers = [...signerObjs];
+
+    // Set envelope status to draft
+    envDef.status = "created";
+
+    const envelopeSummary = await envelopesApi.createEnvelope(accountId, {
+      envelopeDefinition: envDef,
+    });
+
+    const envelopeId = envelopeSummary.envelopeId;
+
+    // Generate url to add tabs to envelope
+    const viewRequest = new docusign.EnvelopeViewRequest();
+    viewRequest.returnUrl = returnUrl;
+    viewRequest.viewAccess = "envelope";
+
+    const viewRequestResults = await envelopesApi.createSenderView(
+      accountId,
+      envelopeId,
+      { envelopeViewRequest: viewRequest }
+    );
+
+    return viewRequestResults.url;
+  },
 });
 
 // SRCDOCS
@@ -488,63 +556,68 @@ const generateForPDF_summary = async (pdfArrayBuffer, model) => {
 export const createNewSrcDoc = action({
   args: {
     cvxStoredFileId: v.string(),
-    projectId: v.string()
+    projectId: v.string(),
   },
   handler: async (ctx, { cvxStoredFileId, projectId }) => {
     const _cvxStoredFileId = cvxStoredFileId as Id<"_storage">;
     const _projectId = projectId as Id<"vsProjects">;
     const writeData = {
       cvxStoredFileId: _cvxStoredFileId,
-      projectId: _projectId
+      projectId: _projectId,
     };
-    const newSrcDocId: any = await ctx.runMutation(internal.dbOps.createNewSrcDoc, writeData);
+    const newSrcDocId: any = await ctx.runMutation(
+      internal.dbOps.createNewSrcDoc,
+      writeData
+    );
     ctx.runAction(api.vsActions.analyseSrcDoc, { srcDocId: newSrcDocId });
     return newSrcDocId;
-  }
+  },
 });
 
 export const analyseSrcDoc = action({
   args: {
-    srcDocId: v.id("vsSrcDoc")
+    srcDocId: v.id("vsSrcDoc"),
   },
   handler: async (ctx, { srcDocId }) => {
     const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
-      srcDocId
+      srcDocId,
     });
     const fileUrl = await ctx.storage.getUrl(srcDoc.cvxStoredFileId);
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const pdfArrayBuffer = await fetch(fileUrl).then((response) => response.arrayBuffer());
+    const pdfArrayBuffer = await fetch(fileUrl).then((response) =>
+      response.arrayBuffer()
+    );
 
     let uploadedFileData;
 
     const writeData = { titleStatus: "generating" };
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
-      updateDataStr: JSON.stringify(writeData)
+      updateDataStr: JSON.stringify(writeData),
     });
     const titleText = await generateForPDF_title(pdfArrayBuffer, model);
     writeData.titleStatus = "generated";
     writeData.titleText = titleText;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
-      updateDataStr: JSON.stringify(writeData)
+      updateDataStr: JSON.stringify(writeData),
     });
 
     writeData.summaryStatus = "generating";
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
-      updateDataStr: JSON.stringify(writeData)
+      updateDataStr: JSON.stringify(writeData),
     });
     const summaryText = await generateForPDF_summary(pdfArrayBuffer, model);
     writeData.summaryStatus = "generated";
     writeData.summaryText = summaryText;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
-      updateDataStr: JSON.stringify(writeData)
+      updateDataStr: JSON.stringify(writeData),
     });
-  }
+  },
 });
 
 // PRJFILE
@@ -552,17 +625,20 @@ export const analyseSrcDoc = action({
 export const createNewPrjFile = action({
   args: {
     cvxStoredFileId: v.string(),
-    projectId: v.string()
+    projectId: v.string(),
   },
   handler: async (ctx, { cvxStoredFileId, projectId }) => {
     const _cvxStoredFileId = cvxStoredFileId as Id<"_storage">;
     const _projectId = projectId as Id<"vsProjects">;
     const writeData = {
       cvxStoredFileId: _cvxStoredFileId,
-      projectId: _projectId
+      projectId: _projectId,
     };
-    const newPrjFileId: any = await ctx.runMutation(internal.dbOps.createNewPrjFile, writeData);
+    const newPrjFileId: any = await ctx.runMutation(
+      internal.dbOps.createNewPrjFile,
+      writeData
+    );
     // ctx.runAction(api.vsActions.analyseSrcDoc, { prjFileId: newPrjFileId });
     return newPrjFileId;
-  }
+  },
 });

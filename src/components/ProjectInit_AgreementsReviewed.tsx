@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState } from "react";
 import {
   Accordion,
   Button,
@@ -8,22 +8,21 @@ import {
   Flex,
   Input,
   Text,
-  rem
-} from '@mantine/core';
-import { FaTrashAlt } from 'react-icons/fa';
+  rem,
+} from "@mantine/core";
+import { FaTrashAlt } from "react-icons/fa";
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { Id } from '../../convex/_generated/dataModel';
+import { Id } from "../../convex/_generated/dataModel";
 
-import FileUploader from './FileUploader';
+import FileUploader from "./FileUploader";
 
-import useCvxUtils from '../hooks/cvxUtils';
+import useCvxUtils from "../hooks/cvxUtils";
 
 export default function ProjectInit_AgreementsReviewed({
-  projectId = null
+  projectId = null,
 }: any) {
-
   const cvxUtils = useCvxUtils();
 
   const [signersList, setSignersList] = useState<any>([]);
@@ -32,30 +31,38 @@ export default function ProjectInit_AgreementsReviewed({
   const [newSignerEmail, setNewSignerEmail] = useState("");
 
   const handleAddSigner = () => {
-    const updSignersList = [...signersList, {
-      signerName: newSignerName,
-      signerEmail: newSignerEmail
-    }];
-    console.log(updSignersList);
+    const updSignersList = [
+      ...signersList,
+      {
+        signerName: newSignerName,
+        signerEmail: newSignerEmail,
+      },
+    ];
     setSignersList(updSignersList);
     setNewSignerName("");
     setNewSignerEmail("");
   };
 
   const handleDeleteSigner = (signer: any) => {
-    const updSignersList = signersList.filter((s: any) => s.signerEmail !== signer.signerEmail);
+    const updSignersList = signersList.filter(
+      (s: any) => s.signerEmail !== signer.signerEmail
+    );
     setSignersList(updSignersList);
   };
 
   const onClick_completeAddingSigners = async () => {
-    const signers = JSON.parse(JSON.stringify(signersList));
-    console.log(signers);
+    const signers = JSON.stringify(signersList);
 
-    const urlToAnnotateDocsForSigning = await cvxUtils.performAction_createSenderViewFromDoc({
-      projectId,
-      signers,
-      returnUrl: `${window.location.origin}/completed-signing-annotation`
-    });
+    const urlToAnnotateDocsForSigning =
+      await cvxUtils.performAction_createSenderViewFromDoc({
+        projectId,
+        signers,
+        returnUrl: `${window.location.origin}/completed-signing-annotation`,
+      });
+
+    if (urlToAnnotateDocsForSigning) {
+      window.location.href = urlToAnnotateDocsForSigning;
+    }
 
     // const updateData = JSON.stringify({ initializationStatus: "agreements_reviewed" });
     // await cvxUtils.performAction_updateProject({ projectId, updateData })
@@ -74,30 +81,15 @@ export default function ProjectInit_AgreementsReviewed({
         <Accordion w="100%" variant="filled" chevron={null}>
           <Accordion.Item key="first" value="first">
             <Accordion.Control icon="+">
-              <Flex
-                w="100%"
-                direction="column"
-                align="center"
-                gap="sm"
-              >
+              <Flex w="100%" direction="column" align="center" gap="sm">
                 <Text c="gray.5" fz="sm">
                   Add New Signer
                 </Text>
               </Flex>
             </Accordion.Control>
             <Accordion.Panel>
-              <Flex
-                w="100%"
-                direction="column"
-                align="center"
-                gap="md"
-              >
-                <Flex
-                  w="100%"
-                  direction="column"
-                  align="center"
-                  gap="xs"
-                >
+              <Flex w="100%" direction="column" align="center" gap="md">
+                <Flex w="100%" direction="column" align="center" gap="xs">
                   <Input
                     w="100%"
                     onChange={(e) => setNewSignerName(e.target.value)}
@@ -111,11 +103,7 @@ export default function ProjectInit_AgreementsReviewed({
                     placeholder="New Signer Email"
                   />
                 </Flex>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={handleAddSigner}
-                >
+                <Button variant="outline" size="lg" onClick={handleAddSigner}>
                   Add
                 </Button>
               </Flex>
@@ -133,65 +121,51 @@ export default function ProjectInit_AgreementsReviewed({
           gap="md"
           style={{ overflowY: "auto" }}
         >
-          {
-            signersList.length < 1
-              ?
-              <Flex
-                w="100%"
-                h="100%"
-                maw="400"
-                direction="column"
-                justify="center"
-                align="center"
-                gap="sm"
-                style={{ textAlign: "center" }}
-              >
-                <Text>
-                  Time to bring others on board!
-                </Text>
-                <Text fz="lg">
-                  Add your signers to start the signing process.
-                </Text>
-              </Flex>
-              :
-              signersList.map((signerObj: any, idx: number) => {
-                return (
-                  <Flex
-                    key={signerObj.signerEmail}
-                    w="100%"
-                    direction="row"
-                    align="center"
-                    gap="md"
-                  >
-                    <Flex
-                      h="100%"
-                      p="md"
-                      align="center"
-                      justify="center"
-                    >
-                      <FaTrashAlt
-                        color="#ababab"
-                        onClick={() => { handleDeleteSigner(signerObj) }}
-                        style={{ cursor: "pointer" }}
-                      />
-                    </Flex>
-                    <Flex
-                      w="100%"
-                      h="100%"
-                      direction="column"
-                      justify="center"
-                    >
-                      <Text fw="bold" lh="0.8">
-                        {signerObj.signerName}
-                      </Text>
-                      <Text fz="sm">
-                        {signerObj.signerEmail}
-                      </Text>
-                    </Flex>
+          {signersList.length < 1 ? (
+            <Flex
+              w="100%"
+              h="100%"
+              maw="400"
+              direction="column"
+              justify="center"
+              align="center"
+              gap="sm"
+              style={{ textAlign: "center" }}
+            >
+              <Text>Time to bring others on board!</Text>
+              <Text fz="lg">
+                Add your signers to start the signing process.
+              </Text>
+            </Flex>
+          ) : (
+            signersList.map((signerObj: any, idx: number) => {
+              return (
+                <Flex
+                  key={signerObj.signerEmail}
+                  w="100%"
+                  direction="row"
+                  align="center"
+                  gap="md"
+                >
+                  <Flex h="100%" p="md" align="center" justify="center">
+                    <FaTrashAlt
+                      color="#ababab"
+                      onClick={() => {
+                        handleDeleteSigner(signerObj);
+                      }}
+                      style={{ cursor: "pointer" }}
+                    />
                   </Flex>
-                );
-              })
-          }
+                  <Flex w="100%" h="100%" direction="column" justify="center">
+                    <Text fw="bold" lh="0.8">
+                      {signerObj.signerName}
+                    </Text>
+                    <Text fz="sm">{signerObj.signerEmail}</Text>
+                  </Flex>
+                </Flex>
+              );
+            })
+          )}
         </Flex>
 
         <Button
@@ -205,4 +179,4 @@ export default function ProjectInit_AgreementsReviewed({
       </Flex>
     </>
   );
-};
+}
