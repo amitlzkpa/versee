@@ -1,4 +1,4 @@
-import { Button, Flex, Text, rem } from "@mantine/core";
+import { Button, Divider, Flex, Text, rem } from "@mantine/core";
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -15,6 +15,15 @@ export default function MyAccount() {
 
   const onClick_startDocusignOAuth = async () => {
     const redirectUri = await performAction_startDocusignOAuth();
+    window.location.href = redirectUri;
+  };
+
+  const performAction_startGSheetsOAuth = useAction(
+    api.vsActions.startGSheetsOAuth
+  );
+
+  const onClick_startGSheetsOAuth = async () => {
+    const redirectUri = await performAction_startGSheetsOAuth();
     window.location.href = redirectUri;
   };
 
@@ -41,6 +50,16 @@ export default function MyAccount() {
             </Flex>
           </>
         )}
+      </Flex>
+
+      <Divider w="60%" my="lg" />
+
+      <Flex w="60%" direction="column" align="center" gap="md" p="lg">
+        <Flex w="100%" justify="center" align="center" gap="sm">
+          <Button onClick={onClick_startGSheetsOAuth} w="100%" size="lg">
+            Connect Google Sheets
+          </Button>
+        </Flex>
       </Flex>
     </Flex>
   );
