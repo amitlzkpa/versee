@@ -12,7 +12,8 @@ export default function MyAccount() {
   );
 
   const onClick_startDocusignOAuth = async () => {
-    const redirectUri = await performAction_startDocusignOAuth();
+    const callbackUrl = `${window.location.origin}/callback/docusign`;
+    const redirectUri = await performAction_startDocusignOAuth({ callbackUrl });
     window.location.href = redirectUri;
   };
 

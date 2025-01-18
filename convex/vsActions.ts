@@ -134,7 +134,10 @@ async function getAccessToken(ctx, storedUserData) {
 }
 
 export const startDocusignOAuth = action({
-  handler: async (ctx) => {
+  args: {
+    callbackUrl: v.string(),
+  },
+  handler: async (ctx, { callbackUrl }) => {
     const restApi = docusign.ApiClient.RestApi;
     const oAuth = docusign.ApiClient.OAuth;
     const basePath = restApi.BasePath.DEMO;
@@ -149,8 +152,7 @@ export const startDocusignOAuth = action({
     const oauthLoginUrl = apiClient.getAuthorizationUri(
       process.env.DOCUSIGN_INTEGRATION_KEY,
       scopes,
-      process.env.DOCUSIGN_REDIRECT_URI,
-      // "http://localhost:5173/callback/docusign",
+      callbackUrl,
       "code"
     );
     return oauthLoginUrl;
