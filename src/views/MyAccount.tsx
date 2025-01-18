@@ -29,7 +29,7 @@ export default function MyAccount() {
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
       <Flex w="60%" direction="column" align="center" gap="md" p="lg">
-        {!storedUserData?.accessTokenObj ? (
+        {!storedUserData?.docusignAccessTknObj ? (
           <>
             <Button onClick={onClick_startDocusignOAuth} w="100%" size="lg">
               Connect Docusign

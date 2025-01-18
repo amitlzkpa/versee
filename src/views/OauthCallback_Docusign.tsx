@@ -35,7 +35,7 @@ export default function OauthCallback_Docusign() {
     <Flex w="100%" direction="column" align="center" gap="sm">
       <Flex w="60%" direction="column" align="center" gap="md" p="lg">
         Docusign Auth
-        {!storedUserData?.accessTokenObj ? (
+        {!storedUserData?.docusignAccessTknObj ? (
           <>
             <Button
               onClick={onClickTest_retrieveDocusignAccessToken}
@@ -48,7 +48,8 @@ export default function OauthCallback_Docusign() {
         ) : (
           <></>
         )}
-        {storedUserData?.accessTokenObj && !storedUserData?.userTokenObj ? (
+        {storedUserData?.docusignAccessTknObj &&
+        !storedUserData?.docusignUserTknObj ? (
           <>
             <Button
               onClick={onClickTest_retrieveDocusignUserToken}

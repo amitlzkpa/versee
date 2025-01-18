@@ -84,9 +84,9 @@ async function downloadFileAsBytes(url: string): Promise<Buffer> {
 // };
 
 async function getAccessToken(ctx, storedUserData) {
-  let userTokenObj = storedUserData.userTokenObj;
-  const issuedAt = userTokenObj.issuedAt;
-  const tokenDurationInSecs = parseInt(userTokenObj.expires_in);
+  let docusignUserTknObj = storedUserData.docusignUserTknObj;
+  const issuedAt = docusignUserTknObj.issuedAt;
+  const tokenDurationInSecs = parseInt(docusignUserTknObj.expires_in);
   const expirtyTs = new Date(
     new Date(issuedAt).getTime() + (tokenDurationInSecs - 10 * 60) * 1000
   );
@@ -103,7 +103,7 @@ async function getAccessToken(ctx, storedUserData) {
     });
     apiClient.addDefaultHeader(
       "Authorization",
-      "Bearer " + userTokenObj.access_token
+      "Bearer " + docusignUserTknObj.access_token
     );
 
     const scopes = [oAuth.Scope.IMPERSONATION, oAuth.Scope.SIGNATURE];
@@ -118,17 +118,19 @@ async function getAccessToken(ctx, storedUserData) {
       expiresIn
     );
 
-    userTokenObj = res.body;
-    userTokenObj.issuedAt = new Date().toISOString();
+    docusignUserTknObj = res.body;
+    docusignUserTknObj.issuedAt = new Date().toISOString();
 
-    const userInfo = await apiClient.getUserInfo(userTokenObj.access_token);
-    const userDataStr = JSON.stringify({ userTokenObj, userInfo });
+    const userInfo = await apiClient.getUserInfo(
+      docusignUserTknObj.access_token
+    );
+    const userDataStr = JSON.stringify({ docusignUserTknObj, userInfo });
     const storedData: any = await ctx.runMutation(
       internal.dbOps.upsertUserData_ForUser,
       { userDataStr }
     );
   }
-  return userTokenObj;
+  return docusignUserTknObj;
 }
 
 export const startDocusignOAuth = action({
@@ -170,14 +172,16 @@ export const retrieveDocusignAccessToken = action({
     });
 
     const code = authCode;
-    const accessTokenObj = await apiClient.generateAccessToken(
+    const docusignAccessTknObj = await apiClient.generateAccessToken(
       process.env.DOCUSIGN_INTEGRATION_KEY,
       process.env.DOCUSIGN_CLIENT_SECRET,
       code
     );
-    accessTokenObj.issuedAt = new Date().toISOString();
-    const userInfo = await apiClient.getUserInfo(accessTokenObj.accessToken);
-    const userDataStr = JSON.stringify({ accessTokenObj, userInfo });
+    docusignAccessTknObj.issuedAt = new Date().toISOString();
+    const userInfo = await apiClient.getUserInfo(
+      docusignAccessTknObj.accessToken
+    );
+    const userDataStr = JSON.stringify({ docusignAccessTknObj, userInfo });
     const storedData: any = await ctx.runMutation(
       internal.dbOps.upsertUserData_ForUser,
       { userDataStr }
@@ -241,11 +245,13 @@ export const retrieveDocusignUserToken = action({
       expiresIn
     );
 
-    const userTokenObj = res.body;
-    userTokenObj.issuedAt = new Date().toISOString();
-    const userInfo = await apiClient.getUserInfo(userTokenObj.access_token);
+    const docusignUserTknObj = res.body;
+    docusignUserTknObj.issuedAt = new Date().toISOString();
+    const userInfo = await apiClient.getUserInfo(
+      docusignUserTknObj.access_token
+    );
 
-    const userDataStr = JSON.stringify({ userTokenObj, userInfo });
+    const userDataStr = JSON.stringify({ docusignUserTknObj, userInfo });
     const storedData: any = await ctx.runMutation(
       internal.dbOps.upsertUserData_ForUser,
       { userDataStr }
@@ -289,8 +295,8 @@ export const sendDocusignSigningEmail = action({
     );
     const accountId = storedUserData.userInfo.accounts[0].accountId;
 
-    const userTokenObj = await getAccessToken(ctx, storedUserData);
-    const accessToken = userTokenObj.access_token;
+    const docusignUserTknObj = await getAccessToken(ctx, storedUserData);
+    const accessToken = docusignUserTknObj.access_token;
 
     const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
       srcDocId,
@@ -374,8 +380,8 @@ export const openDocusignSenderView = action({
     );
     const accountId = storedUserData.userInfo.accounts[0].accountId;
 
-    const userTokenObj = await getAccessToken(ctx, storedUserData);
-    const accessToken = userTokenObj.access_token;
+    const docusignUserTknObj = await getAccessToken(ctx, storedUserData);
+    const accessToken = docusignUserTknObj.access_token;
 
     const srcDoc = await ctx.runQuery(internal.dbOps.getSrcDoc_BySrcDocId, {
       srcDocId,
@@ -489,8 +495,8 @@ export const createSenderViewFromDoc = action({
     );
     const accountId = storedUserData.userInfo.accounts[0].accountId;
 
-    const userTokenObj = await getAccessToken(ctx, storedUserData);
-    const accessToken = userTokenObj.access_token;
+    const docusignUserTknObj = await getAccessToken(ctx, storedUserData);
+    const accessToken = docusignUserTknObj.access_token;
     dsApiClient.addDefaultHeader("Authorization", "Bearer " + accessToken);
     const envelopesApi = new docusign.EnvelopesApi(dsApiClient);
 
