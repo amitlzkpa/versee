@@ -51,13 +51,12 @@ export default function ProjectInit_SignersAssigned({ projectId = null }: any) {
     taggingIframe!.style.visibility = "visible";
   }, [docusignSenderConfigUrl]);
 
-  const onClick_sendDocument = async () => {
-    console.log("foo");
-    // TODO: Trigger new action to trigger send
-  };
-
   useEffect(() => {
     const msgListener = async (e: MessageEvent) => {
+      const taggingIframe = document.getElementById("tagging-iframe-target");
+      taggingIframe!.setAttribute("src", "");
+      taggingIframe!.style.visibility = "hidden";
+
       const updateData = JSON.stringify({
         initializationStatus: "tagging_completed",
       });
@@ -96,10 +95,6 @@ export default function ProjectInit_SignersAssigned({ projectId = null }: any) {
           src=""
           id="tagging-iframe-target"
         />
-
-        <Button w="100%" size="lg" onClick={onClick_sendDocument}>
-          Send
-        </Button>
       </Flex>
     </>
   );
