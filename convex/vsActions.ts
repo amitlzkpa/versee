@@ -495,18 +495,16 @@ export const sendDocusignEnvelope = action({
     dsApiClient.addDefaultHeader("Authorization", "Bearer " + accessToken);
     const envelopesApi = new docusign.EnvelopesApi(dsApiClient);
 
-    const envDef = await envelopesApi.getEnvelope(accountId, envelopeId);
-
+    const envDef = new docusign.Envelope();
+    envDef.envelopeId = envelopeId;
     envDef.emailSubject = `Sign sign sign`;
-    envDef.emailBlurb = `Versee signnnnn`;
     envDef.status = "sent";
 
-    // TODO: this update doesn't seem to work
-    const envelopeSummary = await envelopesApi.update(
-      accountId,
-      envelopeId,
-      envDef
-    );
+    const envelopeSummary = await envelopesApi.update(accountId, envelopeId, {
+      advancedUpdate: "true",
+      resendEnvelope: "true",
+      envelope: envDef,
+    });
 
     return JSON.stringify(envelopeSummary);
   },
