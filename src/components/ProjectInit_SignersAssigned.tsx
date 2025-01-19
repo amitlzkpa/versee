@@ -7,6 +7,7 @@ import {
   Divider,
   Flex,
   Input,
+  Loader,
   Text,
   rem,
 } from "@mantine/core";
@@ -80,21 +81,38 @@ export default function ProjectInit_SignersAssigned({ projectId = null }: any) {
         gap="sm"
         py="lg"
       >
-        <Text>Complete tagging</Text>
+        <Text fz="lg" fw="bold">
+          Add Signing Tags
+        </Text>
 
-        <iframe
-          style={{
-            width: "100%",
-            minHeight: 800,
-            height: "100%",
-            visibility: "hidden",
-            border: 0,
-            borderRadius: rem(20),
-            resize: "vertical",
-          }}
-          src=""
-          id="tagging-iframe-target"
-        />
+        {!docusignSenderConfigUrl ? (
+          <Flex
+            w="100%"
+            h="100%"
+            mih="240"
+            direction="column"
+            align="center"
+            justify="center"
+            gap="sm"
+            py="lg"
+          >
+            <Loader size="lg" type="oval" />
+          </Flex>
+        ) : (
+          <iframe
+            style={{
+              width: "100%",
+              minHeight: 800,
+              height: "100%",
+              visibility: "hidden",
+              border: 0,
+              borderRadius: rem(20),
+              resize: "vertical",
+            }}
+            src=""
+            id="tagging-iframe-target"
+          />
+        )}
       </Flex>
     </>
   );
