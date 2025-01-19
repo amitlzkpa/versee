@@ -85,7 +85,7 @@ export default function ProjectInit_SignersAssigned({ projectId = null }: any) {
         <iframe
           style={{
             width: "100%",
-            minHeight: 400,
+            minHeight: 800,
             height: "100%",
             visibility: "hidden",
             border: 0,
