@@ -55,17 +55,6 @@ export default function ProjectInit_AgreementsReviewed({
     });
 
     await cvxUtils.performAction_updateProject({ projectId, updateData });
-
-    // const urlToAnnotateDocsForSigning =
-    //   await cvxUtils.performAction_createSenderViewFromDoc({
-    //     projectId,
-    //     signers,
-    //     returnUrl: `${window.location.origin}/completed-signing-annotation`,
-    //   });
-
-    // if (urlToAnnotateDocsForSigning) {
-    //   window.location.href = urlToAnnotateDocsForSigning;
-    // }
   };
 
   return (
