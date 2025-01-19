@@ -496,16 +496,18 @@ export const sendDocusignEnvelope = action({
     const envelopesApi = new docusign.EnvelopesApi(dsApiClient);
 
     const envDef = await envelopesApi.getEnvelope(accountId, envelopeId);
-    envDef.status = "sent";
+
     envDef.emailSubject = `Sign sign sign`;
     envDef.emailBlurb = `Versee signnnnn`;
+    envDef.status = "sent";
 
-    // const envDef = new docusign.EnvelopeDefinition();
-    // await envelopesApi.update(accountId, envelopeId);
+    // TODO: this update doesn't seem to work
+    const envelopeSummary = await envelopesApi.update(
+      accountId,
+      envelopeId,
+      envDef
+    );
 
-    const envelopeSummary = await envelopesApi.createEnvelope(accountId, {
-      envelopeDefinition: envDef,
-    });
     return JSON.stringify(envelopeSummary);
   },
 });
