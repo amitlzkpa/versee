@@ -17,10 +17,15 @@ export default function useCvxUtils() {
     api.vsActions.createSenderViewFromDoc
   );
 
+  const performAction_sendDocusignEnvelope = useAction(
+    api.vsActions.sendDocusignEnvelope
+  );
+
   return {
     performAction_generateUploadUrl,
     performAction_sendDocusignSigningEmail,
     performAction_updateProject,
     performAction_createSenderViewFromDoc,
+    performAction_sendDocusignEnvelope,
   };
 }

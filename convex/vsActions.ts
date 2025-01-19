@@ -461,6 +461,55 @@ export const createSenderViewFromDoc = action({
   },
 });
 
+export const sendDocusignEnvelope = action({
+  args: {
+    projectId: v.id("vsProjects"),
+  },
+  handler: async (ctx, { projectId }) => {
+    const project = await ctx.runQuery(api.dbOps.getProject_ByProjectId, {
+      projectId,
+    });
+
+    const envelopeId = project.envelopeId;
+
+    const restApi = docusign.ApiClient.RestApi;
+    const oAuth = docusign.ApiClient.OAuth;
+    const basePath = restApi.BasePath.DEMO;
+    const oAuthBasePath = oAuth.BasePath.DEMO;
+    const dsApiClient = new docusign.ApiClient({
+      basePath: basePath,
+      oAuthBasePath: oAuthBasePath,
+    });
+
+    const storedUserData = await ctx.runQuery(
+      api.dbOps.getUserData_ForCurrUser
+    );
+    const accountId = storedUserData.docusignUserInfo.accounts[0].accountId;
+
+    const docusignUserTknObj = await getActiveTokenForDocusign(
+      ctx,
+      storedUserData
+    );
+    const accessToken = docusignUserTknObj.access_token;
+
+    dsApiClient.addDefaultHeader("Authorization", "Bearer " + accessToken);
+    const envelopesApi = new docusign.EnvelopesApi(dsApiClient);
+
+    const envDef = await envelopesApi.getEnvelope(accountId, envelopeId);
+    envDef.status = "sent";
+    envDef.emailSubject = `Sign sign sign`;
+    envDef.emailBlurb = `Versee signnnnn`;
+
+    // const envDef = new docusign.EnvelopeDefinition();
+    // await envelopesApi.update(accountId, envelopeId);
+
+    const envelopeSummary = await envelopesApi.createEnvelope(accountId, {
+      envelopeDefinition: envDef,
+    });
+    return JSON.stringify(envelopeSummary);
+  },
+});
+
 // GOOGLE WORKSPACE
 
 export const startGWspcOAuth = action({
