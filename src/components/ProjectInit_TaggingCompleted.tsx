@@ -8,6 +8,7 @@ import {
   Flex,
   Input,
   Text,
+  Textarea,
   rem,
 } from "@mantine/core";
 
@@ -22,17 +23,22 @@ export default function ProjectInit_TaggingCompleted({
 }: any) {
   const cvxUtils = useCvxUtils();
 
-  const currProject = useQuery(
-    api.dbOps.getProject_ByProjectId,
-    projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
+  const [emailSubject, setEmailSubject] = useState("Sign Request");
+  const [emailBlurb, setEmailBlurb] = useState(
+    "Please review the documents and sign."
   );
 
   const onClick_sendDocument = async () => {
-    console.log("foo");
     const envelopeSummary = await cvxUtils.performAction_sendDocusignEnvelope({
       projectId,
+      emailSubject,
+      emailBlurb,
     });
-    console.log(envelopeSummary);
+
+    const updateData = JSON.stringify({
+      initializationStatus: "agreement_sent",
+    });
+    await cvxUtils.performAction_updateProject({ projectId, updateData });
   };
 
   return (
@@ -46,11 +52,30 @@ export default function ProjectInit_TaggingCompleted({
         py="lg"
         style={{ textAlign: "center" }}
       >
-        <Text>Send Agreement for Signing</Text>
+        <Text fz="lg" fw="bold">
+          Send Agreement for Signing
+        </Text>
 
-        <Text>{currProject?.envelopeId}</Text>
+        <Input
+          w="100%"
+          onChange={(e) => setEmailSubject(e.target.value)}
+          value={emailSubject}
+          placeholder="Add Email Subject"
+        />
 
-        <Button w="100%" size="lg" onClick={onClick_sendDocument}>
+        <Textarea
+          w="100%"
+          resize="vertical"
+          onChange={(e) => setEmailBlurb(e.target.value)}
+          value={emailBlurb}
+        />
+
+        <Button
+          w="100%"
+          size="lg"
+          onClick={onClick_sendDocument}
+          disabled={!emailSubject}
+        >
           Send
         </Button>
       </Flex>

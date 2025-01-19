@@ -464,8 +464,10 @@ export const createSenderViewFromDoc = action({
 export const sendDocusignEnvelope = action({
   args: {
     projectId: v.id("vsProjects"),
+    emailSubject: v.string(),
+    emailBlurb: v.string(),
   },
-  handler: async (ctx, { projectId }) => {
+  handler: async (ctx, { projectId, emailSubject, emailBlurb }) => {
     const project = await ctx.runQuery(api.dbOps.getProject_ByProjectId, {
       projectId,
     });
@@ -497,7 +499,8 @@ export const sendDocusignEnvelope = action({
 
     const envDef = new docusign.Envelope();
     envDef.envelopeId = envelopeId;
-    envDef.emailSubject = `Sign sign sign`;
+    envDef.emailSubject = emailSubject;
+    envDef.emailBlurb = emailBlurb;
     envDef.status = "sent";
 
     const envelopeSummary = await envelopesApi.update(accountId, envelopeId, {
