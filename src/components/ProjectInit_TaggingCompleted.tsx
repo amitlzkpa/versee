@@ -22,9 +22,17 @@ export default function ProjectInit_TaggingCompleted({
 }: any) {
   const cvxUtils = useCvxUtils();
 
+  const currProject = useQuery(
+    api.dbOps.getProject_ByProjectId,
+    projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
+  );
+
   const onClick_sendDocument = async () => {
     console.log("foo");
-    // TODO: Trigger new action to trigger send
+    const envelopeSummary = await cvxUtils.performAction_sendDocusignEnvelope({
+      projectId,
+    });
+    console.log(envelopeSummary);
   };
 
   return (
@@ -36,8 +44,11 @@ export default function ProjectInit_TaggingCompleted({
         align="center"
         gap="sm"
         py="lg"
+        style={{ textAlign: "center" }}
       >
         <Text>Send Agreement for Signing</Text>
+
+        <Text>{currProject?.envelopeId}</Text>
 
         <Button w="100%" size="lg" onClick={onClick_sendDocument}>
           Send
