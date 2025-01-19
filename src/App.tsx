@@ -97,6 +97,10 @@ function App() {
         { path: "", element: <Landing /> },
         { path: "dev", element: <Dev /> },
         {
+          path: "completed-signing-annotation",
+          element: <CompletedSigningAnnotation_Docusign />,
+        },
+        {
           path: "home",
           element: (
             <ProtectedRoute>
@@ -133,14 +137,6 @@ function App() {
           element: (
             <ProtectedRoute>
               <OauthCallback_GWspc />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "completed-signing-annotation",
-          element: (
-            <ProtectedRoute>
-              <CompletedSigningAnnotation_Docusign />
             </ProtectedRoute>
           ),
         },
