@@ -20,6 +20,7 @@ import ProjectInit_AgreementsUploaded from "../components/ProjectInit_Agreements
 import ProjectInit_AgreementsReviewed from "../components/ProjectInit_AgreementsReviewed";
 import ProjectInit_SignersAssigned from "../components/ProjectInit_SignersAssigned";
 import ProjectInit_TaggingCompleted from "../components/ProjectInit_TaggingCompleted";
+import ProjectInit_AgreementSent from "../components/ProjectInit_AgreementSent";
 
 export default function Project() {
   // PROJECT
@@ -32,8 +33,8 @@ export default function Project() {
   );
 
   return (
-    <Flex w="100%" direction="column" gap="sm" p="lg">
-      <Flex w="40%" direction="column" gap="sm" my="lg">
+    <Flex w="100%" direction="column" align="center" gap="sm" p="lg">
+      <Flex w="60%" direction="column" gap="sm" my="lg">
         <Divider w="100%" />
 
         <Flex direction="column" my="lg">
@@ -65,6 +66,8 @@ export default function Project() {
               return (
                 <ProjectInit_TaggingCompleted projectId={currProject?._id} />
               );
+            case "agreement_sent":
+              return <ProjectInit_AgreementSent projectId={currProject?._id} />;
             default:
               return null;
           }

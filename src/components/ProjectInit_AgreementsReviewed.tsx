@@ -163,7 +163,7 @@ export default function ProjectInit_AgreementsReviewed({
           onClick={onClick_completeAddingSigners}
           disabled={signersList.length < 1}
         >
-          Annotate Document
+          Add Tags
         </Button>
       </Flex>
     </>
