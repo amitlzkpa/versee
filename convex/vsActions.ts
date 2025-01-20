@@ -756,7 +756,11 @@ export const createNewPrjFile = action({
       internal.dbOps.createNewPrjFile,
       writeData
     );
-    // ctx.runAction(api.vsActions.analyseSrcDoc, { prjFileId: newPrjFileId });
+    (async () => {
+      ctx.scheduler.runAfter(0, api.vsActions.analysePrjFile, {
+        prjFileId: newPrjFileId,
+      });
+    })();
     return newPrjFileId;
   },
 });
