@@ -515,6 +515,44 @@ export const sendDocusignEnvelope = action({
 
 // GOOGLE WORKSPACE
 
+const getActiveTokenForGWspc = async (ctx, storedUserData) => {
+  let googleDriveTknObj = storedUserData.googleDriveTknObj;
+  const expirtyTs = new Date(
+    new Date(googleDriveTknObj.tokens.expiry_date).getTime()
+  );
+  const currentTs = new Date();
+  const timeDifference = expirtyTs.getTime() - currentTs.getTime();
+  const minutesDifference = Math.floor(timeDifference / (1000 * 60));
+  const tokenNeedsRefresh = minutesDifference <= 5;
+
+  if (tokenNeedsRefresh) {
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_WORKSPACE_CLIENT_ID,
+      process.env.GOOGLE_WORKSPACE_SECRET,
+      `http://localhost:5173/callback/google-workspace`
+    );
+    oauth2Client.setCredentials(googleDriveTknObj.tokens);
+
+    const refreshedToken = await oauth2Client.refreshAccessToken();
+    const tokens = refreshedToken.credentials;
+
+    googleDriveTknObj = {
+      tokens,
+      issuedAt: new Date().toISOString(),
+    };
+
+    const userDataStr = JSON.stringify({
+      googleDriveTknObj,
+    });
+    const storedData: any = await ctx.runMutation(
+      internal.dbOps.upsertUserData_ForUser,
+      { userDataStr }
+    );
+  }
+
+  return googleDriveTknObj;
+};
+
 export const startGWspcOAuth = action({
   args: {
     callbackUrl: v.string(),
