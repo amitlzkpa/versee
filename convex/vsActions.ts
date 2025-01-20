@@ -760,3 +760,54 @@ export const createNewPrjFile = action({
     return newPrjFileId;
   },
 });
+
+export const analysePrjFile = action({
+  args: {
+    prjFileId: v.id("vsPrjFile"),
+  },
+  handler: async (ctx, { prjFileId }) => {
+    const prjFile = await ctx.runQuery(internal.dbOps.getPrjFile_ByPrjFileId, {
+      prjFileId,
+    });
+    const fileUrl = await ctx.storage.getUrl(prjFile.cvxStoredFileId);
+
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const pdfArrayBuffer = await fetch(fileUrl).then((response) =>
+      response.arrayBuffer()
+    );
+
+    let uploadedFileData;
+
+    const writeData = { titleStatus: "generating" };
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
+      prjFileId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+
+    // Get headers from this file
+
+    // if its a PDF do A, if CSV do B
+
+    const titleText = await generateForPDF_title(pdfArrayBuffer, model);
+    writeData.titleStatus = "generated";
+    writeData.titleText = titleText;
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
+      prjFileId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+
+    writeData.summaryStatus = "generating";
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
+      prjFileId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+    const summaryText = await generateForPDF_summary(pdfArrayBuffer, model);
+    writeData.summaryStatus = "generated";
+    writeData.summaryText = summaryText;
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
+      prjFileId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+  },
+});
