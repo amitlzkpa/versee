@@ -213,6 +213,17 @@ export const getAllPrjFiles_ForProject = query({
   },
 });
 
+export const getPrjFile_ByPrjFileId = query({
+  args: {
+    prjFileId: v.optional(v.id("vsPrjFile")),
+  },
+  handler: async (ctx, { prjFileId }) => {
+    if (!prjFileId) return null;
+    const prjFile = await ctx.db.get(prjFileId);
+    return prjFile;
+  },
+});
+
 export const createNewPrjFile = internalMutation({
   args: {
     cvxStoredFileId: v.id("_storage"),
@@ -222,8 +233,24 @@ export const createNewPrjFile = internalMutation({
     const prjFileData = {
       cvxStoredFileId,
       projectId,
+      titleStatus: "not_generated",
+      titleText: "",
+      summaryStatus: "not_generated",
+      summaryText: "",
     };
     const newPrjFileId = await ctx.db.insert("vsPrjFile", prjFileData);
     return newPrjFileId;
+  },
+});
+
+export const updatePrjFile = internalMutation({
+  args: {
+    prjFileId: v.id("vsPrjFile"),
+    updateDataStr: v.string(),
+  },
+  handler: async (ctx, { prjFileId, updateDataStr }) => {
+    const writeData = JSON.parse(updateDataStr);
+    const updatedPrjFileId = await ctx.db.patch(prjFileId, writeData);
+    return updatedPrjFileId;
   },
 });
