@@ -257,6 +257,8 @@ export default function Dev() {
                       <Card key={prjFile._id} w="100%" withBorder radius="xl">
                         <Flex direction="column" align="stretch" gap="sm">
                           <Text fz="sm">{prjFile._id}</Text>
+                          <Text fw="bold">{prjFile.titleText}</Text>
+                          <Text>{prjFile.summaryText}</Text>
 
                           <Button
                             component="a"
