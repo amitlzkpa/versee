@@ -23,9 +23,11 @@ export default function ProjectInit_TaggingCompleted({
 }: any) {
   const cvxUtils = useCvxUtils();
 
-  const [emailSubject, setEmailSubject] = useState("Sign Request");
+  const [emailSubject, setEmailSubject] = useState(
+    "Quick! Review & Sign the Attached Agreement."
+  );
   const [emailBlurb, setEmailBlurb] = useState(
-    "Please review the documents and sign."
+    "The document is all set and waiting for your signature. Take a moment to review and sign—it’s quick and will help us keep things moving smoothly!"
   );
 
   const onClick_sendDocument = async () => {
