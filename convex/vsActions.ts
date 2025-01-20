@@ -610,6 +610,37 @@ export const retrieveGWspcToken = action({
   },
 });
 
+export const test_readSheet = action({
+  args: {
+    sheetId: v.string(),
+    sheetRange: v.string(),
+  },
+  handler: async (ctx, { sheetId, sheetRange }) => {
+    const storedUserData = await ctx.runQuery(
+      api.dbOps.getUserData_ForCurrUser
+    );
+
+    const googleDriveTknObj = await getActiveTokenForGWspc(ctx, storedUserData);
+
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_WORKSPACE_CLIENT_ID,
+      process.env.GOOGLE_WORKSPACE_SECRET,
+      `http://localhost:5173/callback/google-workspace`
+    );
+
+    oauth2Client.setCredentials(googleDriveTknObj.tokens);
+
+    const sheetsSdk = google.sheets({ version: "v4", auth: oauth2Client });
+
+    const res = await sheetsSdk.spreadsheets.values.get({
+      spreadsheetId: sheetId,
+      range: sheetRange,
+    });
+
+    return res.data;
+  },
+});
+
 // SRCDOCS
 
 const generateForPDF_title = async (pdfArrayBuffer, model) => {

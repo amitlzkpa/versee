@@ -28,7 +28,9 @@ export default function Dev() {
 
   // PROJECT
 
-  const [projectId, setProjectId] = useState("");
+  const [projectId, setProjectId] = useState(
+    "jd7b1wfa7ys2vvws4qa7v48n0s78p3f4"
+  );
 
   const currProject = useQuery(
     api.dbOps.getProject_ByProjectId,
@@ -117,6 +119,19 @@ export default function Dev() {
       .map((r) => r.value);
   };
 
+  // GSHEETS
+
+  const performAction_test_readSheet = useAction(api.vsActions.test_readSheet);
+
+  const onClick_performAction_test_readSheet = async () => {
+    console.log("foo");
+    const d = await performAction_test_readSheet({
+      sheetId: "1oI5VsYhDj41kabCpYS0sDurqvbT3jBC1LyWoUC-EuuY",
+      sheetRange: "Sheet1!A1:D10",
+    });
+    console.log(d);
+  };
+
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
       <AuthLoading>
@@ -129,6 +144,14 @@ export default function Dev() {
       </Unauthenticated>
       <Authenticated>
         <Flex w="60%" direction="column" align="stretch" gap="md" p="lg">
+          <Button
+            w="100%"
+            onClick={onClick_performAction_test_readSheet}
+            size="lg"
+          >
+            G Sheets Test
+          </Button>
+
           <Accordion defaultValue="upload-srcdoc">
             <Accordion.Item key="upload-srcdoc" value="upload-srcdoc">
               <Accordion.Control>
