@@ -4,15 +4,14 @@ import { Button, Card, Flex, Text, UnstyledButton } from "@mantine/core";
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
+import useCvxUtils from "../hooks/cvxUtils";
+
 export default function Home() {
   const navigate = useNavigate();
-
-  const performAction_createNewProject = useAction(
-    api.vsActions.createNewProject
-  );
+  const cvxUtils = useCvxUtils();
 
   const onClickTest_createNewProject = async () => {
-    const newProject = await performAction_createNewProject();
+    const newProject = await cvxUtils.performAction_createNewProject();
     navigate(`/p/${newProject}`);
   };
 

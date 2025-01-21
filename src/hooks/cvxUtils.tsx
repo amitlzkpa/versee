@@ -11,6 +11,10 @@ export default function useCvxUtils() {
     api.vsActions.sendDocusignSigningEmail
   );
 
+  const performAction_createNewProject = useAction(
+    api.vsActions.createNewProject
+  );
+
   const performAction_updateProject = useAction(api.vsActions.updateProject);
 
   const performAction_createSenderViewFromDoc = useAction(
@@ -21,11 +25,22 @@ export default function useCvxUtils() {
     api.vsActions.sendDocusignEnvelope
   );
 
+  const performAction_createNewSrcDoc = useAction(
+    api.vsActions.createNewSrcDoc
+  );
+
+  const performAction_createNewPrjFile = useAction(
+    api.vsActions.createNewPrjFile
+  );
+
   return {
     performAction_generateUploadUrl,
     performAction_sendDocusignSigningEmail,
+    performAction_createNewProject,
     performAction_updateProject,
     performAction_createSenderViewFromDoc,
     performAction_sendDocusignEnvelope,
+    performAction_createNewSrcDoc,
+    performAction_createNewPrjFile,
   };
 }

@@ -47,10 +47,6 @@ export default function Submit() {
     projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
   );
 
-  const performAction_createNewPrjFile = useAction(
-    api.vsActions.createNewPrjFile
-  );
-
   const onClick_uploadFiles_PrjFiles = async (droppedFiles: any) => {
     const ps = droppedFiles.map(
       (file: any) =>
@@ -63,10 +59,11 @@ export default function Submit() {
               });
               const uploadedCvxFile = await result.json();
               const cvxStoredFileId = uploadedCvxFile.storageId;
-              const newPrjFileId = await performAction_createNewPrjFile({
-                projectId: currProject?._id,
-                cvxStoredFileId,
-              });
+              const newPrjFileId =
+                await cvxUtils.performAction_createNewPrjFile({
+                  projectId: currProject?._id,
+                  cvxStoredFileId,
+                });
               return resolve(newPrjFileId);
             } catch (err) {
               return reject(err);

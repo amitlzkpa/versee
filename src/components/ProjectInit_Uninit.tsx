@@ -25,12 +25,6 @@ export default function ProjectInit_Uninit({ projectId = null }: any) {
     projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
   );
 
-  const performAction_createNewSrcDoc = useAction(
-    api.vsActions.createNewSrcDoc
-  );
-
-  const performAction_analyseSrcDoc = useAction(api.vsActions.analyseSrcDoc);
-
   const onClick_uploadFiles_SrcDoc = async (droppedFiles: any) => {
     const ps = droppedFiles.map(
       (file: any) =>
@@ -43,7 +37,7 @@ export default function ProjectInit_Uninit({ projectId = null }: any) {
               });
               const uploadedCvxFile = await result.json();
               const cvxStoredFileId = uploadedCvxFile.storageId;
-              const newSrcDocId = await performAction_createNewSrcDoc({
+              const newSrcDocId = await cvxUtils.performAction_createNewSrcDoc({
                 projectId,
                 cvxStoredFileId,
               });
