@@ -32,8 +32,13 @@ export default function Submit() {
   const [currUserHasAccess, setCurrUserHasAccess] = useState(true);
 
   useEffect(() => {
-    console.log("foo");
-  }, []);
+    const currUserEmail = storedUserData?.user?.email;
+    if (!currUserEmail) return;
+    const signerEmails = (currProject?.signers ?? []).map(
+      (s: any) => s.signerEmail
+    );
+    setCurrUserHasAccess(signerEmails.includes(currUserEmail));
+  }, [currProject, storedUserData?.user?.email]);
 
   // PRJFILE
 
