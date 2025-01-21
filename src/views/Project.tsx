@@ -89,7 +89,6 @@ export default function Project() {
         <Divider w="100%" />
 
         <Flex direction="column" my="lg">
-          <Text size="sm">ProjectId: {currProject?._id}</Text>
           <Text size="lg" fw="bold">
             Creator: {currProject?.creator.name}
           </Text>
@@ -138,7 +137,7 @@ export default function Project() {
                     return (
                       <Card key={srcDoc._id} w="100%" withBorder radius="xl">
                         <Flex direction="column" align="stretch" gap="sm">
-                          <Text fz="sm">{srcDoc._id}</Text>
+                          <Text fz="sm">{srcDoc.titleText}</Text>
                           <Summary_SrcDoc srcDocId={srcDoc._id} />
 
                           <Button
@@ -171,7 +170,6 @@ export default function Project() {
                     return (
                       <Card key={prjFile._id} w="100%" withBorder radius="xl">
                         <Flex direction="column" align="stretch" gap="sm">
-                          <Text fz="sm">{prjFile._id}</Text>
                           <Text fw="bold">{prjFile.titleText}</Text>
                           <Text>{prjFile.summaryText}</Text>
 
