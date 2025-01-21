@@ -86,16 +86,6 @@ export default function Project() {
   return (
     <Flex w="100%" direction="column" align="center" gap="sm" p="lg">
       <Flex w="60%" direction="column" gap="sm" my="lg">
-        <Divider w="100%" />
-
-        <Flex direction="column" my="lg">
-          <Text size="lg" fw="bold">
-            Creator: {currProject?.creator.name}
-          </Text>
-        </Flex>
-
-        <Divider w="100%" />
-
         {(() => {
           switch (currProject?.initializationStatus) {
             case "uninitialized":
@@ -123,7 +113,9 @@ export default function Project() {
           }
         })()}
 
-        {projectId ? (
+        <Divider w="100%" />
+
+        {projectId && currProject?.initializationStatus === "agreement_sent" ? (
           <Accordion defaultValue="upload-srcdoc">
             <Accordion.Item key="list-srcdocs" value="list-srcdocs">
               <Accordion.Control>
