@@ -12,8 +12,7 @@ export default function MyAccount() {
   );
 
   const onClick_startDocusignOAuth = async () => {
-    const callbackUrl = `${window.location.origin}/callback/docusign`;
-    const redirectUri = await performAction_startDocusignOAuth({ callbackUrl });
+    const redirectUri = await performAction_startDocusignOAuth();
     window.location.href = redirectUri;
   };
 
@@ -22,8 +21,7 @@ export default function MyAccount() {
   );
 
   const onClick_startGWspcOAuth = async () => {
-    const callbackUrl = `${window.location.origin}/callback/google-workspace`;
-    const redirectUri = await performAction_startGWspcOAuth({ callbackUrl });
+    const redirectUri = await performAction_startGWspcOAuth();
     window.location.href = redirectUri;
   };
 

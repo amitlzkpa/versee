@@ -17,10 +17,8 @@ export default function OauthCallback_GWspc() {
   const onClickTest_retrieveGWspcAccessToken = async () => {
     const queryParams = new URLSearchParams(location.search);
     const code = queryParams.get("code");
-    const callbackUrl = `${window.location.origin}/callback/google-workspace`;
     const savedRecord = await performAction_retrieveGWspcToken({
-      authCode: code ?? "",
-      callbackUrl,
+      authCode: code ?? ""
     });
     console.log(savedRecord);
   };

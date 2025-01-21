@@ -11,6 +11,9 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // import jwt from "jsonwebtoken";
 import * as docusign from "docusign-esign";
 
+let DEV = true;
+DEV = false;
+
 // UTILS
 
 export const generateUploadUrl = action(async (ctx) => {
@@ -137,10 +140,8 @@ async function getActiveTokenForDocusign(ctx, storedUserData) {
 }
 
 export const startDocusignOAuth = action({
-  args: {
-    callbackUrl: v.string(),
-  },
-  handler: async (ctx, { callbackUrl }) => {
+  args: {},
+  handler: async (ctx) => {
     const restApi = docusign.ApiClient.RestApi;
     const oAuth = docusign.ApiClient.OAuth;
     const basePath = restApi.BasePath.DEMO;
@@ -155,7 +156,7 @@ export const startDocusignOAuth = action({
     const oauthLoginUrl = apiClient.getAuthorizationUri(
       process.env.DOCUSIGN_INTEGRATION_KEY,
       scopes,
-      callbackUrl,
+      `${DEV ? "http://localhost:5173" : "https://versee.vercel.app"}/callback/docusign`,
       "code"
     );
     return oauthLoginUrl;
@@ -554,14 +555,12 @@ const getActiveTokenForGWspc = async (ctx, storedUserData) => {
 };
 
 export const startGWspcOAuth = action({
-  args: {
-    callbackUrl: v.string(),
-  },
-  handler: async (ctx, { callbackUrl }) => {
+  args: {},
+  handler: async (ctx) => {
     const oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_WORKSPACE_CLIENT_ID,
       process.env.GOOGLE_WORKSPACE_SECRET,
-      callbackUrl
+      `${DEV ? "http://localhost:5173" : "https://versee.vercel.app"}/callback/google-workspace`
     );
 
     const scopes = [
@@ -584,13 +583,12 @@ export const startGWspcOAuth = action({
 export const retrieveGWspcToken = action({
   args: {
     authCode: v.string(),
-    callbackUrl: v.string(),
   },
-  handler: async (ctx, { authCode, callbackUrl }) => {
+  handler: async (ctx, { authCode }) => {
     const oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_WORKSPACE_CLIENT_ID,
       process.env.GOOGLE_WORKSPACE_SECRET,
-      callbackUrl
+      `${DEV ? "http://localhost:5173" : "https://versee.vercel.app"}/callback/google-workspace`
     );
     const { tokens } = await oauth2Client.getToken(authCode);
 
