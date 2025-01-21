@@ -92,6 +92,7 @@ export default function ProjectInit_AgreementsUploaded({
                   </Button>
 
                   <Text>{srcDoc.summaryText}</Text>
+                  <Text>{srcDoc.summary_es_Text}</Text>
                 </Flex>
               </Carousel.Slide>
             );
