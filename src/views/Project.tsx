@@ -15,6 +15,7 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
+import Summary_SrcDoc from "../components/Summary_SrcDoc";
 import ProjectInit_Uninit from "../components/ProjectInit_Uninit";
 import ProjectInit_AgreementsUploaded from "../components/ProjectInit_AgreementsUploaded";
 import ProjectInit_AgreementsReviewed from "../components/ProjectInit_AgreementsReviewed";
@@ -141,8 +142,7 @@ export default function Project() {
                       <Card key={srcDoc._id} w="100%" withBorder radius="xl">
                         <Flex direction="column" align="stretch" gap="sm">
                           <Text fz="sm">{srcDoc._id}</Text>
-                          <Text fw="bold">{srcDoc.titleText}</Text>
-                          <Text>{srcDoc.summaryText}</Text>
+                          <Summary_SrcDoc srcDocId={srcDoc._id} />
 
                           <Button
                             component="a"

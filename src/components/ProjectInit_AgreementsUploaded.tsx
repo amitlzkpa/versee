@@ -14,6 +14,8 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
+import Summary_SrcDoc from "../components/Summary_SrcDoc";
+
 import useCvxUtils from "../hooks/cvxUtils";
 
 export default function ProjectInit_AgreementsUploaded({
@@ -68,7 +70,6 @@ export default function ProjectInit_AgreementsUploaded({
                   gap="sm"
                   style={{ overflowY: "auto" }}
                 >
-                  <Text fz="sm">{srcDoc._id}</Text>
                   <Text fw="bold">{srcDoc.titleText}</Text>
 
                   <embed
@@ -91,8 +92,7 @@ export default function ProjectInit_AgreementsUploaded({
                     Open
                   </Button>
 
-                  <Text>{srcDoc.summaryText}</Text>
-                  <Text>{srcDoc.summary_es_Text}</Text>
+                  <Summary_SrcDoc srcDocId={srcDoc._id} />
                 </Flex>
               </Carousel.Slide>
             );

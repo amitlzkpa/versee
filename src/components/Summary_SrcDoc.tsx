@@ -18,24 +18,35 @@ import useCvxUtils from "../hooks/cvxUtils";
 export default function ProjectInit_Uninit({ srcDocId = null }: any) {
   const cvxUtils = useCvxUtils();
 
-  const srcDoc = useQuery(api.dbOps.getSrcDoc_BySrcDocId, { srcDocId });
+  const srcDoc = useQuery(
+    api.dbOps.getSrcDoc_BySrcDocId,
+    srcDocId ? { srcDocId } : "skip"
+  );
 
   return (
     <>
       <Flex direction="column" w="100%" gap="md">
-        <Flex direction="column" w="100%">
-          <Text fw="bold" fz="sm">
-            English
-          </Text>
-          <Text>{srcDoc.summaryText}</Text>
-        </Flex>
+        {srcDoc?.summaryText ? (
+          <Flex direction="column" w="100%">
+            <Text fw="bold" fz="sm">
+              English
+            </Text>
+            <Text>{srcDoc?.summaryText}</Text>
+          </Flex>
+        ) : (
+          <></>
+        )}
 
-        <Flex direction="column" w="100%">
-          <Text fw="bold" fz="sm">
-            Spanish
-          </Text>
-          <Text>{srcDoc.summary_es_Text}</Text>
-        </Flex>
+        {srcDoc?.summary_es_Text ? (
+          <Flex direction="column" w="100%">
+            <Text fw="bold" fz="sm">
+              Spanish
+            </Text>
+            <Text>{srcDoc?.summary_es_Text}</Text>
+          </Flex>
+        ) : (
+          <></>
+        )}
       </Flex>
     </>
   );
