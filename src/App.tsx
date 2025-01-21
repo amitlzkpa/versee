@@ -20,6 +20,7 @@ import Landing from "./views/Landing";
 import MyAccount from "./views/MyAccount";
 import Home from "./views/Home";
 import Project from "./views/Project";
+import Submit from "./views/Submit";
 
 import Navbar from "./components/Navbar";
 
@@ -121,6 +122,14 @@ function App() {
           element: (
             <ProtectedRoute>
               <Project />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "submit/:projectId?",
+          element: (
+            <ProtectedRoute>
+              <Submit />
             </ProtectedRoute>
           ),
         },
