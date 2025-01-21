@@ -23,6 +23,7 @@ import Project from "./views/Project";
 import Submit from "./views/Submit";
 
 import Navbar from "./components/Navbar";
+import { useEffect, useState } from "react";
 
 const ProtectedRoute = ({ children }: any) => {
   const { isAuthenticated, isLoading } = useConvexAuth();
@@ -153,12 +154,27 @@ function App() {
     },
   ]);
 
+  const [navbarIsVisible, setNavbarIsVisible] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const params = new URLSearchParams(window.location.search);
+      const disableNavbar = params.has("disableNavbar");
+      if (disableNavbar) setNavbarIsVisible(false);
+      else setNavbarIsVisible(true);
+    })();
+  }, []);
+
   return (
     <MantineProvider theme={theme}>
       <Flex w="100%" h="100%" direction="column" align="center" gap="sm">
-        <Flex w="100%" p="sm">
-          <Navbar />
-        </Flex>
+        {navbarIsVisible ? (
+          <Flex w="100%" p="sm">
+            <Navbar />
+          </Flex>
+        ) : (
+          <></>
+        )}
         <Flex w="100%" h="100%" p="sm" style={{ overflowY: "auto" }}>
           <RouterProvider router={router} />
         </Flex>
