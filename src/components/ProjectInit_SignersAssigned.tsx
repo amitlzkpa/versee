@@ -30,7 +30,7 @@ export default function ProjectInit_SignersAssigned({ projectId = null }: any) {
       const envelopeData = await cvxUtils.performAction_createSenderViewFromDoc(
         {
           projectId,
-          returnUrl: `${window.location.origin}/completed-signing-annotation`,
+          returnUrl: `${window.location.origin}/completed-signing-annotation?disableNavbar=true`,
         }
       );
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Button, Flex } from "@mantine/core";
+import { Button, Flex, Text } from "@mantine/core";
 
 export default function CompletedSigningAnnotation_Docusign() {
   const location = useLocation();
@@ -15,7 +15,7 @@ export default function CompletedSigningAnnotation_Docusign() {
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
       <Flex w="60%" direction="column" align="center" gap="md" p="lg">
-        Tags Added!
+        <Text>Nice work! The file is ready.</Text>
       </Flex>
     </Flex>
   );
