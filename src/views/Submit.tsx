@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button, Divider, Flex, Text, rem } from "@mantine/core";
 
@@ -5,7 +6,7 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
-import { FaCross } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
 
 import useCvxUtils from "../hooks/cvxUtils";
 
@@ -22,6 +23,8 @@ export default function Submit() {
     projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
   );
 
+  const [currUserHasAccess, setCurrUserHasAccess] = useState(false);
+
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
       <Flex w="60%" direction="column" align="center" gap="md" p="lg">
@@ -32,7 +35,7 @@ export default function Submit() {
       <Divider w="60%" my="lg" />
 
       <Flex w="60%" direction="column" align="center" gap="md" p="lg">
-        {storedUserData?.googleDriveTknObj ? (
+        {currUserHasAccess ? (
           <>
             <Button w="100%" size="lg">
               Submit File
@@ -41,7 +44,7 @@ export default function Submit() {
         ) : (
           <>
             <Flex justify="center" align="center" gap="sm">
-              <FaCross
+              <FaExclamationCircle
                 style={{
                   width: rem(12),
                   height: rem(12),
