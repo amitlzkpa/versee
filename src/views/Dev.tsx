@@ -153,6 +153,7 @@ export default function Dev() {
             G Sheets Test
           </Button>
 
+          {/*
           <Accordion defaultValue="upload-srcdoc">
             <Accordion.Item key="upload-srcdoc" value="upload-srcdoc">
               <Accordion.Control>
@@ -278,6 +279,7 @@ export default function Dev() {
               </Accordion.Panel>
             </Accordion.Item>
           </Accordion>
+          */}
         </Flex>
       </Authenticated>
     </Flex>
