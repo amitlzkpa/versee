@@ -133,6 +133,12 @@ export default function Dev() {
     console.log(d);
   };
 
+  // NAVIGATOR API
+
+  const onClick_performAction_test_navigatorAPI = async () => {
+    console.log("foo");
+  };
+
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
       <AuthLoading>
@@ -151,6 +157,14 @@ export default function Dev() {
             size="lg"
           >
             G Sheets Test
+          </Button>
+
+          <Button
+            w="100%"
+            onClick={onClick_performAction_test_navigatorAPI}
+            size="lg"
+          >
+            Navigator Test
           </Button>
 
           {/*
