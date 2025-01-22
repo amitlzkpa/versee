@@ -104,7 +104,7 @@ export default function Project() {
     setHighestStepVisited((hSC) => Math.max(hSC, nextStep));
   };
 
-  const shouldAllowSelectStep = (step: any) => highestStepVisited >= step && active !== step;
+  const shouldAllowSelectStep = (step: any) => highestStepVisited >= step && active !== step || true;
 
 
   useEffect(() => {
@@ -128,29 +128,35 @@ export default function Project() {
           <Stepper active={active} onStepClick={handleStepChange} orientation="vertical">
             <Stepper.Step
               label="First step"
-              description="Give an outline"
+              description="Upload your papers"
               allowStepSelect={shouldAllowSelectStep(0)}
             >
               <Center>
-                Step 1: Start with an outline of your proposal
+                <Text style={{ textAlign: "center" }}>
+                  Upload your papers
+                </Text>
               </Center>
             </Stepper.Step>
             <Stepper.Step
               label="Second step"
-              description="Review stakeholders"
+              description="Review them"
               allowStepSelect={shouldAllowSelectStep(1)}
             >
               <Center>
-                Step 2: Review who is involved
+                <Text style={{ textAlign: "center" }}>
+                  Review and Confirm
+                </Text>
               </Center>
             </Stepper.Step>
             <Stepper.Step
               label="Third step"
-              description="View the effects"
+              description="Add signers"
               allowStepSelect={shouldAllowSelectStep(2)}
             >
               <Center>
-                Step 3: Go through side effects
+                <Text style={{ textAlign: "center" }}>
+                  Add Signers
+                </Text>
               </Center>
             </Stepper.Step>
           </Stepper>
@@ -176,7 +182,7 @@ export default function Project() {
                   w="100%"
                   h="200"
                 >
-                  <Text>first</Text>
+                  <ProjectInit_Uninit projectId={currProject?._id} />
                 </Flex>
               </Tabs.Panel>
 
@@ -188,7 +194,7 @@ export default function Project() {
                   w="100%"
                   h="200"
                 >
-                  <Text>second</Text>
+                  <ProjectInit_AgreementsUploaded projectId={currProject?._id} />
                 </Flex>
               </Tabs.Panel>
 
@@ -200,7 +206,7 @@ export default function Project() {
                   w="100%"
                   h="200"
                 >
-                  <Text>third</Text>
+                  <ProjectInit_AgreementsReviewed projectId={currProject?._id} />
                 </Flex>
               </Tabs.Panel>
             </Tabs>
@@ -213,16 +219,6 @@ export default function Project() {
 
       {(() => {
         switch (currProject?.initializationStatus) {
-          case "uninitialized":
-            return <ProjectInit_Uninit projectId={currProject?._id} />;
-          case "agreements_uploaded":
-            return (
-              <ProjectInit_AgreementsUploaded projectId={currProject?._id} />
-            );
-          case "agreements_reviewed":
-            return (
-              <ProjectInit_AgreementsReviewed projectId={currProject?._id} />
-            );
           case "signers_assigned":
             return (
               <ProjectInit_SignersAssigned projectId={currProject?._id} />
