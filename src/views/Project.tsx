@@ -90,7 +90,10 @@ export default function Project() {
   const tabVals = useMemo(() => [
     "uninitialized",
     "agreements_uploaded",
-    "agreements_reviewed"
+    "agreements_reviewed",
+    "signers_assigned",
+    "tagging_completed",
+    "agreement_sent"
   ], []);
   const [active, setActive] = useState(0);
   const [activeTabVal, setActiveTabVal] = useState("");
@@ -167,6 +170,38 @@ export default function Project() {
                 </Text>
               </Center>
             </Stepper.Step>
+            <Stepper.Step
+              label="Fourth step"
+              description="Add tags"
+              allowStepSelect={shouldAllowSelectStep(3)}
+            >
+              <Center>
+                <Text style={{ textAlign: "center" }}>
+                  Add Tags
+                </Text>
+              </Center>
+            </Stepper.Step>
+            <Stepper.Step
+              label="Fourth step"
+              description="Finalize"
+              allowStepSelect={shouldAllowSelectStep(4)}
+            >
+              <Center>
+                <Text style={{ textAlign: "center" }}>
+                  Finalize
+                </Text>
+              </Center>
+            </Stepper.Step>
+            <Stepper.Step
+              label="Done"
+              allowStepSelect={shouldAllowSelectStep(5)}
+            >
+              <Center>
+                <Text style={{ textAlign: "center" }}>
+                  Wait for Signers
+                </Text>
+              </Center>
+            </Stepper.Step>
           </Stepper>
         </Flex>
 
@@ -217,122 +252,131 @@ export default function Project() {
                   <ProjectInit_AgreementsReviewed projectId={currProject?._id} />
                 </Flex>
               </Tabs.Panel>
+
+              <Tabs.Panel value="signers_assigned">
+                <Flex
+                  direction="column"
+                  justify="center"
+                  align="center"
+                  w="100%"
+                  h="100%"
+                >
+                  <ProjectInit_SignersAssigned projectId={currProject?._id} />
+                </Flex>
+              </Tabs.Panel>
+
+              <Tabs.Panel value="tagging_completed">
+                <Flex
+                  direction="column"
+                  justify="center"
+                  align="center"
+                  w="100%"
+                  h="100%"
+                >
+                  <ProjectInit_TaggingCompleted projectId={currProject?._id} />
+                </Flex>
+              </Tabs.Panel>
+
+              <Tabs.Panel value="agreement_sent">
+                <Flex
+                  direction="column"
+                  justify="center"
+                  align="center"
+                  w="100%"
+                  h="100%"
+                >
+                  <ProjectInit_AgreementSent projectId={currProject?._id} />
+                  <Accordion w="100%" defaultValue="upload-srcdoc">
+                    <Accordion.Item key="list-srcdocs" value="list-srcdocs">
+                      <Accordion.Control>
+                        <Text size="md" fw="bold">
+                          Doocuments
+                        </Text>
+                      </Accordion.Control>
+                      <Accordion.Panel>
+                        <Flex w="100%" direction="column" align="center" gap="xs">
+                          {(curProjectSrcDocs ?? []).map((srcDoc: any) => {
+                            return (
+                              <Card key={srcDoc._id} w="100%" withBorder radius="xl">
+                                <Flex direction="column" align="stretch" gap="sm">
+                                  <Text fz="sm">{srcDoc.titleText}</Text>
+                                  <Summary_SrcDoc srcDocId={srcDoc._id} />
+
+                                  <Button
+                                    component="a"
+                                    variant="outline"
+                                    href={srcDoc.fileUrl}
+                                    target="_blank"
+                                    w="100%"
+                                    size="lg"
+                                  >
+                                    Open
+                                  </Button>
+                                </Flex>
+                              </Card>
+                            );
+                          })}
+                        </Flex>
+                      </Accordion.Panel>
+                    </Accordion.Item>
+
+                    <Accordion.Item key="list-prjfiles" value="list-prjfiles">
+                      <Accordion.Control>
+                        <Text size="md" fw="bold">
+                          Received Files
+                        </Text>
+                      </Accordion.Control>
+                      <Accordion.Panel>
+                        <Flex w="100%" direction="column" align="center" gap="xs">
+                          {(curProjectPrjFiles ?? []).map((prjFile: any) => {
+                            return (
+                              <Card key={prjFile._id} w="100%" withBorder radius="xl">
+                                <Flex direction="column" align="stretch" gap="sm">
+                                  <Text fw="bold">{prjFile.titleText}</Text>
+                                  <Text>{prjFile.summaryText}</Text>
+
+                                  <Button
+                                    component="a"
+                                    variant="outline"
+                                    href={prjFile.fileUrl}
+                                    target="_blank"
+                                    w="100%"
+                                    size="lg"
+                                  >
+                                    Open
+                                  </Button>
+                                </Flex>
+                              </Card>
+                            );
+                          })}
+                        </Flex>
+                      </Accordion.Panel>
+                    </Accordion.Item>
+
+                    <Accordion.Item key="upload-prjfile" value="upload-prjfile">
+                      <Accordion.Control>
+                        <Text size="md" fw="bold">
+                          Upload Project File
+                        </Text>
+                      </Accordion.Control>
+                      <Accordion.Panel>
+                        <Flex direction="column">
+                          <FileUploader
+                            projectId={currProject?._id}
+                            onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
+                          />
+                        </Flex>
+                      </Accordion.Panel>
+                    </Accordion.Item>
+                  </Accordion>
+                </Flex>
+              </Tabs.Panel>
             </Tabs>
           </Flex>
         </Flex>
 
       </Flex>
 
-
-
-      {(() => {
-        switch (currProject?.initializationStatus) {
-          case "signers_assigned":
-            return (
-              <ProjectInit_SignersAssigned projectId={currProject?._id} />
-            );
-          case "tagging_completed":
-            return (
-              <ProjectInit_TaggingCompleted projectId={currProject?._id} />
-            );
-          case "agreement_sent":
-            return <ProjectInit_AgreementSent projectId={currProject?._id} />;
-          default:
-            return null;
-        }
-      })()}
-
-      <Divider w="100%" />
-
-      {projectId && currProject?.initializationStatus === "agreement_sent" ? (
-        <Accordion defaultValue="upload-srcdoc">
-          <Accordion.Item key="list-srcdocs" value="list-srcdocs">
-            <Accordion.Control>
-              <Text size="md" fw="bold">
-                Doocuments
-              </Text>
-            </Accordion.Control>
-            <Accordion.Panel>
-              <Flex w="100%" direction="column" align="center" gap="xs">
-                {(curProjectSrcDocs ?? []).map((srcDoc: any) => {
-                  return (
-                    <Card key={srcDoc._id} w="100%" withBorder radius="xl">
-                      <Flex direction="column" align="stretch" gap="sm">
-                        <Text fz="sm">{srcDoc.titleText}</Text>
-                        <Summary_SrcDoc srcDocId={srcDoc._id} />
-
-                        <Button
-                          component="a"
-                          variant="outline"
-                          href={srcDoc.fileUrl}
-                          target="_blank"
-                          w="100%"
-                          size="lg"
-                        >
-                          Open
-                        </Button>
-                      </Flex>
-                    </Card>
-                  );
-                })}
-              </Flex>
-            </Accordion.Panel>
-          </Accordion.Item>
-
-          <Accordion.Item key="list-prjfiles" value="list-prjfiles">
-            <Accordion.Control>
-              <Text size="md" fw="bold">
-                Received Files
-              </Text>
-            </Accordion.Control>
-            <Accordion.Panel>
-              <Flex w="100%" direction="column" align="center" gap="xs">
-                {(curProjectPrjFiles ?? []).map((prjFile: any) => {
-                  return (
-                    <Card key={prjFile._id} w="100%" withBorder radius="xl">
-                      <Flex direction="column" align="stretch" gap="sm">
-                        <Text fw="bold">{prjFile.titleText}</Text>
-                        <Text>{prjFile.summaryText}</Text>
-
-                        <Button
-                          component="a"
-                          variant="outline"
-                          href={prjFile.fileUrl}
-                          target="_blank"
-                          w="100%"
-                          size="lg"
-                        >
-                          Open
-                        </Button>
-                      </Flex>
-                    </Card>
-                  );
-                })}
-              </Flex>
-            </Accordion.Panel>
-          </Accordion.Item>
-
-          <Accordion.Item key="upload-prjfile" value="upload-prjfile">
-            <Accordion.Control>
-              <Text size="md" fw="bold">
-                Upload Project File
-              </Text>
-            </Accordion.Control>
-            <Accordion.Panel>
-              <Flex direction="column">
-                <FileUploader
-                  projectId={currProject?._id}
-                  onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
-                />
-              </Flex>
-            </Accordion.Panel>
-          </Accordion.Item>
-        </Accordion>
-      ) : (
-        <></>
-      )}
-
-      <Divider w="100%" />
     </Flex>
   );
 }
