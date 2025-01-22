@@ -842,6 +842,7 @@ export const analysePrjFile = action({
 
 // NAVIGATOR API
 
+// NOTE: Navigator API can only process docs made outside of REST API eSignature service
 export const test_navigatorAPI = action({
   args: {},
   handler: async (ctx) => {
