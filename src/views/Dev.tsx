@@ -133,6 +133,18 @@ export default function Dev() {
     console.log(d);
   };
 
+  // NAVIGATOR API
+
+  const performAction_test_webhookCalls = useAction(
+    api.vsActions.test_webhookCalls
+  );
+
+  const onClick_performAction_test_webhookCalls = async () => {
+    console.log("foo");
+    const f = await performAction_test_webhookCalls();
+    console.log(f);
+  };
+
   return (
     <Flex w="100%" direction="column" align="center" gap="sm">
       <AuthLoading>
@@ -151,6 +163,14 @@ export default function Dev() {
             size="lg"
           >
             G Sheets Test
+          </Button>
+
+          <Button
+            w="100%"
+            onClick={onClick_performAction_test_webhookCalls}
+            size="lg"
+          >
+            Webhooks Test
           </Button>
 
           {/*

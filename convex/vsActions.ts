@@ -839,3 +839,12 @@ export const analysePrjFile = action({
     });
   },
 });
+
+// WEBHOOK
+
+export const test_webhookCalls = action({
+  args: {},
+  handler: async (ctx) => {
+    return { foo: "bar" };
+  },
+});
