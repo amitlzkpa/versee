@@ -135,8 +135,14 @@ export default function Dev() {
 
   // NAVIGATOR API
 
+  const performAction_test_navigatorAPI = useAction(
+    api.vsActions.test_navigatorAPI
+  );
+
   const onClick_performAction_test_navigatorAPI = async () => {
     console.log("foo");
+    const f = await performAction_test_navigatorAPI();
+    console.log(f);
   };
 
   return (

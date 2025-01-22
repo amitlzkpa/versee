@@ -839,3 +839,12 @@ export const analysePrjFile = action({
     });
   },
 });
+
+// NAVIGATOR API
+
+export const test_navigatorAPI = action({
+  args: {},
+  handler: async (ctx) => {
+    return { foo: "bar" };
+  },
+});
