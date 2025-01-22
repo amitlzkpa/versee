@@ -845,6 +845,93 @@ export const analysePrjFile = action({
 export const test_webhookCalls = action({
   args: {},
   handler: async (ctx) => {
-    return { foo: "bar" };
+    const restApi = docusign.ApiClient.RestApi;
+    const oAuth = docusign.ApiClient.OAuth;
+    const basePath = restApi.BasePath.DEMO;
+    const oAuthBasePath = oAuth.BasePath.DEMO;
+    const dsApiClient = new docusign.ApiClient({
+      basePath: basePath,
+      oAuthBasePath: oAuthBasePath,
+    });
+
+    const storedUserData = await ctx.runQuery(
+      api.dbOps.getUserData_ForCurrUser
+    );
+    const accountId = storedUserData.docusignUserInfo.accounts[0].accountId;
+
+    const docusignUserTknObj = await getActiveTokenForDocusign(
+      ctx,
+      storedUserData
+    );
+    const accessToken = docusignUserTknObj.access_token;
+
+    dsApiClient.addDefaultHeader("Authorization", "Bearer " + accessToken);
+    const connectApi = new docusign.ConnectApi(dsApiClient);
+
+    // const connectId = "10723568";
+    // const retVal = await connectApi.getConfiguration(accountId, connectId);
+    // console.log(retVal);
+
+    // const connCofigObj = {
+    //   configurationType: "customrecipient",
+    //   urlToPublishTo: "https://tremendous-tapir-419.convex.site/receiveWebhook",
+    //   allUsers: "true",
+    //   name: "versee_webhook",
+    //   deliveryMode: "SIM",
+    //   allowEnvelopePublish: "true",
+    //   enableLog: "true",
+    //   eventData: {
+    //     version: "restv2.1",
+    //   },
+    //   events: [
+    //     "envelope-sent",
+    //     "envelope-delivered",
+    //     "envelope-completed",
+    //     // "envelope-declined",
+    //     // "envelope-voided",
+    //     // "envelope-resent",
+    //     // "envelope-corrected",
+    //     // "envelope-deleted",
+    //     // "envelope-corrected",
+    //     // "envelope-discarded",
+    //     // "envelope-created",
+    //     // "envelope-removed",
+    //   ],
+    // };
+
+    const connCofigObj = new docusign.ConnectCustomConfiguration();
+    connCofigObj.name = "versee_webhook";
+    connCofigObj.configurationType = "custom";
+    connCofigObj.urlToPublishTo =
+      "https://tremendous-tapir-419.convex.site/receiveWebhook";
+    connCofigObj.allUsers = "true";
+    connCofigObj.deliveryMode = "SIM";
+    connCofigObj.allowEnvelopePublish = "true";
+    connCofigObj.enableLog = "true";
+    connCofigObj.requiresAcknowledgement = "false";
+    connCofigObj.includeHMAC = "false";
+    // connCofigObj.signMessageWithX509Certificate = false;
+    connCofigObj.envelopeEvents = ["Completed"];
+
+    const connectEventData = new docusign.ConnectEventData();
+    connectEventData.version = "restv2.1";
+    connCofigObj.eventData = connectEventData;
+
+    console.log(connCofigObj);
+
+    try {
+      let retVal = await connectApi.createConfiguration(
+        accountId,
+        connCofigObj
+      );
+    } catch (err) {
+      console.log(err.message);
+    }
+    // const retVal = await connectApi.createConfiguration(
+    //   accountId,
+    //   connCofigObj
+    // );
+
+    return retVal;
   },
 });
