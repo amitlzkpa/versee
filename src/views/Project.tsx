@@ -87,25 +87,33 @@ export default function Project() {
 
   // Stepper
 
-  const tabVals = useMemo(() => ["first", "second", "third"], []);
+  const tabVals = useMemo(() => [
+    "uninitialized",
+    "agreements_uploaded",
+    "agreements_reviewed"
+  ], []);
   const [active, setActive] = useState(0);
-  const [activeTabVal, setActiveTabVal] = useState("first");
+  const [activeTabVal, setActiveTabVal] = useState("");
 
   const [highestStepVisited, setHighestStepVisited] = useState(active);
 
   const handleStepChange = (nextStep: any) => {
     const isOutOfBounds = nextStep > tabVals.length || nextStep < 0;
-
     if (isOutOfBounds) {
       return;
     }
-
     setActive(nextStep);
     setHighestStepVisited((hSC) => Math.max(hSC, nextStep));
   };
 
-  const shouldAllowSelectStep = (step: any) => highestStepVisited >= step && active !== step || true;
+  useEffect(() => {
+    if (!currProject?.initializationStatus) return;
+    const activeIdx = tabVals.indexOf(currProject?.initializationStatus);
+    setActive(activeIdx);
+    setHighestStepVisited(currProject?.initializationStatus);
+  }, [currProject, tabVals]);
 
+  const shouldAllowSelectStep = (step: any) => highestStepVisited >= step && active !== step;
 
   useEffect(() => {
     setActiveTabVal(tabVals[active]);
@@ -174,37 +182,37 @@ export default function Project() {
             w="100%"
           >
             <Tabs value={activeTabVal}>
-              <Tabs.Panel value="first">
+              <Tabs.Panel value="uninitialized">
                 <Flex
                   direction="column"
                   justify="center"
                   align="center"
                   w="100%"
-                  h="200"
+                  h="100%"
                 >
                   <ProjectInit_Uninit projectId={currProject?._id} />
                 </Flex>
               </Tabs.Panel>
 
-              <Tabs.Panel value="second">
+              <Tabs.Panel value="agreements_uploaded">
                 <Flex
                   direction="column"
                   justify="center"
                   align="center"
                   w="100%"
-                  h="200"
+                  h="100%"
                 >
                   <ProjectInit_AgreementsUploaded projectId={currProject?._id} />
                 </Flex>
               </Tabs.Panel>
 
-              <Tabs.Panel value="third">
+              <Tabs.Panel value="agreements_reviewed">
                 <Flex
                   direction="column"
                   justify="center"
                   align="center"
                   w="100%"
-                  h="200"
+                  h="100%"
                 >
                   <ProjectInit_AgreementsReviewed projectId={currProject?._id} />
                 </Flex>
