@@ -12,7 +12,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import * as docusign from "docusign-esign";
 
 let DEV = true;
-DEV = false;
+// DEV = false;
 
 // UTILS
 
@@ -109,7 +109,11 @@ async function getActiveTokenForDocusign(ctx, storedUserData) {
       "Bearer " + docusignUserTknObj.access_token
     );
 
-    const scopes = [oAuth.Scope.IMPERSONATION, oAuth.Scope.SIGNATURE];
+    const scopes = [
+      oAuth.Scope.IMPERSONATION,
+      oAuth.Scope.SIGNATURE,
+      oAuth.Scope.EXTENDED,
+    ];
     const userId = storedUserData.docusignUserInfo.sub;
     const expiresIn = 60 * 60;
 
@@ -866,71 +870,50 @@ export const test_webhookCalls = action({
     const accessToken = docusignUserTknObj.access_token;
 
     dsApiClient.addDefaultHeader("Authorization", "Bearer " + accessToken);
-    const connectApi = new docusign.ConnectApi(dsApiClient);
 
+    // const connectApi = new docusign.ConnectApi(dsApiClient);
     // const connectId = "10723568";
+    // console.log(accountId, connectId);
     // const retVal = await connectApi.getConfiguration(accountId, connectId);
     // console.log(retVal);
+    // return retVal;
 
-    // const connCofigObj = {
-    //   configurationType: "customrecipient",
-    //   urlToPublishTo: "https://tremendous-tapir-419.convex.site/receiveWebhook",
-    //   allUsers: "true",
-    //   name: "versee_webhook",
-    //   deliveryMode: "SIM",
-    //   allowEnvelopePublish: "true",
-    //   enableLog: "true",
-    //   eventData: {
-    //     version: "restv2.1",
-    //   },
-    //   events: [
-    //     "envelope-sent",
-    //     "envelope-delivered",
-    //     "envelope-completed",
-    //     // "envelope-declined",
-    //     // "envelope-voided",
-    //     // "envelope-resent",
-    //     // "envelope-corrected",
-    //     // "envelope-deleted",
-    //     // "envelope-corrected",
-    //     // "envelope-discarded",
-    //     // "envelope-created",
-    //     // "envelope-removed",
-    //   ],
-    // };
-
-    const connCofigObj = new docusign.ConnectCustomConfiguration();
-    connCofigObj.name = "versee_webhook";
-    connCofigObj.configurationType = "custom";
-    connCofigObj.urlToPublishTo =
+    console.log("--------------------------------");
+    const connectApi = new docusign.ConnectApi(dsApiClient);
+    const connectCustomConfiguration =
+      new docusign.ConnectCustomConfiguration();
+    connectCustomConfiguration.name = "versee connect";
+    connectCustomConfiguration.configurationType = "custom";
+    connectCustomConfiguration.allUsers = true;
+    connectCustomConfiguration.includeHMAC = false;
+    connectCustomConfiguration.enableLog = true;
+    connectCustomConfiguration.urlToPublishTo =
       "https://tremendous-tapir-419.convex.site/receiveWebhook";
-    connCofigObj.allUsers = "true";
-    connCofigObj.deliveryMode = "SIM";
-    connCofigObj.allowEnvelopePublish = "true";
-    connCofigObj.enableLog = "true";
-    connCofigObj.requiresAcknowledgement = "false";
-    connCofigObj.includeHMAC = "false";
-    // connCofigObj.signMessageWithX509Certificate = false;
-    connCofigObj.envelopeEvents = ["Completed"];
-
+    connectCustomConfiguration.events = [
+      "envelope-sent",
+      // "envelope-delivered",
+      // "envelope-completed",
+      // "envelope-declined",
+      // "envelope-voided",
+      // "envelope-resent",
+      // "envelope-corrected",
+      // "envelope-deleted",
+      // "envelope-corrected",
+      // "envelope-discarded",
+      // "envelope-created",
+      // "envelope-removed",
+    ];
     const connectEventData = new docusign.ConnectEventData();
     connectEventData.version = "restv2.1";
-    connCofigObj.eventData = connectEventData;
-
-    console.log(connCofigObj);
-
-    try {
-      let retVal = await connectApi.createConfiguration(
-        accountId,
-        connCofigObj
-      );
-    } catch (err) {
-      console.log(err.message);
-    }
-    // const retVal = await connectApi.createConfiguration(
-    //   accountId,
-    //   connCofigObj
-    // );
+    connectCustomConfiguration.eventData = connectEventData;
+    console.log(connectCustomConfiguration);
+    console.log(accountId);
+    const retVal = await connectApi.createConfiguration(
+      accountId,
+      connectCustomConfiguration
+    );
+    console.log(retVal);
+    console.log("--------------------------------");
 
     return retVal;
   },
