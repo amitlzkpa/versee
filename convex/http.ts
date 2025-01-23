@@ -5,7 +5,7 @@ const http = httpRouter();
 
 http.route({
   path: "/receiveWebhook",
-  method: "GET",
+  method: "POST",
   handler: receiveWebhook,
 });
 
