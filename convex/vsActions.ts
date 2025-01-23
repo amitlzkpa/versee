@@ -892,9 +892,7 @@ export const test_webhookCalls = action({
       new docusign.ConnectCustomConfiguration();
     connectCustomConfiguration.name = "versee connect";
     connectCustomConfiguration.configurationType = "custom";
-    connectCustomConfiguration.allUsers = true;
-    connectCustomConfiguration.includeHMAC = false;
-    connectCustomConfiguration.enableLog = true;
+    connectCustomConfiguration.deliveryMode = "sim";
     connectCustomConfiguration.urlToPublishTo =
       "https://tremendous-tapir-419.convex.site/receiveWebhook";
     connectCustomConfiguration.events = [
@@ -911,6 +909,25 @@ export const test_webhookCalls = action({
       // "envelope-created",
       // "envelope-removed",
     ];
+    connectCustomConfiguration.allUsers = "true";
+    connectCustomConfiguration.enableLog = "true";
+    connectCustomConfiguration.allowEnvelopePublish = "true";
+    connectCustomConfiguration.allUsersExcept = "false";
+    connectCustomConfiguration.includeCertificateOfCompletion = "false";
+    connectCustomConfiguration.includeCertSoapHeader = "false";
+    connectCustomConfiguration.includeDocumentFields = "false";
+    connectCustomConfiguration.includeDocuments = "false";
+    connectCustomConfiguration.includeEnvelopeVoidReason = "false";
+    connectCustomConfiguration.includeHMAC = "false";
+    connectCustomConfiguration.includeOAuth = "false";
+    connectCustomConfiguration.includeSenderAccountasCustomField = "false";
+    connectCustomConfiguration.includeTimeZoneInformation = "false";
+    connectCustomConfiguration.integratorManaged = "false";
+    connectCustomConfiguration.requireMutualTls = "false";
+    connectCustomConfiguration.requiresAcknowledgement = "true";
+    connectCustomConfiguration.signMessageWithX509Certificate = "false";
+    connectCustomConfiguration.useSoapInterface = "false";
+    connectCustomConfiguration.soapNamespace = "";
     const connectEventData = new docusign.ConnectEventData();
     connectEventData.version = "restv2.1";
     connectCustomConfiguration.eventData = connectEventData;
