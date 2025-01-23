@@ -155,7 +155,11 @@ export const startDocusignOAuth = action({
       oAuthBasePath: oAuthBasePath,
     });
 
-    const scopes = [oAuth.Scope.IMPERSONATION, oAuth.Scope.SIGNATURE];
+    const scopes = [
+      oAuth.Scope.IMPERSONATION,
+      oAuth.Scope.SIGNATURE,
+      oAuth.Scope.EXTENDED,
+    ];
 
     const oauthLoginUrl = apiClient.getAuthorizationUri(
       process.env.DOCUSIGN_INTEGRATION_KEY,
@@ -218,7 +222,11 @@ export const retrieveDocusignUserToken = action({
       oAuthBasePath: oAuthBasePath,
     });
 
-    const scopes = [oAuth.Scope.IMPERSONATION, oAuth.Scope.SIGNATURE];
+    const scopes = [
+      oAuth.Scope.IMPERSONATION,
+      oAuth.Scope.SIGNATURE,
+      oAuth.Scope.EXTENDED,
+    ];
     const userId = storedUserData.docusignUserInfo.sub;
     const expiresIn = 3600;
 
