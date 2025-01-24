@@ -655,20 +655,6 @@ const generateForPDF_offerings = async (pdfArrayBuffer, model) => {
   return offerings;
 };
 
-const generateForPDF_summary_es = async (pdfArrayBuffer, model) => {
-  const result = await model.generateContent([
-    {
-      inlineData: {
-        data: Buffer.from(pdfArrayBuffer).toString("base64"),
-        mimeType: "application/pdf",
-      },
-    },
-    "Give a very short description of the contents of this document in 1-2 sentences. Keep it simple and don't use any formatting. Reply directly with the answer in Spanish.",
-  ]);
-  const summary_es_Text = result.response.text();
-  return summary_es_Text;
-};
-
 const generateForPDF_title = async (pdfArrayBuffer, model) => {
   const result = await model.generateContent([
     {
@@ -762,23 +748,6 @@ export const analyseSrcDoc = action({
       srcDocId,
       updateDataStr: JSON.stringify(writeData),
     });
-
-    writeData.summary_es_Text = "generating";
-    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
-      srcDocId,
-      updateDataStr: JSON.stringify(writeData),
-    });
-    const summary_es_Text = await generateForPDF_summary_es(
-      pdfArrayBuffer,
-      model
-    );
-    writeData.summary_es_Status = "generated";
-    writeData.summary_es_Text = summary_es_Text;
-    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
-      srcDocId,
-      updateDataStr: JSON.stringify(writeData),
-    });
-
 
     const schema = {
       description: "List of offerings",
