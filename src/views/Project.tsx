@@ -24,7 +24,6 @@ import ProjectInit_SignersAssigned from "../components/ProjectInit_SignersAssign
 import ProjectInit_TaggingCompleted from "../components/ProjectInit_TaggingCompleted";
 import ProjectInit_AgreementSent from "../components/ProjectInit_AgreementSent";
 
-
 import useCvxUtils from "../hooks/cvxUtils";
 import GuideInfo from "../components/GuideInfo";
 
@@ -72,14 +71,17 @@ export default function Project() {
 
   // Stepper
 
-  const tabVals = useMemo(() => [
-    "uninitialized",
-    "agreements_uploaded",
-    "agreements_reviewed",
-    "signers_assigned",
-    "tagging_completed",
-    "agreement_sent"
-  ], []);
+  const tabVals = useMemo(
+    () => [
+      "uninitialized",
+      "agreements_uploaded",
+      "agreements_reviewed",
+      "signers_assigned",
+      "tagging_completed",
+      "agreement_sent",
+    ],
+    []
+  );
   const [active, setActive] = useState(0);
   const [activeTabVal, setActiveTabVal] = useState("");
 
@@ -101,7 +103,8 @@ export default function Project() {
     setHighestStepVisited(currProject?.initializationStatus);
   }, [currProject, tabVals]);
 
-  const shouldAllowSelectStep = (step: any) => highestStepVisited >= step && active !== step;
+  const shouldAllowSelectStep = (step: any) =>
+    highestStepVisited >= step && active !== step;
 
   useEffect(() => {
     setActiveTabVal(tabVals[active]);
@@ -109,20 +112,14 @@ export default function Project() {
 
   return (
     <Flex w="100%" direction="column" align="center" gap="sm" p="lg">
-
-      <Flex
-        w="100%"
-        mb="xl"
-        gap="md"
-        pb="xl"
-      >
+      <Flex w="100%" mb="xl" gap="md" pb="xl">
         {/* Step selector */}
-        <Flex
-          w="30%"
-          direction="column"
-          align="stretch"
-        >
-          <Stepper active={active} onStepClick={handleStepChange} orientation="vertical">
+        <Flex w="30%" direction="column" align="stretch">
+          <Stepper
+            active={active}
+            onStepClick={handleStepChange}
+            orientation="vertical"
+          >
             <Stepper.Step
               label="First step"
               description="Upload your papers"
@@ -186,16 +183,8 @@ export default function Project() {
         </Flex>
 
         {/* Step content */}
-        <Flex
-          w="80%"
-          direction="column"
-          align="stretch"
-        >
-          <Flex
-            direction="column"
-            align="stretch"
-            w="100%"
-          >
+        <Flex w="80%" direction="column" align="stretch">
+          <Flex direction="column" align="stretch" w="100%">
             <Tabs value={activeTabVal}>
               <Tabs.Panel value="uninitialized">
                 <Flex
@@ -217,7 +206,9 @@ export default function Project() {
                   w="100%"
                   h="100%"
                 >
-                  <ProjectInit_AgreementsUploaded projectId={currProject?._id} />
+                  <ProjectInit_AgreementsUploaded
+                    projectId={currProject?._id}
+                  />
                 </Flex>
               </Tabs.Panel>
 
@@ -229,7 +220,9 @@ export default function Project() {
                   w="100%"
                   h="100%"
                 >
-                  <ProjectInit_AgreementsReviewed projectId={currProject?._id} />
+                  <ProjectInit_AgreementsReviewed
+                    projectId={currProject?._id}
+                  />
                 </Flex>
               </Tabs.Panel>
 
@@ -271,9 +264,7 @@ export default function Project() {
             </Tabs>
           </Flex>
         </Flex>
-
       </Flex>
-
     </Flex>
   );
 }

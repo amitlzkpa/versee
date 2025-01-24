@@ -781,7 +781,8 @@ export const analyseSrcDoc = action({
           },
           quantity: {
             type: SchemaType.NUMBER,
-            description: "Quantity of what is being made available (without units).",
+            description:
+              "Quantity of what is being made available (without units).",
             nullable: false,
           },
           units: {
@@ -826,7 +827,8 @@ export const analyseSrcDoc = action({
         properties: {
           title: {
             type: SchemaType.STRING,
-            description: "A suitable title to be shown as heading for the criteria.",
+            description:
+              "A suitable title to be shown as heading for the criteria.",
             nullable: false,
           },
           description: {

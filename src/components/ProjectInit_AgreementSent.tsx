@@ -19,7 +19,6 @@ import FileUploader from "../components/FileUploader";
 import Summary_SrcDoc from "../components/Summary_SrcDoc";
 
 export default function ProjectInit_AgreementSent({ projectId = null }: any) {
-
   const curProjectSrcDocs = useQuery(
     api.dbOps.getAllSrcDocs_ForProject,
     projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"

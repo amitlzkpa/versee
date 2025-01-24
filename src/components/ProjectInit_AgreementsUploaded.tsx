@@ -111,34 +111,33 @@ export default function ProjectInit_AgreementsUploaded({
 
                   <Summary_SrcDoc srcDocId={srcDoc._id} />
 
-                  {
-                    srcDoc.offerings_Text
-                      ?
-                      <Text>
-                        <pre
-                          style={{ textWrap: "pretty" }}
-                        >
-                          {JSON.stringify(JSON.parse(srcDoc.offerings_Text), null, 2)}
-                        </pre>
-                      </Text>
-                      :
-                      <></>
-                  }
-
-                  {srcDoc.criteria_Text
-                    ?
+                  {srcDoc.offerings_Text ? (
                     <Text>
-                      <pre
-                        style={{ textWrap: "pretty" }}
-                      >
-                        {JSON.stringify(JSON.parse(srcDoc.criteria_Text), null, 2)}
+                      <pre style={{ textWrap: "pretty" }}>
+                        {JSON.stringify(
+                          JSON.parse(srcDoc.offerings_Text),
+                          null,
+                          2
+                        )}
                       </pre>
                     </Text>
-                    :
+                  ) : (
                     <></>
+                  )}
 
-                  }
-
+                  {srcDoc.criteria_Text ? (
+                    <Text>
+                      <pre style={{ textWrap: "pretty" }}>
+                        {JSON.stringify(
+                          JSON.parse(srcDoc.criteria_Text),
+                          null,
+                          2
+                        )}
+                      </pre>
+                    </Text>
+                  ) : (
+                    <></>
+                  )}
                 </Flex>
               </Carousel.Slide>
             );

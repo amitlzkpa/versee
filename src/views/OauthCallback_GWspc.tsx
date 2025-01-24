@@ -18,7 +18,7 @@ export default function OauthCallback_GWspc() {
     const queryParams = new URLSearchParams(location.search);
     const code = queryParams.get("code");
     const savedRecord = await performAction_retrieveGWspcToken({
-      authCode: code ?? ""
+      authCode: code ?? "",
     });
     console.log(savedRecord);
   };
