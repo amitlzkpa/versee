@@ -67,6 +67,7 @@ export default function ProjectInit_TaggingCompleted({
 
         <Textarea
           w="100%"
+          rows={8}
           resize="vertical"
           onChange={(e) => setEmailBlurb(e.target.value)}
           value={emailBlurb}

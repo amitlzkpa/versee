@@ -138,8 +138,8 @@ export default function Project() {
                 p="lg"
                 style={{ textAlign: "center" }}
               >
-                <Text>Time to get the ball rolling!</Text>
-                <Text fz="lg" lh="1">
+                <Text lh="1">Time to get the ball rolling!</Text>
+                <Text fz="lg" lh="1.2">
                   Upload your agreement and let’s get things moving.
                 </Text>
               </Flex>
@@ -149,44 +149,88 @@ export default function Project() {
               description="Review them"
               allowStepSelect={shouldAllowSelectStep(1)}
             >
-              <Center>
-                <Text style={{ textAlign: "center" }}>
+              <Flex
+                w="100%"
+                h="100%"
+                maw="400"
+                direction="column"
+                justify="center"
+                align="center"
+                gap="sm"
+                p="lg"
+                style={{ textAlign: "center" }}
+              >
+                <Text lh="1"></Text>
+                <Text fz="lg" lh="1.2">
                   Review and Confirm
                 </Text>
-              </Center>
+              </Flex>
             </Stepper.Step>
             <Stepper.Step
               label="Third step"
               description="Add signers"
               allowStepSelect={shouldAllowSelectStep(2)}
             >
-              <Center>
-                <Text style={{ textAlign: "center" }}>
-                  Add Signers
+              <Flex
+                w="100%"
+                h="100%"
+                maw="400"
+                direction="column"
+                justify="center"
+                align="center"
+                gap="sm"
+                p="lg"
+                style={{ textAlign: "center" }}
+              >
+                <Text lh="1">Time to bring others on board!</Text>
+                <Text fz="lg" lh="1.2">
+                  Add your signers to start the signing process.
                 </Text>
-              </Center>
+              </Flex>
             </Stepper.Step>
             <Stepper.Step
               label="Fourth step"
               description="Add tags"
               allowStepSelect={shouldAllowSelectStep(3)}
             >
-              <Center>
-                <Text style={{ textAlign: "center" }}>
-                  Add Tags
+              <Flex
+                w="100%"
+                h="100%"
+                maw="400"
+                direction="column"
+                justify="center"
+                align="center"
+                gap="sm"
+                p="lg"
+                style={{ textAlign: "center" }}
+              >
+                <Text lh="1">Guide your signers.</Text>
+                <Text fz="lg" lh="1.2">
+                  Mark the fields where they need to provide details and sign.
                 </Text>
-              </Center>
+              </Flex>
             </Stepper.Step>
             <Stepper.Step
               label="Fourth step"
               description="Finalize"
               allowStepSelect={shouldAllowSelectStep(4)}
             >
-              <Center>
-                <Text style={{ textAlign: "center" }}>
-                  Finalize
+              <Flex
+                w="100%"
+                h="100%"
+                maw="400"
+                direction="column"
+                justify="center"
+                align="center"
+                gap="sm"
+                p="lg"
+                style={{ textAlign: "center" }}
+              >
+                <Text lh="1">Ready to send?</Text>
+                <Text fz="lg" lh="1.2">
+                  Customize the message before sending it out for signatures.
                 </Text>
-              </Center>
+              </Flex>
             </Stepper.Step>
             <Stepper.Step
               label="Done"

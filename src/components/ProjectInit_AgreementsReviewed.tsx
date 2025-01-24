@@ -121,10 +121,7 @@ export default function ProjectInit_AgreementsReviewed({
               gap="sm"
               style={{ textAlign: "center" }}
             >
-              <Text>Time to bring others on board!</Text>
-              <Text fz="lg">
-                Add your signers to start the signing process.
-              </Text>
+              <Text>No signers added yet</Text>
             </Flex>
           ) : (
             signersList.map((signerObj: any, idx: number) => {
@@ -163,7 +160,7 @@ export default function ProjectInit_AgreementsReviewed({
           onClick={onClick_completeAddingSigners}
           disabled={signersList.length < 1}
         >
-          Add Tags
+          Done
         </Button>
       </Flex>
     </>
