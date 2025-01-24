@@ -2,7 +2,7 @@ import { Button, Divider, Flex, Text, rem } from "@mantine/core";
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaRedo } from "react-icons/fa";
 
 export default function MyAccount() {
   const storedUserData = useQuery(api.dbOps.getUserData_ForCurrUser);
@@ -45,6 +45,15 @@ export default function MyAccount() {
                 }}
               />
               <Text>Docusign Account Connected</Text>
+              <FaRedo
+                onClick={onClick_startDocusignOAuth}
+                style={{
+                  width: rem(16),
+                  height: rem(16),
+                  color: "var(--mantine-color-gray-5)",
+                  cursor: "pointer",
+                }}
+              />
             </Flex>
           </>
         )}
@@ -70,6 +79,15 @@ export default function MyAccount() {
                 }}
               />
               <Text>Google Drive Account Connected</Text>
+              <FaRedo
+                onClick={onClick_startGWspcOAuth}
+                style={{
+                  width: rem(16),
+                  height: rem(16),
+                  color: "var(--mantine-color-gray-5)",
+                  cursor: "pointer",
+                }}
+              />
             </Flex>
           </>
         )}
