@@ -7,7 +7,7 @@ import { Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 
 import { google } from "googleapis";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 // import jwt from "jsonwebtoken";
 import * as docusign from "docusign-esign";
 
@@ -779,6 +779,46 @@ export const analyseSrcDoc = action({
       updateDataStr: JSON.stringify(writeData),
     });
 
+
+    const schema = {
+      description: "List of offerings",
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          title: {
+            type: SchemaType.STRING,
+            description: "A suitable title to be shown for the offering.",
+            nullable: false,
+          },
+          description: {
+            type: SchemaType.STRING,
+            description: "2 sentence description of what is being offered.",
+            nullable: false,
+          },
+          quantity: {
+            type: SchemaType.NUMBER,
+            description: "Quantity of what is being made available (without units).",
+            nullable: false,
+          },
+          units: {
+            type: SchemaType.STRING,
+            description: "Units for the quantity of what is being offered.",
+            nullable: false,
+          },
+        },
+        required: ["title", "description", "quantity", "units"],
+      },
+    };
+
+    const soModel = genAI.getGenerativeModel({
+      model: "gemini-1.5-pro",
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: schema,
+      },
+    });
+
     writeData.offerings_Status = "generating";
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
@@ -786,7 +826,7 @@ export const analyseSrcDoc = action({
     });
     const offerings_Text = await generateForPDF_offerings(
       pdfArrayBuffer,
-      model
+      soModel
     );
     writeData.offerings_Status = "generated";
     writeData.offerings_Text = offerings_Text;
