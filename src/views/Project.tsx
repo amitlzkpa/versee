@@ -111,8 +111,9 @@ export default function Project() {
 
       <Flex
         w="100%"
-        m="xl"
+        mb="xl"
         gap="md"
+        pb="xl"
       >
         {/* Step selector */}
         <Flex
@@ -126,11 +127,22 @@ export default function Project() {
               description="Upload your papers"
               allowStepSelect={shouldAllowSelectStep(0)}
             >
-              <Center>
-                <Text style={{ textAlign: "center" }}>
-                  Upload your papers
+              <Flex
+                w="100%"
+                h="100%"
+                maw="400"
+                direction="column"
+                justify="center"
+                align="center"
+                gap="sm"
+                p="lg"
+                style={{ textAlign: "center" }}
+              >
+                <Text>Time to get the ball rolling!</Text>
+                <Text fz="lg" lh="1">
+                  Upload your agreement and let’s get things moving.
                 </Text>
-              </Center>
+              </Flex>
             </Stepper.Step>
             <Stepper.Step
               label="Second step"
