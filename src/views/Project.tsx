@@ -26,6 +26,7 @@ import ProjectInit_AgreementSent from "../components/ProjectInit_AgreementSent";
 
 
 import useCvxUtils from "../hooks/cvxUtils";
+import GuideInfo from "../components/GuideInfo";
 
 export default function Project() {
   const cvxUtils = useCvxUtils();
@@ -127,120 +128,59 @@ export default function Project() {
               description="Upload your papers"
               allowStepSelect={shouldAllowSelectStep(0)}
             >
-              <Flex
-                w="100%"
-                h="100%"
-                maw="400"
-                direction="column"
-                justify="center"
-                align="center"
-                gap="sm"
-                p="lg"
-                style={{ textAlign: "center" }}
-              >
-                <Text lh="1">Time to get the ball rolling!</Text>
-                <Text fz="lg" lh="1.2">
-                  Upload your agreement and let’s get things moving.
-                </Text>
-              </Flex>
+              <GuideInfo
+                msgHead="Time to get the ball rolling!"
+                msgDesc="Upload your agreement and let's get things moving."
+              />
             </Stepper.Step>
             <Stepper.Step
               label="Second step"
               description="Review them"
               allowStepSelect={shouldAllowSelectStep(1)}
             >
-              <Flex
-                w="100%"
-                h="100%"
-                maw="400"
-                direction="column"
-                justify="center"
-                align="center"
-                gap="sm"
-                p="lg"
-                style={{ textAlign: "center" }}
-              >
-                <Text lh="1"></Text>
-                <Text fz="lg" lh="1.2">
-                  Review and Confirm
-                </Text>
-              </Flex>
+              <GuideInfo
+                msgHead="Review and Confirm"
+                msgDesc="Confirm that the uploaded document and information are correct."
+              />
             </Stepper.Step>
             <Stepper.Step
               label="Third step"
               description="Add signers"
               allowStepSelect={shouldAllowSelectStep(2)}
             >
-              <Flex
-                w="100%"
-                h="100%"
-                maw="400"
-                direction="column"
-                justify="center"
-                align="center"
-                gap="sm"
-                p="lg"
-                style={{ textAlign: "center" }}
-              >
-                <Text lh="1">Time to bring others on board!</Text>
-                <Text fz="lg" lh="1.2">
-                  Add your signers to start the signing process.
-                </Text>
-              </Flex>
+              <GuideInfo
+                msgHead="Time to bring others on board!"
+                msgDesc="Add your signers to start the signing process."
+              />
             </Stepper.Step>
             <Stepper.Step
               label="Fourth step"
               description="Add tags"
               allowStepSelect={shouldAllowSelectStep(3)}
             >
-              <Flex
-                w="100%"
-                h="100%"
-                maw="400"
-                direction="column"
-                justify="center"
-                align="center"
-                gap="sm"
-                p="lg"
-                style={{ textAlign: "center" }}
-              >
-                <Text lh="1">Guide your signers.</Text>
-                <Text fz="lg" lh="1.2">
-                  Mark the fields where they need to provide details and sign.
-                </Text>
-              </Flex>
+              <GuideInfo
+                msgHead="Guide your signers."
+                msgDesc="Mark the fields where they need to provide details and sign."
+              />
             </Stepper.Step>
             <Stepper.Step
               label="Fourth step"
               description="Finalize"
               allowStepSelect={shouldAllowSelectStep(4)}
             >
-              <Flex
-                w="100%"
-                h="100%"
-                maw="400"
-                direction="column"
-                justify="center"
-                align="center"
-                gap="sm"
-                p="lg"
-                style={{ textAlign: "center" }}
-              >
-                <Text lh="1">Ready to send?</Text>
-                <Text fz="lg" lh="1.2">
-                  Customize the message before sending it out for signatures.
-                </Text>
-              </Flex>
+              <GuideInfo
+                msgHead="Ready to send?"
+                msgDesc="Customize the message before sending it out for signatures."
+              />
             </Stepper.Step>
             <Stepper.Step
               label="Done"
               allowStepSelect={shouldAllowSelectStep(5)}
             >
-              <Center>
-                <Text style={{ textAlign: "center" }}>
-                  Wait for Signers
-                </Text>
-              </Center>
+              <GuideInfo
+                msgHead="Success!"
+                msgDesc="The signature request is sent—real-time updates will keep you in the loop."
+              />
             </Stepper.Step>
           </Stepper>
         </Flex>
