@@ -641,6 +641,20 @@ export const test_readSheet = action({
 
 // SRCDOCS
 
+const generateForPDF_offerings = async (pdfArrayBuffer, model) => {
+  const result = await model.generateContent([
+    {
+      inlineData: {
+        data: Buffer.from(pdfArrayBuffer).toString("base64"),
+        mimeType: "application/pdf",
+      },
+    },
+    "Extract the key offerings made available for applicants through this PDF. Provide granular and accurate details in an organized manner.",
+  ]);
+  const offerings = result.response.text();
+  return offerings;
+};
+
 const generateForPDF_summary_es = async (pdfArrayBuffer, model) => {
   const result = await model.generateContent([
     {
@@ -723,6 +737,7 @@ export const analyseSrcDoc = action({
     let uploadedFileData;
 
     const writeData = { titleStatus: "generating" };
+
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
       updateDataStr: JSON.stringify(writeData),
@@ -759,6 +774,22 @@ export const analyseSrcDoc = action({
     );
     writeData.summary_es_Status = "generated";
     writeData.summary_es_Text = summary_es_Text;
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
+      srcDocId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+
+    writeData.offerings_Status = "generating";
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
+      srcDocId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+    const offerings_Text = await generateForPDF_offerings(
+      pdfArrayBuffer,
+      model
+    );
+    writeData.offerings_Status = "generated";
+    writeData.offerings_Text = offerings_Text;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
       updateDataStr: JSON.stringify(writeData),
