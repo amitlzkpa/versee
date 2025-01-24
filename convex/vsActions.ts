@@ -649,10 +649,24 @@ const generateForPDF_offerings = async (pdfArrayBuffer, model) => {
         mimeType: "application/pdf",
       },
     },
-    "Extract the key offerings made available for applicants through this PDF. Provide granular and accurate details in an organized manner.",
+    "Extract the key offerings made available for applicants through this PDF.",
   ]);
   const offerings = result.response.text();
   return offerings;
+};
+
+const generateForPDF_criteria = async (pdfArrayBuffer, model) => {
+  const result = await model.generateContent([
+    {
+      inlineData: {
+        data: Buffer.from(pdfArrayBuffer).toString("base64"),
+        mimeType: "application/pdf",
+      },
+    },
+    "Extract criterias relevant for applicants described in the PDF.",
+  ]);
+  const criteria = result.response.text();
+  return criteria;
 };
 
 const generateForPDF_title = async (pdfArrayBuffer, model) => {
@@ -724,32 +738,32 @@ export const analyseSrcDoc = action({
 
     const writeData = { titleStatus: "generating" };
 
-    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
-      srcDocId,
-      updateDataStr: JSON.stringify(writeData),
-    });
-    const titleText = await generateForPDF_title(pdfArrayBuffer, model);
-    writeData.titleStatus = "generated";
-    writeData.titleText = titleText;
-    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
-      srcDocId,
-      updateDataStr: JSON.stringify(writeData),
-    });
+    // uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
+    //   srcDocId,
+    //   updateDataStr: JSON.stringify(writeData),
+    // });
+    // const titleText = await generateForPDF_title(pdfArrayBuffer, model);
+    // writeData.titleStatus = "generated";
+    // writeData.titleText = titleText;
+    // uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
+    //   srcDocId,
+    //   updateDataStr: JSON.stringify(writeData),
+    // });
 
-    writeData.summaryStatus = "generating";
-    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
-      srcDocId,
-      updateDataStr: JSON.stringify(writeData),
-    });
-    const summaryText = await generateForPDF_summary(pdfArrayBuffer, model);
-    writeData.summaryStatus = "generated";
-    writeData.summaryText = summaryText;
-    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
-      srcDocId,
-      updateDataStr: JSON.stringify(writeData),
-    });
+    // writeData.summaryStatus = "generating";
+    // uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
+    //   srcDocId,
+    //   updateDataStr: JSON.stringify(writeData),
+    // });
+    // const summaryText = await generateForPDF_summary(pdfArrayBuffer, model);
+    // writeData.summaryStatus = "generated";
+    // writeData.summaryText = summaryText;
+    // uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
+    //   srcDocId,
+    //   updateDataStr: JSON.stringify(writeData),
+    // });
 
-    const schema = {
+    const schema_offerings = {
       description: "List of offerings",
       type: SchemaType.ARRAY,
       items: {
@@ -780,11 +794,11 @@ export const analyseSrcDoc = action({
       },
     };
 
-    const soModel = genAI.getGenerativeModel({
+    const soModel_offerings = genAI.getGenerativeModel({
       model: "gemini-1.5-pro",
       generationConfig: {
         responseMimeType: "application/json",
-        responseSchema: schema,
+        responseSchema: schema_offerings,
       },
     });
 
@@ -795,10 +809,60 @@ export const analyseSrcDoc = action({
     });
     const offerings_Text = await generateForPDF_offerings(
       pdfArrayBuffer,
-      soModel
+      soModel_offerings
     );
     writeData.offerings_Status = "generated";
     writeData.offerings_Text = offerings_Text;
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
+      srcDocId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+
+    const schema_criteria = {
+      description: "List of eligibility criteria",
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          title: {
+            type: SchemaType.STRING,
+            description: "A suitable title to be shown as heading for the criteria.",
+            nullable: false,
+          },
+          description: {
+            type: SchemaType.STRING,
+            description: "2 sentence description of the criteria.",
+            nullable: false,
+          },
+          applies_to: {
+            type: SchemaType.STRING,
+            description: "Stipulatios for where this criteria applies.",
+            nullable: false,
+          },
+        },
+        required: ["title", "description", "applies_to"],
+      },
+    };
+
+    const soModel_criteria = genAI.getGenerativeModel({
+      model: "gemini-1.5-pro",
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: schema_criteria,
+      },
+    });
+
+    writeData.criteria_Status = "generating";
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
+      srcDocId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+    const criteria_Text = await generateForPDF_criteria(
+      pdfArrayBuffer,
+      soModel_criteria
+    );
+    writeData.criteria_Status = "generated";
+    writeData.criteria_Text = criteria_Text;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
       updateDataStr: JSON.stringify(writeData),
