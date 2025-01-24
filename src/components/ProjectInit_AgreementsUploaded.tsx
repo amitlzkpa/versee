@@ -23,6 +23,14 @@ export default function ProjectInit_AgreementsUploaded({
 }: any) {
   const cvxUtils = useCvxUtils();
 
+  const performAction_analyseSrcDoc = useAction(api.vsActions.analyseSrcDoc);
+
+  const onClick_analyseDoc = async (srcDocId: any) => {
+    await performAction_analyseSrcDoc({
+      srcDocId: srcDocId,
+    });
+  };
+
   // SRCDOC
 
   const curProjectSrcDocs = useQuery(
@@ -48,7 +56,7 @@ export default function ProjectInit_AgreementsUploaded({
         gap="sm"
         py="lg"
       >
-        <Text fz="xl" fw="bold" w="100%">
+        <Text fz="lg" fw="bold">
           Agreement Papers ({(curProjectSrcDocs ?? []).length})
         </Text>
 
@@ -92,7 +100,45 @@ export default function ProjectInit_AgreementsUploaded({
                     Open
                   </Button>
 
+                  <Button
+                    variant="outline"
+                    w="100%"
+                    size="sm"
+                    onClick={() => onClick_analyseDoc(srcDoc._id)}
+                  >
+                    Analyse
+                  </Button>
+
                   <Summary_SrcDoc srcDocId={srcDoc._id} />
+
+                  {
+                    srcDoc.offerings_Text
+                      ?
+                      <Text>
+                        <pre
+                          style={{ textWrap: "pretty" }}
+                        >
+                          {JSON.stringify(JSON.parse(srcDoc.offerings_Text), null, 2)}
+                        </pre>
+                      </Text>
+                      :
+                      <></>
+                  }
+
+                  {srcDoc.criteria_Text
+                    ?
+                    <Text>
+                      <pre
+                        style={{ textWrap: "pretty" }}
+                      >
+                        {JSON.stringify(JSON.parse(srcDoc.criteria_Text), null, 2)}
+                      </pre>
+                    </Text>
+                    :
+                    <></>
+
+                  }
+
                 </Flex>
               </Carousel.Slide>
             );
