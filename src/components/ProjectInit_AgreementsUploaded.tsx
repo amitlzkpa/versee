@@ -100,7 +100,7 @@ export default function ProjectInit_AgreementsUploaded({
         </Carousel>
 
         <Button w="100%" size="lg" onClick={onClick_confirmAgreementReview}>
-          Add Signers
+          Confirm
         </Button>
       </Flex>
     </>

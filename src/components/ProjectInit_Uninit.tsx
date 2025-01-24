@@ -63,24 +63,6 @@ export default function ProjectInit_Uninit({ projectId = null }: any) {
   return (
     <>
       <Flex w="100%" h="100%" direction="column" align="center" gap="sm">
-        {/* Info message */}
-        <Flex
-          w="100%"
-          h="100%"
-          maw="400"
-          direction="column"
-          justify="center"
-          align="center"
-          gap="sm"
-          style={{ textAlign: "center" }}
-        >
-          <Text>Time to get the ball rolling!</Text>
-          <Text fz="lg">
-            Upload your agreement and let’s get things moving.
-          </Text>
-        </Flex>
-
-        {/* File Upload */}
         <Flex
           w="100%"
           h="100%"
