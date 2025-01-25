@@ -133,29 +133,55 @@ export default function ProjectInit_AgreementsUploaded({
 
                 <Summary_SrcDoc srcDocId={srcDoc._id} />
 
-                {srcDoc.offerings_Text ? (
-                  <pre style={{ textWrap: "pretty" }}>
-                    {JSON.stringify(
-                      JSON.parse(srcDoc.offerings_Text),
-                      null,
-                      2
-                    )}
-                  </pre>
-                ) : (
-                  <></>
-                )}
 
-                {srcDoc.criteria_Text ? (
-                  <pre style={{ textWrap: "pretty" }}>
-                    {JSON.stringify(
-                      JSON.parse(srcDoc.criteria_Text),
-                      null,
-                      2
-                    )}
-                  </pre>
-                ) : (
-                  <></>
-                )}
+                <Accordion w="100%">
+                  <Accordion.Item key="first" value="first">
+                    <Accordion.Control>
+                      <Text>
+                        Scheme
+                      </Text>
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                      <Flex w="100%" direction="column" align="center" gap="md">
+                        {srcDoc.offerings_Text ? (
+                          <pre style={{ textWrap: "pretty" }}>
+                            {JSON.stringify(
+                              JSON.parse(srcDoc.offerings_Text),
+                              null,
+                              2
+                            )}
+                          </pre>
+                        ) : (
+                          <></>
+                        )}
+                      </Flex>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+
+                  <Accordion.Item key="second" value="second">
+                    <Accordion.Control>
+                      <Text>
+                        Eligibility
+                      </Text>
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                      <Flex w="100%" direction="column" align="center" gap="md">
+                        {srcDoc.criteria_Text ? (
+                          <pre style={{ textWrap: "pretty" }}>
+                            {JSON.stringify(
+                              JSON.parse(srcDoc.criteria_Text),
+                              null,
+                              2
+                            )}
+                          </pre>
+                        ) : (
+                          <></>
+                        )}
+                      </Flex>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                </Accordion>
+
               </Flex>
             </Flex>
             :
