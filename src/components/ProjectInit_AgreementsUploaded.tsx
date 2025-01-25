@@ -73,6 +73,7 @@ export default function ProjectInit_AgreementsUploaded({
     const offeringsText = JSON.stringify(offeringsJSON);
     const criteriaText = JSON.stringify(criteriaJSON);
     const updateData_srcdoc = JSON.stringify({
+      ...docOne,
       offerings_Text: offeringsText,
       criteria_Text: criteriaText,
     });
@@ -145,7 +146,7 @@ export default function ProjectInit_AgreementsUploaded({
                 Analyse
               </Button>
             </Flex>
-            <Flex w="50%" h="100%" direction="column" align="stretch" gap="md">
+            <Flex w="50%" h="100%" direction="column" align="stretch" gap="xs">
               <Button
                 w="100%"
                 size="lg"
@@ -156,9 +157,28 @@ export default function ProjectInit_AgreementsUploaded({
 
               <Divider my="sm" />
 
-              <Text fw="bold">{srcDoc.titleText}</Text>
+              <TextInput
+                variant="unstyled"
+                w="100%"
+                size="lg"
+                fw="bold"
+                defaultValue={srcDoc.titleText}
+                onChange={(e) => {
+                  srcDoc.titleText = e.target.value;
+                }}
+              />
 
-              <Summary_SrcDoc srcDocId={srcDoc._id} />
+              <Textarea
+                variant="unstyled"
+                size="md"
+                w="100%"
+                rows={6}
+                resize="vertical"
+                defaultValue={srcDoc.summaryText}
+                onChange={(e) => {
+                  srcDoc.summaryText = e.target.value;
+                }}
+              />
 
               <Accordion w="100%">
                 <Accordion.Item key="first" value="first">
