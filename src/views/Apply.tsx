@@ -136,6 +136,7 @@ export default function Preview() {
           />
         </Flex>
       </Drawer>
+
       <Flex w="30%" direction="column" align="stretch" gap="sm">
         <Flex
           w="100%"
@@ -193,14 +194,29 @@ export default function Preview() {
         gap="md"
         style={{ overflowY: "auto" }}
       >
-        Boom
+        <Flex
+          w="100%"
+          h="100%"
+          direction="column"
+          align="stretch"
+          gap="md"
+          style={{ overflowY: "auto", textAlign: "center" }}
+        >
+          <Text>Docs</Text>
+        </Flex>
       </Flex>
 
       <Flex w="30%" direction="column" align="center" gap="md">
-        <FileUploader
-          projectId={currProject?._id}
-          onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
-        />
+        <Flex w="100%" direction="column" align="stretch">
+          <FileUploader
+            projectId={currProject?._id}
+            onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
+          />
+        </Flex>
+
+        <Flex w="100%" h="100%" direction="column" align="stretch">
+          File List
+        </Flex>
       </Flex>
     </Flex>
   );
