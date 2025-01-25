@@ -6,8 +6,10 @@ import {
   Center,
   Divider,
   Flex,
+  Input,
   Loader,
   Text,
+  Textarea,
   rem,
 } from "@mantine/core";
 
@@ -51,8 +53,17 @@ export default function ProjectInit_AgreementsUploaded({
 
   useEffect(() => {
     if ((curProjectSrcDocs ?? []).length < 1) return;
-    const docOne: any = (curProjectSrcDocs ?? []);
-    setSrcDoc(docOne[0]);
+    const docOne: any = (curProjectSrcDocs ?? [])[0];
+    setSrcDoc(docOne);
+  }, [curProjectSrcDocs]);
+
+  const [offeringsJSON, setOfferingsJSON] = useState([]);
+
+  useEffect(() => {
+    if ((curProjectSrcDocs ?? []).length < 1) return;
+    const docOne: any = (curProjectSrcDocs ?? [])[0];
+    if (!docOne?.offerings_Text) return;
+    setOfferingsJSON(JSON.parse(docOne.offerings_Text));
   }, [curProjectSrcDocs]);
 
   return (
@@ -142,19 +153,36 @@ export default function ProjectInit_AgreementsUploaded({
                       </Text>
                     </Accordion.Control>
                     <Accordion.Panel>
-                      <Flex w="100%" direction="column" align="center" gap="md">
-                        {srcDoc.offerings_Text ? (
-                          <pre style={{ textWrap: "pretty" }}>
-                            {JSON.stringify(
-                              JSON.parse(srcDoc.offerings_Text),
-                              null,
-                              2
-                            )}
-                          </pre>
-                        ) : (
+                      {
+                        offeringsJSON
+                          ?
+                          <Flex w="100%" direction="column" align="stretch" gap="md">
+                            {
+                              offeringsJSON.map((offerItem: any, offerIdx: number) => {
+                                return (
+                                  <Flex w="100%" direction="column" align="center" gap="xs" key={offerIdx}>
+                                    <Input
+                                      w="100%"
+                                      fz="md"
+                                      fw="bold"
+                                      defaultValue={offerItem.title}
+                                      placeholder="New Signer Name"
+                                    />
+                                    <Textarea
+                                      variant="filled"
+                                      w="100%"
+                                      rows={4}
+                                      resize="vertical"
+                                      defaultValue={offerItem.description}
+                                    />
+                                  </Flex>
+                                );
+                              })
+                            }
+                          </Flex>
+                          :
                           <></>
-                        )}
-                      </Flex>
+                      }
                     </Accordion.Panel>
                   </Accordion.Item>
 
