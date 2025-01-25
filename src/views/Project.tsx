@@ -39,36 +39,6 @@ export default function Project() {
     projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
   );
 
-  const onClick_uploadFiles_PrjFiles = async (droppedFiles: any) => {
-    const ps = droppedFiles.map(
-      (file: any) =>
-        new Promise((resolve, reject) => {
-          cvxUtils.performAction_generateUploadUrl().then(async (uploadUrl) => {
-            try {
-              const result = await fetch(uploadUrl, {
-                method: "POST",
-                body: file,
-              });
-              const uploadedCvxFile = await result.json();
-              const cvxStoredFileId = uploadedCvxFile.storageId;
-              const newPrjFileId =
-                await cvxUtils.performAction_createNewPrjFile({
-                  projectId: currProject?._id,
-                  cvxStoredFileId,
-                });
-              return resolve(newPrjFileId);
-            } catch (err) {
-              return reject(err);
-            }
-          });
-        })
-    );
-
-    const newPrjFileIds = (await Promise.allSettled(ps))
-      .filter((r) => r.status === "fulfilled")
-      .map((r) => r.value);
-  };
-
   // Stepper
 
   const tabVals = useMemo(
