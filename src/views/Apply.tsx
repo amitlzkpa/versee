@@ -22,20 +22,29 @@ export default function Preview() {
   const storedUserData = useQuery(api.dbOps.getUserData_ForCurrUser);
   const cvxUtils = useCvxUtils();
 
-  // PROJECT
+  // APPLICATION
 
-  const { applicationId, projectId } = useParams();
+  const { applicationId } = useParams();
 
-  const currProject = useQuery(
+  const currApplication = useQuery(
     api.dbOps.getApplication_ByApplicationId,
     applicationId
       ? { applicationId: applicationId as Id<"vsApplications"> }
       : "skip"
   );
 
+  // PROJECT
+
+  const currProject = useQuery(
+    api.dbOps.getProject_ByProjectId,
+    currApplication ? { projectId: currApplication.projectId } : "skip"
+  );
+
+  // SRCDOCS
+
   const curProjectSrcDocs = useQuery(
     api.dbOps.getAllSrcDocs_ForProject,
-    projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
+    currApplication ? { projectId: currApplication.projectId } : "skip"
   );
 
   const [srcDoc, setSrcDoc] = useState<any>({});
@@ -63,6 +72,8 @@ export default function Preview() {
     if (!docOne?.criteria_Text) return;
     setCriteriaJSON(JSON.parse(docOne.criteria_Text));
   }, [curProjectSrcDocs]);
+
+  // PRJFILES
 
   const onClick_uploadFiles_PrjFiles = async (droppedFiles: any) => {
     const ps = droppedFiles.map(
