@@ -46,7 +46,14 @@ export default function FileUploader({
   };
 
   return (
-    <>
+    <Flex
+      w="100%"
+      h="100%"
+      direction="column"
+      justify="center"
+      align="center"
+      gap="xs"
+    >
       <Dropzone
         w="100%"
         h="100%"
@@ -60,10 +67,10 @@ export default function FileUploader({
           "image/jpeg",
           "image/webp",
           "image/heic",
-          "text/csv",
+          // "text/csv",
           "application/pdf",
-          "application/msword",
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          // "application/msword",
+          // "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         ]}
         maxSize={15 * 1024 * 1024}
         disabled={!projectId}
@@ -179,6 +186,7 @@ export default function FileUploader({
       </Dropzone>
 
       <Button
+        variant="outline"
         onClick={onClick_uploadBtn}
         w="100%"
         size="lg"
@@ -186,6 +194,6 @@ export default function FileUploader({
       >
         Upload
       </Button>
-    </>
+    </Flex>
   );
 }
