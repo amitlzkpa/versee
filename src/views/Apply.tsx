@@ -3,12 +3,15 @@ import { useParams } from "react-router-dom";
 import {
   Accordion,
   Button,
+  Drawer,
   Divider,
   Flex,
   Text,
   Pill,
+  ScrollArea,
   rem,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -105,8 +108,34 @@ export default function Preview() {
       .map((r) => r.value);
   };
 
+  // PREVIEW
+
+  const [opened, { open, close }] = useDisclosure(false);
+
   return (
-    <Flex w="100%" gap="sm">
+    <Flex w="100%" h="100%" gap="sm">
+      <Drawer
+        h="100%"
+        size="xl"
+        opened={opened}
+        onClose={close}
+        withCloseButton={false}
+        title={srcDoc?.titleText}
+        scrollAreaComponent={ScrollArea.Autosize}
+      >
+        <Flex w="100%" h="100%" direction="column" align="stretch">
+          <embed
+            style={{
+              width: "100%",
+              height: "90vh",
+              minHeight: rem(400),
+              borderRadius: rem(20),
+              flexGrow: 1,
+            }}
+            src={srcDoc.fileUrl}
+          />
+        </Flex>
+      </Drawer>
       <Flex w="30%" direction="column" align="stretch" gap="sm">
         <Flex
           w="100%"
@@ -115,9 +144,14 @@ export default function Preview() {
           align="stretch"
           style={{ overflowY: "auto" }}
         >
-          <Text fz="lg" fw="bold">
-            Eligibility List
-          </Text>
+          <Flex w="100%" align="center">
+            <Text fz="lg" fw="bold" style={{ flexGrow: 1 }}>
+              Eligibility List
+            </Text>
+            <Button variant="outline" onClick={open}>
+              Full Details
+            </Button>
+          </Flex>
           <Accordion w="100%">
             {criteriaJSON ? (
               <Flex w="100%" direction="column" align="stretch" gap="md">
@@ -159,20 +193,10 @@ export default function Preview() {
         gap="md"
         style={{ overflowY: "auto" }}
       >
-        <Text fw="bold" style={{ textAlign: "center" }}>
-          {srcDoc.titleText}
-        </Text>
-        <embed
-          style={{
-            width: "100%",
-            height: "100%",
-            borderRadius: rem(20),
-          }}
-          src={srcDoc.fileUrl}
-        />
+        Boom
       </Flex>
 
-      <Flex w="20%" direction="column" align="center" gap="md">
+      <Flex w="30%" direction="column" align="center" gap="md">
         <FileUploader
           projectId={currProject?._id}
           onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
