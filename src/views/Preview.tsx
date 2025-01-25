@@ -7,11 +7,18 @@ import {
   Divider,
   Flex,
   Text,
+  Loader,
   Pill,
   rem,
 } from "@mantine/core";
 
-import { useAction, useQuery } from "convex/react";
+import {
+  useAction,
+  useQuery,
+  Authenticated,
+  Unauthenticated,
+  AuthLoading,
+} from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
@@ -185,45 +192,61 @@ export default function Preview() {
       </Flex>
 
       <Flex w="20%" direction="column" align="stretch" gap="md">
-        <Flex
-          w="100%"
-          h="100%"
-          direction="column"
-          justify="center"
-          align="center"
-          gap="xl"
-          px="lg"
-          style={{ textAlign: "center" }}
-        >
-          <FaRobot
-            style={{
-              width: rem(24),
-              height: rem(24),
-              color: "var(--mantine-color-gray-5)",
-            }}
-          />
-          <Flex w="100%" direction="column" align="stretch" gap="sm">
-            <Text lh="1">
-              Our AI guide is here to make it simple and stress-free.
-            </Text>
-            <Text fz="lg" lh="1.2">
-              Let's begin your application
+        <AuthLoading>
+          <Flex w="100%" h="100%" justify="center" align="center" p="lg">
+            <Loader size="md" type="dots" />
+          </Flex>
+        </AuthLoading>
+
+        <Unauthenticated>
+          <Flex w="100%" h="100%" justify="center" align="center" p="lg">
+            <Text style={{ textAlign: "center" }}>
+              Please log in to start your application
             </Text>
           </Flex>
-          <ActionIcon
-            variant="filled"
-            size="input-xl"
-            aria-label="Start Application Button"
-            onClick={onClick_startNewApplication}
+        </Unauthenticated>
+
+        <Authenticated>
+          <Flex
+            w="100%"
+            h="100%"
+            direction="column"
+            justify="center"
+            align="center"
+            gap="xl"
+            px="lg"
+            style={{ textAlign: "center" }}
           >
-            <FaAngleRight
+            <FaRobot
               style={{
-                width: rem(38),
-                height: rem(38),
+                width: rem(24),
+                height: rem(24),
+                color: "var(--mantine-color-gray-5)",
               }}
             />
-          </ActionIcon>
-        </Flex>
+            <Flex w="100%" direction="column" align="stretch" gap="sm">
+              <Text lh="1">
+                Our AI guide is here to make it simple and stress-free.
+              </Text>
+              <Text fz="lg" lh="1.2">
+                Let's begin your application
+              </Text>
+            </Flex>
+            <ActionIcon
+              variant="filled"
+              size="input-xl"
+              aria-label="Start Application Button"
+              onClick={onClick_startNewApplication}
+            >
+              <FaAngleRight
+                style={{
+                  width: rem(38),
+                  height: rem(38),
+                }}
+              />
+            </ActionIcon>
+          </Flex>
+        </Authenticated>
       </Flex>
     </Flex>
   );
