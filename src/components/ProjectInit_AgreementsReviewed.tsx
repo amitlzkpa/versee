@@ -17,6 +17,7 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
 import useCvxUtils from "../hooks/cvxUtils";
+import { Link } from "react-router-dom";
 
 export default function ProjectInit_AgreementsReviewed({
   projectId = null,
@@ -67,6 +68,37 @@ export default function ProjectInit_AgreementsReviewed({
         gap="sm"
         py="lg"
       >
+        <Card
+          w="100%"
+          h="100%"
+          c="versee-purple"
+          variant="outline"
+          style={{ borderStyle: "dashed" }}
+        >
+          <Link
+            to={`/submit/${projectId}`}
+            style={{ textDecoration: "none" }}
+            target="_blank"
+          >
+            <Flex
+              w="100%"
+              h="100%"
+              p="sm"
+              direction="column"
+              justify="center"
+              align="center"
+              style={{ textAlign: "center" }}
+            >
+              <Text fz="xs" c="gray.6">
+                Public Link
+              </Text>
+              <Text fz="sm" c="versee-purple">
+                {`${window.location.origin}/submit/${projectId}`}
+              </Text>
+            </Flex>
+          </Link>
+        </Card>
+
         <Accordion w="100%" variant="filled" chevron={null}>
           <Accordion.Item key="first" value="first">
             <Accordion.Control icon="+">
