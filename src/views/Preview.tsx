@@ -236,7 +236,8 @@ export default function Preview() {
                 variant="filled"
                 size="input-xl"
                 aria-label="Start Application Button"
-                onClick={() => navigate(`/apply/${existingApplication?._id}`)}
+                component="a"
+                href={`/apply/${existingApplication?._id}`}
               >
                 <FaAngleRight
                   style={{
