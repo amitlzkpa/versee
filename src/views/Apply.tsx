@@ -100,6 +100,7 @@ export default function Preview() {
               const newPrjFileId =
                 await cvxUtils.performAction_createNewPrjFile({
                   projectId: currProject?._id,
+                  applicationId: currApplication?._id,
                   cvxStoredFileId,
                 });
               return resolve(newPrjFileId);
