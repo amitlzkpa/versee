@@ -145,7 +145,7 @@ export default function Submit() {
                           w="100%"
                           direction="column"
                           align="center"
-                          key={offerItem.title}
+                          key={offerIdx}
                         >
                           <Flex w="100%" align="center" gap="sm">
                             <Text fz="md" fw="bold" style={{ flexGrow: 1 }}>
@@ -181,7 +181,7 @@ export default function Submit() {
                             direction="column"
                             align="stretch"
                             gap="xs"
-                            key={criteriaItem.title}
+                            key={criteriaIdx}
                           >
                             <Flex w="100%" align="center" gap="sm">
                               <Text fz="md" fw="bold" style={{ flexGrow: 1 }}>

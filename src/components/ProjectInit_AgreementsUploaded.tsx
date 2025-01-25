@@ -213,7 +213,7 @@ export default function ProjectInit_AgreementsUploaded({
                                 direction="column"
                                 align="center"
                                 gap="xs"
-                                key={offerItem.title}
+                                key={offerIdx}
                               >
                                 <Flex w="100%" align="center" gap="sm">
                                   <TextInput
@@ -299,7 +299,7 @@ export default function ProjectInit_AgreementsUploaded({
                                 direction="column"
                                 align="stretch"
                                 gap="xs"
-                                key={criteriaItem.title}
+                                key={criteriaIdx}
                               >
                                 <Flex w="100%" align="center" gap="sm">
                                   <TextInput
