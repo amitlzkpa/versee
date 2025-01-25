@@ -98,6 +98,7 @@ export default function ProjectInit_AgreementsUploaded({
               <Flex
                 w="50%"
                 h="100%"
+                mih="800"
                 direction="column"
                 align="center"
                 gap="sm"
@@ -175,6 +176,22 @@ export default function ProjectInit_AgreementsUploaded({
                                       defaultValue={offerItem.title}
                                       onChange={(e) => { offerItem.title = e.target.value }}
                                     />
+                                    <Flex gap="sm">
+                                      <Input
+                                        w="60%"
+                                        fz="sm"
+                                        fw="bold"
+                                        defaultValue={offerItem.quantity}
+                                        onChange={(e) => { offerItem.quantity = e.target.value }}
+                                      />
+                                      <Input
+                                        w="40%"
+                                        fz="sm"
+                                        fw="bold"
+                                        defaultValue={offerItem.units}
+                                        onChange={(e) => { offerItem.units = e.target.value }}
+                                      />
+                                    </Flex>
                                     <Textarea
                                       variant="filled"
                                       w="100%"
