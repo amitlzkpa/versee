@@ -20,7 +20,7 @@ import Landing from "./views/Landing";
 import MyAccount from "./views/MyAccount";
 import Home from "./views/Home";
 import Project from "./views/Project";
-import Submit from "./views/Submit";
+import Preview from "./views/Preview";
 
 import Navbar from "./components/Navbar";
 import { useEffect, useState } from "react";
@@ -127,10 +127,10 @@ function App() {
           ),
         },
         {
-          path: "submit/:projectId?",
+          path: "preview/:projectId?",
           element: (
             <ProtectedRoute>
-              <Submit />
+              <Preview />
             </ProtectedRoute>
           ),
         },

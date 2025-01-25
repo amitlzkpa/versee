@@ -19,7 +19,7 @@ import FileUploader from "../components/FileUploader";
 
 import useCvxUtils from "../hooks/cvxUtils";
 
-export default function Submit() {
+export default function Preview() {
   const storedUserData = useQuery(api.dbOps.getUserData_ForCurrUser);
   const cvxUtils = useCvxUtils();
 
@@ -117,7 +117,7 @@ export default function Submit() {
     <Flex w="100%" gap="sm">
       <Flex w="40%" direction="column" align="stretch" gap="sm">
         <Text fz="xl" fw="bold">
-          Submit Application
+          Preview Application
         </Text>
 
         <Divider />

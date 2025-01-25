@@ -31,7 +31,7 @@ export default function Navbar() {
         <Button
           component="a"
           variant="transparent"
-          href="/submit"
+          href="/preview"
           size="sm"
           h={32}
         >

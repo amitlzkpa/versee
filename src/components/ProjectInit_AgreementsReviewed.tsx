@@ -76,7 +76,7 @@ export default function ProjectInit_AgreementsReviewed({
           style={{ borderStyle: "dashed" }}
         >
           <Link
-            to={`/submit/${projectId}`}
+            to={`/preview/${projectId}`}
             style={{ textDecoration: "none" }}
             target="_blank"
           >
@@ -93,7 +93,7 @@ export default function ProjectInit_AgreementsReviewed({
                 Public Link
               </Text>
               <Text fz="sm" c="versee-purple">
-                {`${window.location.origin}/submit/${projectId}`}
+                {`${window.location.origin}/preview/${projectId}`}
               </Text>
             </Flex>
           </Link>
