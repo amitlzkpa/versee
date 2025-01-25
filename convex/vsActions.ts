@@ -959,3 +959,28 @@ export const analysePrjFile = action({
     });
   },
 });
+
+// APPLICATIONS
+
+export const createNewApplication = action({
+  handler: async (ctx) => {
+    const newApplication: any = await ctx.runMutation(
+      internal.dbOps.createNewApplication
+    );
+    return newApplication;
+  },
+});
+
+export const updateApplication = action({
+  args: {
+    applicationId: v.id("vsApplications"),
+    updateData: v.string(),
+  },
+  handler: async (ctx, { applicationId, updateData }) => {
+    const updatedApplication: any = await ctx.runMutation(
+      internal.dbOps.updateApplication,
+      { applicationId, updateData }
+    );
+    return updatedApplication;
+  },
+});

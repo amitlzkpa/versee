@@ -254,3 +254,57 @@ export const updatePrjFile = internalMutation({
     return updatedPrjFileId;
   },
 });
+
+// APPLICATIONS
+
+export const getAllApplications_ForCurrUser = query({
+  handler: async (ctx) => {
+    const currUser = await ctx.auth.getUserIdentity();
+    if (!currUser) return [];
+    const applications = await ctx.db
+      .query("vsApplications")
+      .filter((q) => q.eq(q.field("creator.subject"), currUser.subject))
+      .order("desc")
+      .collect();
+    return applications;
+  },
+});
+
+export const getApplication_ByApplicationId = query({
+  args: {
+    applicationId: v.optional(v.id("vsApplications")),
+  },
+  handler: async (ctx, { applicationId }) => {
+    if (!applicationId) return null;
+    const application = await ctx.db.get(applicationId);
+    return application;
+  },
+});
+
+export const createNewApplication = internalMutation({
+  handler: async (ctx) => {
+    const currUser = await ctx.auth.getUserIdentity();
+    if (!currUser) return null;
+    const newApplicationData = {
+      creator: currUser,
+      initializationStatus: "uninitialized",
+    };
+    const newApplication = await ctx.db.insert(
+      "vsApplications",
+      newApplicationData
+    );
+    return newApplication;
+  },
+});
+
+export const updateApplication = internalMutation({
+  args: {
+    applicationId: v.id("vsApplications"),
+    updateData: v.string(),
+  },
+  handler: async (ctx, { applicationId, updateData }) => {
+    const _updateData = JSON.parse(updateData);
+    const updatedApplication = await ctx.db.patch(applicationId, _updateData);
+    return updatedApplication;
+  },
+});
