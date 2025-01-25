@@ -236,28 +236,43 @@ export default function Preview() {
             bg="gray.1"
             style={{ flexGrow: 1, overflowY: "auto" }}
           >
-            {(curProjectPrjFiles ?? []).map((prjFile: any) => {
-              return (
-                <Card key={prjFile._id} w="50%" withBorder p="md">
-                  <Flex direction="column" align="stretch" gap="sm">
-                    <Text fz="sm" fw="bold">
-                      {prjFile.titleText}
-                    </Text>
+            {(curProjectPrjFiles ?? []).length > 0 ? (
+              (curProjectPrjFiles ?? []).map((prjFile: any) => {
+                return (
+                  <Card key={prjFile._id} w="50%" withBorder p="md">
+                    <Flex direction="column" align="stretch" gap="sm">
+                      <Text fz="sm" fw="bold">
+                        {prjFile.titleText}
+                      </Text>
 
-                    <Button
-                      component="a"
-                      variant="outline"
-                      href={prjFile.fileUrl}
-                      target="_blank"
-                      w="100%"
-                      size="lg"
-                    >
-                      Open
-                    </Button>
-                  </Flex>
-                </Card>
-              );
-            })}
+                      <Button
+                        component="a"
+                        variant="outline"
+                        href={prjFile.fileUrl}
+                        target="_blank"
+                        w="100%"
+                        size="lg"
+                      >
+                        Open
+                      </Button>
+                    </Flex>
+                  </Card>
+                );
+              })
+            ) : (
+              <Flex
+                w="100%"
+                h="100%"
+                justify="center"
+                align="center"
+                p="xl"
+                style={{ textAlign: "center" }}
+              >
+                <Text fz="sm" c="gray.6" fs="italic" w="200">
+                  Add your files and let the AI work its magic!
+                </Text>
+              </Flex>
+            )}
           </Paper>
         </Flex>
       </Flex>
