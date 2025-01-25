@@ -21,6 +21,7 @@ import MyAccount from "./views/MyAccount";
 import Home from "./views/Home";
 import Project from "./views/Project";
 import Preview from "./views/Preview";
+import Apply from "./views/Apply";
 
 import Navbar from "./components/Navbar";
 import { useEffect, useState } from "react";
@@ -129,6 +130,14 @@ function App() {
         {
           path: "preview/:projectId?",
           element: <Preview />,
+        },
+        {
+          path: "apply/:applicationId?",
+          element: (
+            <ProtectedRoute>
+              <Apply />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "callback/docusign",
