@@ -107,15 +107,7 @@ export default function Preview() {
 
   return (
     <Flex w="100%" gap="sm">
-      <Flex w="40%" direction="column" align="stretch" gap="sm">
-        <Text fz="xl" fw="bold">
-          Preview Application
-        </Text>
-
-        <Divider />
-
-        <Text>{srcDoc.summaryText}</Text>
-
+      <Flex w="30%" direction="column" align="stretch" gap="sm">
         <Flex
           w="100%"
           h="100%"
@@ -123,75 +115,38 @@ export default function Preview() {
           align="stretch"
           style={{ overflowY: "auto" }}
         >
+          <Text fz="lg" fw="bold">
+            Eligibility List
+          </Text>
           <Accordion w="100%">
-            <Accordion.Item key="first" value="first">
-              <Accordion.Control>
-                <Text>Scheme</Text>
-              </Accordion.Control>
-              <Accordion.Panel>
-                {offeringsJSON ? (
-                  <Flex w="100%" direction="column" align="stretch" gap="md">
-                    {offeringsJSON.map((offerItem: any, offerIdx: number) => {
-                      return (
-                        <Flex
-                          w="100%"
-                          direction="column"
-                          align="center"
-                          key={offerIdx}
-                        >
-                          <Flex w="100%" align="center" gap="sm">
-                            <Text fz="md" fw="bold" style={{ flexGrow: 1 }}>
-                              {offerItem.title}
-                            </Text>
-                            <Pill size="sm">
-                              {offerItem.quantity} {offerItem.units}
-                            </Pill>
-                          </Flex>
-                          <Text fz="sm">{offerItem.description}</Text>
+            {criteriaJSON ? (
+              <Flex w="100%" direction="column" align="stretch" gap="md">
+                {criteriaJSON.map((criteriaItem: any, criteriaIdx: number) => {
+                  return (
+                    <Accordion.Item
+                      key={criteriaIdx.toString()}
+                      value={criteriaIdx.toString()}
+                    >
+                      <Accordion.Control mb="md">
+                        <Flex w="100%" direction="column">
+                          <Text fz="md" fw="bold">
+                            {criteriaItem.title}
+                          </Text>
+                          <Text fz="xs" fw="thin">
+                            {criteriaItem.applies_to}
+                          </Text>
                         </Flex>
-                      );
-                    })}
-                  </Flex>
-                ) : (
-                  <></>
-                )}
-              </Accordion.Panel>
-            </Accordion.Item>
-
-            <Accordion.Item key="second" value="second">
-              <Accordion.Control>
-                <Text>Eligibility</Text>
-              </Accordion.Control>
-              <Accordion.Panel>
-                {criteriaJSON ? (
-                  <Flex w="100%" direction="column" align="stretch" gap="md">
-                    {criteriaJSON.map(
-                      (criteriaItem: any, criteriaIdx: number) => {
-                        return (
-                          <Flex
-                            w="100%"
-                            direction="column"
-                            align="stretch"
-                            gap="xs"
-                            key={criteriaIdx}
-                          >
-                            <Flex w="100%" align="center" gap="sm">
-                              <Text fz="md" fw="bold" style={{ flexGrow: 1 }}>
-                                {criteriaItem.title}
-                              </Text>
-                              <Pill size="sm">{criteriaItem.applies_to}</Pill>
-                            </Flex>
-                            <Text fz="sm">{criteriaItem.description}</Text>
-                          </Flex>
-                        );
-                      }
-                    )}
-                  </Flex>
-                ) : (
-                  <></>
-                )}
-              </Accordion.Panel>
-            </Accordion.Item>
+                      </Accordion.Control>
+                      <Accordion.Panel>
+                        <Text fz="sm">{criteriaItem.description}</Text>
+                      </Accordion.Panel>
+                    </Accordion.Item>
+                  );
+                })}
+              </Flex>
+            ) : (
+              <></>
+            )}
           </Accordion>
         </Flex>
       </Flex>
