@@ -13,6 +13,8 @@ import {
   rem,
 } from "@mantine/core";
 
+import { FaMinusCircle, FaTrash } from "react-icons/fa";
+
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
@@ -58,6 +60,11 @@ export default function ProjectInit_AgreementsUploaded({
     setOfferingsJSON(JSON.parse(docOne.offerings_Text));
   }, [curProjectSrcDocs]);
 
+  const removeOfferItem = (offerIdx: number) => {
+    offeringsJSON.splice(offerIdx, 1);
+    setOfferingsJSON([...offeringsJSON]);
+  };
+
   const [criteriaJSON, setCriteriaJSON] = useState([]);
 
   useEffect(() => {
@@ -66,6 +73,11 @@ export default function ProjectInit_AgreementsUploaded({
     if (!docOne?.criteria_Text) return;
     setCriteriaJSON(JSON.parse(docOne.criteria_Text));
   }, [curProjectSrcDocs]);
+
+  const removeCriteriaItem = (criteriaIdx: number) => {
+    criteriaJSON.splice(criteriaIdx, 1);
+    setCriteriaJSON([...criteriaJSON]);
+  };
 
   const onClick_confirmAgreementReview = async () => {
     if ((curProjectSrcDocs ?? []).length < 1) return;
@@ -203,15 +215,29 @@ export default function ProjectInit_AgreementsUploaded({
                                 gap="xs"
                                 key={offerItem.title}
                               >
-                                <TextInput
-                                  w="100%"
-                                  size="md"
-                                  fw="bold"
-                                  defaultValue={offerItem.title}
-                                  onChange={(e) => {
-                                    offerItem.title = e.target.value;
-                                  }}
-                                />
+                                <Flex w="100%" align="center" gap="sm">
+                                  <TextInput
+                                    w="100%"
+                                    size="md"
+                                    fw="bold"
+                                    defaultValue={offerItem.title}
+                                    onChange={(e) => {
+                                      offerItem.title = e.target.value;
+                                    }}
+                                  />
+                                  <FaMinusCircle
+                                    style={{
+                                      pointerEvents: "all",
+                                      width: rem(18),
+                                      height: rem(18),
+                                      color: "var(--mantine-color-gray-5)",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() => {
+                                      removeOfferItem(offerIdx);
+                                    }}
+                                  />
+                                </Flex>
                                 <Flex gap="sm">
                                   <TextInput
                                     w="60%"
@@ -275,15 +301,29 @@ export default function ProjectInit_AgreementsUploaded({
                                 gap="xs"
                                 key={criteriaItem.title}
                               >
-                                <TextInput
-                                  w="100%"
-                                  size="md"
-                                  fw="bold"
-                                  defaultValue={criteriaItem.title}
-                                  onChange={(e) => {
-                                    criteriaItem.title = e.target.value;
-                                  }}
-                                />
+                                <Flex w="100%" align="center" gap="sm">
+                                  <TextInput
+                                    w="100%"
+                                    size="md"
+                                    fw="bold"
+                                    defaultValue={criteriaItem.title}
+                                    onChange={(e) => {
+                                      criteriaItem.title = e.target.value;
+                                    }}
+                                  />
+                                  <FaMinusCircle
+                                    style={{
+                                      pointerEvents: "all",
+                                      width: rem(18),
+                                      height: rem(18),
+                                      color: "var(--mantine-color-gray-5)",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() => {
+                                      removeCriteriaItem(criteriaIdx);
+                                    }}
+                                  />
+                                </Flex>
                                 <Flex w="100%" gap="sm" px="sm">
                                   <Text fz="md">Applies To:</Text>
                                   <TextInput
