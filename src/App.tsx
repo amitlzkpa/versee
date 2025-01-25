@@ -128,11 +128,7 @@ function App() {
         },
         {
           path: "preview/:projectId?",
-          element: (
-            <ProtectedRoute>
-              <Preview />
-            </ProtectedRoute>
-          ),
+          element: <Preview />,
         },
         {
           path: "callback/docusign",
