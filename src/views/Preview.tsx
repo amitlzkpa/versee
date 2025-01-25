@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
+  ActionIcon,
   Accordion,
   Button,
   Divider,
@@ -14,13 +15,11 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
-import { FaExclamationCircle } from "react-icons/fa";
-import FileUploader from "../components/FileUploader";
+import { FaRobot, FaAngleRight } from "react-icons/fa";
 
 import useCvxUtils from "../hooks/cvxUtils";
 
 export default function Preview() {
-  const storedUserData = useQuery(api.dbOps.getUserData_ForCurrUser);
   const cvxUtils = useCvxUtils();
 
   // PROJECT
@@ -63,54 +62,10 @@ export default function Preview() {
     setCriteriaJSON(JSON.parse(docOne.criteria_Text));
   }, [curProjectSrcDocs]);
 
-  // ACCESS
+  // CLICK
 
-  const [currUserHasAccess, setCurrUserHasAccess] = useState(true);
-
-  // useEffect(() => {
-  //   const currUserEmail = storedUserData?.user?.email;
-  //   if (!currUserEmail) return;
-  //   const signerEmails = (currProject?.signers ?? []).map(
-  //     (s: any) => s.signerEmail
-  //   );
-  //   setCurrUserHasAccess(signerEmails.includes(currUserEmail));
-  // }, [currProject, storedUserData?.user?.email]);
-
-  // PRJFILE
-
-  const curProjectPrjFiles = useQuery(
-    api.dbOps.getAllPrjFiles_ForProject,
-    projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
-  );
-
-  const onClick_uploadFiles_PrjFiles = async (droppedFiles: any) => {
-    const ps = droppedFiles.map(
-      (file: any) =>
-        new Promise((resolve, reject) => {
-          cvxUtils.performAction_generateUploadUrl().then(async (uploadUrl) => {
-            try {
-              const result = await fetch(uploadUrl, {
-                method: "POST",
-                body: file,
-              });
-              const uploadedCvxFile = await result.json();
-              const cvxStoredFileId = uploadedCvxFile.storageId;
-              const newPrjFileId =
-                await cvxUtils.performAction_createNewPrjFile({
-                  projectId: currProject?._id,
-                  cvxStoredFileId,
-                });
-              return resolve(newPrjFileId);
-            } catch (err) {
-              return reject(err);
-            }
-          });
-        })
-    );
-
-    const newPrjFileIds = (await Promise.allSettled(ps))
-      .filter((r) => r.status === "fulfilled")
-      .map((r) => r.value);
+  const onClick_startNewApplication = async () => {
+    console.log("foo");
   };
 
   return (
@@ -225,28 +180,46 @@ export default function Preview() {
         />
       </Flex>
 
-      <Flex w="20%" direction="column" align="center" gap="md">
-        {currUserHasAccess ? (
-          <>
-            <FileUploader
-              projectId={currProject?._id}
-              onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
+      <Flex w="20%" direction="column" align="stretch" gap="md">
+        <Flex
+          w="100%"
+          h="100%"
+          direction="column"
+          justify="center"
+          align="center"
+          gap="xl"
+          px="lg"
+          style={{ textAlign: "center" }}
+        >
+          <FaRobot
+            style={{
+              width: rem(24),
+              height: rem(24),
+              color: "var(--mantine-color-gray-5)",
+            }}
+          />
+          <Flex w="100%" direction="column" align="stretch" gap="sm">
+            <Text lh="1">
+              Our AI guide is here to make it simple and stress-free.
+            </Text>
+            <Text fz="lg" lh="1.2">
+              Let's begin your application
+            </Text>
+          </Flex>
+          <ActionIcon
+            variant="filled"
+            size="input-xl"
+            aria-label="Start Application Button"
+            onClick={onClick_startNewApplication}
+          >
+            <FaAngleRight
+              style={{
+                width: rem(38),
+                height: rem(38),
+              }}
             />
-          </>
-        ) : (
-          <>
-            <Flex justify="center" align="center" gap="sm">
-              <FaExclamationCircle
-                style={{
-                  width: rem(12),
-                  height: rem(12),
-                  color: "var(--mantine-color-gray-5)",
-                }}
-              />
-              <Text>You do not have access.</Text>
-            </Flex>
-          </>
-        )}
+          </ActionIcon>
+        </Flex>
       </Flex>
     </Flex>
   );
