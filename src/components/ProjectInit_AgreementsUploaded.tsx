@@ -58,12 +58,23 @@ export default function ProjectInit_AgreementsUploaded({
     setOfferingsJSON(JSON.parse(docOne.offerings_Text));
   }, [curProjectSrcDocs]);
 
+  const [criteriaJSON, setCriteriaJSON] = useState([]);
+
+  useEffect(() => {
+    if ((curProjectSrcDocs ?? []).length < 1) return;
+    const docOne: any = (curProjectSrcDocs ?? [])[0];
+    if (!docOne?.criteria_Text) return;
+    setCriteriaJSON(JSON.parse(docOne.criteria_Text));
+  }, [curProjectSrcDocs]);
+
   const onClick_confirmAgreementReview = async () => {
     if ((curProjectSrcDocs ?? []).length < 1) return;
     const docOne: any = (curProjectSrcDocs ?? [])[0];
     const offeringsText = JSON.stringify(offeringsJSON);
+    const criteriaText = JSON.stringify(criteriaJSON);
     const updateData_srcdoc = JSON.stringify({
       offerings_Text: offeringsText,
+      criteria_Text: criteriaText,
     });
 
     await cvxUtils.performAction_updateSrcDoc({ srcDocId: docOne._id, updateDataStr: updateData_srcdoc });
@@ -218,19 +229,49 @@ export default function ProjectInit_AgreementsUploaded({
                       </Text>
                     </Accordion.Control>
                     <Accordion.Panel>
-                      <Flex w="100%" direction="column" align="center" gap="md">
-                        {srcDoc.criteria_Text ? (
-                          <pre style={{ textWrap: "pretty" }}>
-                            {JSON.stringify(
-                              JSON.parse(srcDoc.criteria_Text),
-                              null,
-                              2
-                            )}
-                          </pre>
-                        ) : (
+                      {
+                        criteriaJSON
+                          ?
+                          <Flex w="100%" direction="column" align="stretch" gap="md">
+                            {
+                              criteriaJSON.map((criteriaItem: any, criteriaIdx: number) => {
+                                return (
+                                  <Flex w="100%" direction="column" align="stretch" gap="xs" key={criteriaItem.title}>
+                                    <Input
+                                      w="100%"
+                                      fz="md"
+                                      fw="bold"
+                                      defaultValue={criteriaItem.title}
+                                      onChange={(e) => { criteriaItem.title = e.target.value }}
+                                    />
+                                    <Flex w="100%" gap="sm" px="sm">
+                                      <Text fz="md">
+                                        Applies To:
+                                      </Text>
+                                      <Input
+                                        style={{ flexGrow: 1 }}
+                                        fz="sm"
+                                        fw="bold"
+                                        defaultValue={criteriaItem.applies_to}
+                                        onChange={(e) => { criteriaItem.applies_to = e.target.value }}
+                                      />
+                                    </Flex>
+                                    <Textarea
+                                      variant="filled"
+                                      w="100%"
+                                      rows={4}
+                                      resize="vertical"
+                                      defaultValue={criteriaItem.description}
+                                      onChange={(e) => { criteriaItem.description = e.target.value }}
+                                    />
+                                  </Flex>
+                                );
+                              })
+                            }
+                          </Flex>
+                          :
                           <></>
-                        )}
-                      </Flex>
+                      }
                     </Accordion.Panel>
                   </Accordion.Item>
                 </Accordion>
