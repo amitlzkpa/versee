@@ -75,6 +75,7 @@ export default function ProjectInit_Uninit({ projectId = null }: any) {
           <FileUploader
             projectId={projectId}
             onClick_uploadFiles={onClick_uploadFiles_SrcDoc}
+            allowMultiple={false}
           />
         </Flex>
       </Flex>
