@@ -19,6 +19,8 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
+import { FaExclamationCircle } from "react-icons/fa";
+
 import FileUploader from "../components/FileUploader";
 
 import useCvxUtils from "../hooks/cvxUtils";
@@ -116,166 +118,196 @@ export default function Preview() {
       .map((r) => r.value);
   };
 
-  // PREVIEW
+  // LHS PREVIEW
 
   const [opened, { open, close }] = useDisclosure(false);
 
+  // ACCESS
+
+  const [currUserHasAccess, setCurrUserHasAccess] = useState(true);
+
+  useEffect(() => {
+    const currUserEmail = storedUserData?.user?.email;
+    if (!currUserEmail) return;
+    if (!currApplication) return;
+    setCurrUserHasAccess(currUserEmail === currApplication.applicant.email);
+  }, [currApplication, storedUserData?.user?.email]);
+
   return (
     <Flex w="100%" h="100%" gap="sm">
-      <Drawer
-        h="100%"
-        size="xl"
-        opened={opened}
-        onClose={close}
-        withCloseButton={false}
-        title={srcDoc?.titleText}
-        scrollAreaComponent={ScrollArea.Autosize}
-      >
-        <Flex w="100%" h="100%" direction="column" align="stretch">
-          <embed
-            style={{
-              width: "100%",
-              height: "90vh",
-              minHeight: rem(400),
-              borderRadius: rem(20),
-              flexGrow: 1,
-            }}
-            src={srcDoc.fileUrl}
-          />
-        </Flex>
-      </Drawer>
-
-      <Flex w="30%" direction="column" align="stretch" gap="sm">
-        <Flex
-          w="100%"
-          h="100%"
-          direction="column"
-          align="stretch"
-          style={{ overflowY: "auto" }}
-        >
-          <Flex w="100%" align="center" pr="xs">
-            <Text fz="lg" fw="bold" style={{ flexGrow: 1 }}>
-              Eligibility List
-            </Text>
-            <Button variant="outline" onClick={open}>
-              Full Details
-            </Button>
-          </Flex>
-          <Accordion w="100%">
-            {criteriaJSON ? (
-              <Flex w="100%" direction="column" align="stretch" gap="md">
-                {criteriaJSON.map((criteriaItem: any, criteriaIdx: number) => {
-                  return (
-                    <Accordion.Item
-                      key={criteriaIdx.toString()}
-                      value={criteriaIdx.toString()}
-                    >
-                      <Accordion.Control mb="md">
-                        <Flex w="100%" direction="column">
-                          <Text fz="md" fw="bold">
-                            {criteriaItem.title}
-                          </Text>
-                          <Text fz="xs" fw="thin">
-                            {criteriaItem.applies_to}
-                          </Text>
-                        </Flex>
-                      </Accordion.Control>
-                      <Accordion.Panel>
-                        <Text fz="sm">{criteriaItem.description}</Text>
-                      </Accordion.Panel>
-                    </Accordion.Item>
-                  );
-                })}
-              </Flex>
-            ) : (
-              <></>
-            )}
-          </Accordion>
-        </Flex>
-      </Flex>
-
-      <Flex
-        w="40%"
-        h="100%"
-        direction="column"
-        align="stretch"
-        gap="md"
-        style={{ overflowY: "auto" }}
-      >
-        <Flex
-          w="100%"
-          h="100%"
-          direction="column"
-          align="stretch"
-          gap="md"
-          style={{ overflowY: "auto", textAlign: "center" }}
-        >
-          <Text>Docs</Text>
-        </Flex>
-      </Flex>
-
-      <Flex w="30%" direction="column" align="center" gap="sm">
-        <Flex w="100%" direction="column" align="stretch">
-          <FileUploader
-            projectId={currProject?._id}
-            onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
-          />
-        </Flex>
-
-        <Divider w="100%" />
-
-        <Flex w="100%" h="100%" direction="column" align="stretch">
-          <Text fz="md" fw="bold">
-            Uploaded Files
-          </Text>
-
-          <Paper
-            w="100%"
+      {currUserHasAccess ? (
+        <>
+          <Drawer
             h="100%"
-            p="md"
-            bg="gray.1"
-            style={{ flexGrow: 1, overflowY: "auto" }}
+            size="xl"
+            opened={opened}
+            onClose={close}
+            withCloseButton={false}
+            title={srcDoc?.titleText}
+            scrollAreaComponent={ScrollArea.Autosize}
           >
-            {(currApplicationPrjFiles ?? []).length > 0 ? (
-              (currApplicationPrjFiles ?? []).map((prjFile: any) => {
-                return (
-                  <Card key={prjFile._id} w="50%" withBorder p="md">
-                    <Flex direction="column" align="stretch" gap="sm">
-                      <Text fz="sm" fw="bold">
-                        {prjFile.titleText}
-                      </Text>
+            <Flex w="100%" h="100%" direction="column" align="stretch">
+              <embed
+                style={{
+                  width: "100%",
+                  height: "90vh",
+                  minHeight: rem(400),
+                  borderRadius: rem(20),
+                  flexGrow: 1,
+                }}
+                src={srcDoc.fileUrl}
+              />
+            </Flex>
+          </Drawer>
 
-                      <Button
-                        component="a"
-                        variant="outline"
-                        href={prjFile.fileUrl}
-                        target="_blank"
-                        w="100%"
-                        size="lg"
-                      >
-                        Open
-                      </Button>
-                    </Flex>
-                  </Card>
-                );
-              })
-            ) : (
-              <Flex
+          <Flex w="30%" direction="column" align="stretch" gap="sm">
+            <Flex
+              w="100%"
+              h="100%"
+              direction="column"
+              align="stretch"
+              style={{ overflowY: "auto" }}
+            >
+              <Flex w="100%" align="center" pr="xs">
+                <Text fz="lg" fw="bold" style={{ flexGrow: 1 }}>
+                  Eligibility List
+                </Text>
+                <Button variant="outline" onClick={open}>
+                  Full Details
+                </Button>
+              </Flex>
+              <Accordion w="100%">
+                {criteriaJSON ? (
+                  <Flex w="100%" direction="column" align="stretch" gap="md">
+                    {criteriaJSON.map(
+                      (criteriaItem: any, criteriaIdx: number) => {
+                        return (
+                          <Accordion.Item
+                            key={criteriaIdx.toString()}
+                            value={criteriaIdx.toString()}
+                          >
+                            <Accordion.Control mb="md">
+                              <Flex w="100%" direction="column">
+                                <Text fz="md" fw="bold">
+                                  {criteriaItem.title}
+                                </Text>
+                                <Text fz="xs" fw="thin">
+                                  {criteriaItem.applies_to}
+                                </Text>
+                              </Flex>
+                            </Accordion.Control>
+                            <Accordion.Panel>
+                              <Text fz="sm">{criteriaItem.description}</Text>
+                            </Accordion.Panel>
+                          </Accordion.Item>
+                        );
+                      }
+                    )}
+                  </Flex>
+                ) : (
+                  <></>
+                )}
+              </Accordion>
+            </Flex>
+          </Flex>
+
+          <Flex
+            w="40%"
+            h="100%"
+            direction="column"
+            align="stretch"
+            gap="md"
+            style={{ overflowY: "auto" }}
+          >
+            <Flex
+              w="100%"
+              h="100%"
+              direction="column"
+              align="stretch"
+              gap="md"
+              style={{ overflowY: "auto", textAlign: "center" }}
+            >
+              <Text>Docs</Text>
+            </Flex>
+          </Flex>
+
+          <Flex w="30%" direction="column" align="center" gap="sm">
+            <Flex w="100%" direction="column" align="stretch">
+              <FileUploader
+                projectId={currProject?._id}
+                onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
+              />
+            </Flex>
+
+            <Divider w="100%" />
+
+            <Flex w="100%" h="100%" direction="column" align="stretch">
+              <Text fz="md" fw="bold">
+                Uploaded Files
+              </Text>
+
+              <Paper
                 w="100%"
                 h="100%"
-                justify="center"
-                align="center"
-                p="xl"
-                style={{ textAlign: "center" }}
+                p="md"
+                bg="gray.1"
+                style={{ flexGrow: 1, overflowY: "auto" }}
               >
-                <Text fz="sm" c="gray.6" fs="italic" w="200">
-                  Add your files and let the AI work its magic!
-                </Text>
-              </Flex>
-            )}
-          </Paper>
+                {(currApplicationPrjFiles ?? []).length > 0 ? (
+                  (currApplicationPrjFiles ?? []).map((prjFile: any) => {
+                    return (
+                      <Card key={prjFile._id} w="50%" withBorder p="md">
+                        <Flex direction="column" align="stretch" gap="sm">
+                          <Text fz="sm" fw="bold">
+                            {prjFile.titleText}
+                          </Text>
+
+                          <Button
+                            component="a"
+                            variant="outline"
+                            href={prjFile.fileUrl}
+                            target="_blank"
+                            w="100%"
+                            size="lg"
+                          >
+                            Open
+                          </Button>
+                        </Flex>
+                      </Card>
+                    );
+                  })
+                ) : (
+                  <Flex
+                    w="100%"
+                    h="100%"
+                    justify="center"
+                    align="center"
+                    p="xl"
+                    style={{ textAlign: "center" }}
+                  >
+                    <Text fz="sm" c="gray.6" fs="italic" w="200">
+                      Add your files and let the AI work its magic!
+                    </Text>
+                  </Flex>
+                )}
+              </Paper>
+            </Flex>
+          </Flex>
+        </>
+      ) : (
+        <Flex w="100%" direction="column" align="center" gap="md">
+          <Flex w="20%" direction="column" align="center" gap="md">
+            <FaExclamationCircle
+              style={{
+                width: rem(12),
+                height: rem(12),
+                color: "var(--mantine-color-gray-5)",
+              }}
+            />
+            <Text style={{ textAlign: "center" }}>You do not have access.</Text>
+          </Flex>
         </Flex>
-      </Flex>
+      )}
     </Flex>
   );
 }
