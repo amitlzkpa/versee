@@ -194,7 +194,13 @@ export default function Project() {
                   w="100%"
                   h="100%"
                 >
-                  <ProjectInit_Uninit projectId={currProject?._id} />
+                  {
+                    activeTabVal === "uninitialized"
+                      ?
+                      <ProjectInit_Uninit projectId={currProject?._id} />
+                      :
+                      <></>
+                  }
                 </Flex>
               </Tabs.Panel>
 
@@ -206,9 +212,15 @@ export default function Project() {
                   w="100%"
                   h="100%"
                 >
-                  <ProjectInit_AgreementsUploaded
-                    projectId={currProject?._id}
-                  />
+                  {
+                    activeTabVal === "agreements_uploaded"
+                      ?
+                      <ProjectInit_AgreementsUploaded
+                        projectId={currProject?._id}
+                      />
+                      :
+                      <></>
+                  }
                 </Flex>
               </Tabs.Panel>
 
@@ -220,9 +232,15 @@ export default function Project() {
                   w="100%"
                   h="100%"
                 >
-                  <ProjectInit_AgreementsReviewed
-                    projectId={currProject?._id}
-                  />
+                  {
+                    activeTabVal === "agreements_reviewed"
+                      ?
+                      <ProjectInit_AgreementsReviewed
+                        projectId={currProject?._id}
+                      />
+                      :
+                      <></>
+                  }
                 </Flex>
               </Tabs.Panel>
 
@@ -234,7 +252,13 @@ export default function Project() {
                   w="100%"
                   h="100%"
                 >
-                  <ProjectInit_SignersAssigned projectId={currProject?._id} />
+                  {
+                    activeTabVal === "signers_assigned"
+                      ?
+                      <ProjectInit_SignersAssigned projectId={currProject?._id} />
+                      :
+                      <></>
+                  }
                 </Flex>
               </Tabs.Panel>
 
@@ -246,7 +270,13 @@ export default function Project() {
                   w="100%"
                   h="100%"
                 >
-                  <ProjectInit_TaggingCompleted projectId={currProject?._id} />
+                  {
+                    activeTabVal === "tagging_completed"
+                      ?
+                      <ProjectInit_TaggingCompleted projectId={currProject?._id} />
+                      :
+                      <></>
+                  }
                 </Flex>
               </Tabs.Panel>
 
@@ -258,7 +288,13 @@ export default function Project() {
                   w="100%"
                   h="100%"
                 >
-                  <ProjectInit_AgreementSent projectId={currProject?._id} />
+                  {
+                    activeTabVal === "agreement_sent"
+                      ?
+                      <ProjectInit_AgreementSent projectId={currProject?._id} />
+                      :
+                      <></>
+                  }
                 </Flex>
               </Tabs.Panel>
             </Tabs>
