@@ -35,6 +35,14 @@ export default function useCvxUtils() {
     api.vsActions.createNewPrjFile
   );
 
+  const performAction_createNewApplication = useAction(
+    api.vsActions.createNewApplication
+  );
+
+  const performAction_updateApplication = useAction(
+    api.vsActions.updateApplication
+  );
+
   return {
     performAction_generateUploadUrl,
     performAction_sendDocusignSigningEmail,
@@ -45,5 +53,7 @@ export default function useCvxUtils() {
     performAction_createNewSrcDoc,
     performAction_updateSrcDoc,
     performAction_createNewPrjFile,
+    performAction_createNewApplication,
+    performAction_updateApplication,
   };
 }

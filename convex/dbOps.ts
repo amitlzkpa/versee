@@ -282,11 +282,15 @@ export const getApplication_ByApplicationId = query({
 });
 
 export const createNewApplication = internalMutation({
-  handler: async (ctx) => {
+  args: {
+    projectId: v.id("vsProjects"),
+  },
+  handler: async (ctx, { projectId }) => {
     const currUser = await ctx.auth.getUserIdentity();
     if (!currUser) return null;
     const newApplicationData = {
-      creator: currUser,
+      projectId,
+      applicant: currUser,
       initializationStatus: "uninitialized",
     };
     const newApplication = await ctx.db.insert(

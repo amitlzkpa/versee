@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   ActionIcon,
   Accordion,
@@ -20,6 +20,7 @@ import { FaRobot, FaAngleRight } from "react-icons/fa";
 import useCvxUtils from "../hooks/cvxUtils";
 
 export default function Preview() {
+  const navigate = useNavigate();
   const cvxUtils = useCvxUtils();
 
   // PROJECT
@@ -65,7 +66,10 @@ export default function Preview() {
   // CLICK
 
   const onClick_startNewApplication = async () => {
-    console.log("foo");
+    const newApplicationId = await cvxUtils.performAction_createNewApplication({
+      projectId: projectId as Id<"vsProjects">,
+    });
+    navigate(`/apply/${newApplicationId}`);
   };
 
   return (

@@ -963,9 +963,13 @@ export const analysePrjFile = action({
 // APPLICATIONS
 
 export const createNewApplication = action({
-  handler: async (ctx) => {
+  args: {
+    projectId: v.id("vsProjects"),
+  },
+  handler: async (ctx, { projectId }) => {
     const newApplication: any = await ctx.runMutation(
-      internal.dbOps.createNewApplication
+      internal.dbOps.createNewApplication,
+      { projectId }
     );
     return newApplication;
   },
