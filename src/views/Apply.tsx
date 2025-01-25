@@ -168,7 +168,7 @@ export default function Preview() {
               align="stretch"
               style={{ overflowY: "auto" }}
             >
-              <Flex w="100%" align="center" pr="xs">
+              <Flex w="100%" align="center" pr="xs" py="xs">
                 <Text fz="lg" fw="bold" style={{ flexGrow: 1 }}>
                   Eligibility List
                 </Text>
@@ -228,6 +228,16 @@ export default function Preview() {
               style={{ overflowY: "auto", textAlign: "center" }}
             >
               <Text>Docs</Text>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  cvxUtils.performAction_analyseApplication({
+                    applicationId: currApplication._id,
+                  });
+                }}
+              >
+                Analyse
+              </Button>
             </Flex>
           </Flex>
 

@@ -991,3 +991,35 @@ export const updateApplication = action({
     return updatedApplication;
   },
 });
+
+export const analyseApplication = action({
+  args: {
+    applicationId: v.id("vsApplications"),
+  },
+  handler: async (ctx, { applicationId }) => {
+    const application = await ctx.runQuery(
+      api.dbOps.getApplication_ByApplicationId,
+      { applicationId }
+    );
+
+    const project = await ctx.runQuery(api.dbOps.getProject_ByProjectId, {
+      projectId: application.projectId,
+    });
+
+    const srcDocs = await ctx.runQuery(api.dbOps.getAllSrcDocs_ForProject, {
+      projectId: application.projectId,
+    });
+
+    const prjFiles = await ctx.runQuery(
+      api.dbOps.getAllPrjFiles_ForApplication,
+      {
+        applicationId: application._id,
+      }
+    );
+
+    console.log(application);
+    console.log(project);
+    console.log(srcDocs);
+    console.log(prjFiles);
+  },
+});
