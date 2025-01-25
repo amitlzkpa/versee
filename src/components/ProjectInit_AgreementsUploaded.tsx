@@ -41,21 +41,6 @@ export default function ProjectInit_AgreementsUploaded({
     projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
   );
 
-  const onClick_confirmAgreementReview = async () => {
-    if ((curProjectSrcDocs ?? []).length < 1) return;
-    const docOne: any = (curProjectSrcDocs ?? [])[0];
-    const offeringsText = JSON.stringify(offeringsJSON);
-    const updateData_srcdoc = JSON.stringify({
-      offerings_Text: offeringsText,
-    });
-
-    await cvxUtils.performAction_updateSrcDoc({ srcDocId: docOne._id, updateDataStr: updateData_srcdoc });
-    const updateData_project = JSON.stringify({
-      initializationStatus: "agreements_reviewed",
-    });
-    await cvxUtils.performAction_updateProject({ projectId, updateData: updateData_project });
-  };
-
   const [srcDoc, setSrcDoc] = useState<any>({});
 
   useEffect(() => {
@@ -72,6 +57,21 @@ export default function ProjectInit_AgreementsUploaded({
     if (!docOne?.offerings_Text) return;
     setOfferingsJSON(JSON.parse(docOne.offerings_Text));
   }, [curProjectSrcDocs]);
+
+  const onClick_confirmAgreementReview = async () => {
+    if ((curProjectSrcDocs ?? []).length < 1) return;
+    const docOne: any = (curProjectSrcDocs ?? [])[0];
+    const offeringsText = JSON.stringify(offeringsJSON);
+    const updateData_srcdoc = JSON.stringify({
+      offerings_Text: offeringsText,
+    });
+
+    await cvxUtils.performAction_updateSrcDoc({ srcDocId: docOne._id, updateDataStr: updateData_srcdoc });
+    const updateData_project = JSON.stringify({
+      initializationStatus: "agreements_reviewed",
+    });
+    await cvxUtils.performAction_updateProject({ projectId, updateData: updateData_project });
+  };
 
   return (
     <>

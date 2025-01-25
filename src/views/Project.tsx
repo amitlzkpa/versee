@@ -104,7 +104,7 @@ export default function Project() {
   }, [currProject, tabVals]);
 
   const shouldAllowSelectStep = (step: any) =>
-    highestStepVisited >= step && active !== step;
+    highestStepVisited >= step && active !== step || true;
 
   useEffect(() => {
     setActiveTabVal(tabVals[active]);
