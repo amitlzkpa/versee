@@ -28,9 +28,9 @@ export default function ProjectInit_Uninit({ srcDocId = null }: any) {
       <Flex direction="column" w="100%" gap="md">
         {srcDoc?.summaryText ? (
           <Flex direction="column" w="100%">
-            <Text fw="bold" fz="sm">
+            {/* <Text fw="bold" fz="sm">
               English
-            </Text>
+            </Text> */}
             <Text>{srcDoc?.summaryText}</Text>
           </Flex>
         ) : (
@@ -39,9 +39,9 @@ export default function ProjectInit_Uninit({ srcDocId = null }: any) {
 
         {srcDoc?.summary_es_Text ? (
           <Flex direction="column" w="100%">
-            <Text fw="bold" fz="sm">
+            {/* <Text fw="bold" fz="sm">
               Spanish
-            </Text>
+            </Text> */}
             <Text>{srcDoc?.summary_es_Text}</Text>
           </Flex>
         ) : (
