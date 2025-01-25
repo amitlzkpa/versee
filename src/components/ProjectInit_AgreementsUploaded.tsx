@@ -75,68 +75,88 @@ export default function ProjectInit_AgreementsUploaded({
             <Flex
               w="100%"
               h="100%"
-              direction="column"
-              align="center"
-              gap="sm"
-              style={{ overflowY: "auto" }}
+              gap="md"
             >
-              <Text fw="bold">{srcDoc.titleText}</Text>
-
-              <embed
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  minHeight: rem(400),
-                  borderRadius: rem(20),
-                }}
-                src={srcDoc.fileUrl}
-              />
-
-              <Button
-                component="a"
-                variant="transparent"
-                href={srcDoc.fileUrl}
-                target="_blank"
-                w="100%"
-                size="sm"
+              <Flex
+                w="50%"
+                h="100%"
+                direction="column"
+                align="center"
+                gap="sm"
+                style={{ overflowY: "auto" }}
               >
-                Open
-              </Button>
+                <embed
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    minHeight: rem(800),
+                    borderRadius: rem(20),
+                  }}
+                  src={srcDoc.fileUrl}
+                />
 
-              <Button
-                variant="outline"
-                w="100%"
-                size="sm"
-                onClick={() => onClick_analyseDoc(srcDoc._id)}
+                <Button
+                  component="a"
+                  variant="transparent"
+                  href={srcDoc.fileUrl}
+                  target="_blank"
+                  w="100%"
+                  size="sm"
+                >
+                  Open
+                </Button>
+
+                <Button
+                  variant="outline"
+                  w="100%"
+                  size="sm"
+                  onClick={() => onClick_analyseDoc(srcDoc._id)}
+                >
+                  Analyse
+                </Button>
+
+              </Flex>
+              <Flex
+                w="50%"
+                h="100%"
+                direction="column"
+                align="stretch"
+                gap="md"
               >
-                Analyse
-              </Button>
+                <Button w="100%" size="lg" onClick={onClick_confirmAgreementReview}>
+                  Confirm
+                </Button>
 
-              <Summary_SrcDoc srcDocId={srcDoc._id} />
+                <Divider my="sm" />
 
-              {srcDoc.offerings_Text ? (
-                <pre style={{ textWrap: "pretty" }}>
-                  {JSON.stringify(
-                    JSON.parse(srcDoc.offerings_Text),
-                    null,
-                    2
-                  )}
-                </pre>
-              ) : (
-                <></>
-              )}
+                <Text fw="bold">{srcDoc.titleText}</Text>
 
-              {srcDoc.criteria_Text ? (
-                <pre style={{ textWrap: "pretty" }}>
-                  {JSON.stringify(
-                    JSON.parse(srcDoc.criteria_Text),
-                    null,
-                    2
-                  )}
-                </pre>
-              ) : (
-                <></>
-              )}
+                <Summary_SrcDoc srcDocId={srcDoc._id} />
+
+                {srcDoc.offerings_Text ? (
+                  <pre style={{ textWrap: "pretty" }}>
+                    {JSON.stringify(
+                      JSON.parse(srcDoc.offerings_Text),
+                      null,
+                      2
+                    )}
+                  </pre>
+                ) : (
+                  <></>
+                )}
+
+                {srcDoc.criteria_Text ? (
+                  <pre style={{ textWrap: "pretty" }}>
+                    {JSON.stringify(
+                      JSON.parse(srcDoc.criteria_Text),
+                      null,
+                      2
+                    )}
+                  </pre>
+                ) : (
+                  <></>
+                )}
+              </Flex>
             </Flex>
             :
             <Flex
@@ -152,9 +172,6 @@ export default function ProjectInit_AgreementsUploaded({
             </Flex>
         }
 
-        <Button w="100%" size="lg" onClick={onClick_confirmAgreementReview}>
-          Confirm
-        </Button>
       </Flex>
     </>
   );
