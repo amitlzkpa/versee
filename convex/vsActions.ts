@@ -718,6 +718,20 @@ export const createNewSrcDoc = action({
   },
 });
 
+export const updateSrcDoc = action({
+  args: {
+    srcDocId: v.id("vsSrcDoc"),
+    updateDataStr: v.string(),
+  },
+  handler: async (ctx, { srcDocId, updateDataStr }) => {
+    const updatedSrcDoc: any = await ctx.runMutation(
+      internal.dbOps.updateSrcDoc,
+      { srcDocId, updateDataStr }
+    );
+    return updatedSrcDoc;
+  },
+});
+
 export const analyseSrcDoc = action({
   args: {
     srcDocId: v.id("vsSrcDoc"),

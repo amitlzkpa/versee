@@ -29,6 +29,8 @@ export default function useCvxUtils() {
     api.vsActions.createNewSrcDoc
   );
 
+  const performAction_updateSrcDoc = useAction(api.vsActions.updateSrcDoc);
+
   const performAction_createNewPrjFile = useAction(
     api.vsActions.createNewPrjFile
   );
@@ -41,6 +43,7 @@ export default function useCvxUtils() {
     performAction_createSenderViewFromDoc,
     performAction_sendDocusignEnvelope,
     performAction_createNewSrcDoc,
+    performAction_updateSrcDoc,
     performAction_createNewPrjFile,
   };
 }
