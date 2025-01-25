@@ -4,24 +4,19 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { FaCheckCircle, FaRedo } from "react-icons/fa";
 
+import useCvxUtils from "../hooks/cvxUtils";
+
 export default function MyAccount() {
   const storedUserData = useQuery(api.dbOps.getUserData_ForCurrUser);
-
-  const performAction_startDocusignOAuth = useAction(
-    api.vsActions.startDocusignOAuth
-  );
+  const cvxUtils = useCvxUtils();
 
   const onClick_startDocusignOAuth = async () => {
-    const redirectUri = await performAction_startDocusignOAuth();
+    const redirectUri = await cvxUtils.performAction_startDocusignOAuth();
     window.location.href = redirectUri;
   };
 
-  const performAction_startGWspcOAuth = useAction(
-    api.vsActions.startGWspcOAuth
-  );
-
   const onClick_startGWspcOAuth = async () => {
-    const redirectUri = await performAction_startGWspcOAuth();
+    const redirectUri = await cvxUtils.performAction_startGWspcOAuth();
     window.location.href = redirectUri;
   };
 

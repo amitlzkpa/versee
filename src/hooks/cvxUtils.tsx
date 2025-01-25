@@ -3,6 +3,26 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
 export default function useCvxUtils() {
+  const performAction_startDocusignOAuth = useAction(
+    api.vsActions.startDocusignOAuth
+  );
+
+  const performAction_retrieveDocusignAccessToken = useAction(
+    api.vsActions.retrieveDocusignAccessToken
+  );
+
+  const performAction_retrieveDocusignUserToken = useAction(
+    api.vsActions.retrieveDocusignUserToken
+  );
+
+  const performAction_startGWspcOAuth = useAction(
+    api.vsActions.startGWspcOAuth
+  );
+
+  const performAction_retrieveGWspcToken = useAction(
+    api.vsActions.retrieveGWspcToken
+  );
+
   const performAction_generateUploadUrl = useAction(
     api.vsActions.generateUploadUrl
   );
@@ -31,6 +51,8 @@ export default function useCvxUtils() {
 
   const performAction_updateSrcDoc = useAction(api.vsActions.updateSrcDoc);
 
+  const performAction_analyseSrcDoc = useAction(api.vsActions.analyseSrcDoc);
+
   const performAction_createNewPrjFile = useAction(
     api.vsActions.createNewPrjFile
   );
@@ -44,6 +66,11 @@ export default function useCvxUtils() {
   );
 
   return {
+    performAction_startDocusignOAuth,
+    performAction_retrieveDocusignAccessToken,
+    performAction_retrieveDocusignUserToken,
+    performAction_startGWspcOAuth,
+    performAction_retrieveGWspcToken,
     performAction_generateUploadUrl,
     performAction_sendDocusignSigningEmail,
     performAction_createNewProject,
@@ -52,6 +79,7 @@ export default function useCvxUtils() {
     performAction_sendDocusignEnvelope,
     performAction_createNewSrcDoc,
     performAction_updateSrcDoc,
+    performAction_analyseSrcDoc,
     performAction_createNewPrjFile,
     performAction_createNewApplication,
     performAction_updateApplication,

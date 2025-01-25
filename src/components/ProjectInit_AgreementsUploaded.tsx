@@ -28,10 +28,8 @@ export default function ProjectInit_AgreementsUploaded({
 }: any) {
   const cvxUtils = useCvxUtils();
 
-  const performAction_analyseSrcDoc = useAction(api.vsActions.analyseSrcDoc);
-
   const onClick_analyseDoc = async (srcDocId: any) => {
-    await performAction_analyseSrcDoc({
+    await cvxUtils.performAction_analyseSrcDoc({
       srcDocId: srcDocId,
     });
   };

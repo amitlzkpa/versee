@@ -44,12 +44,6 @@ export default function Dev() {
     projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
   );
 
-  const performAction_createNewSrcDoc = useAction(
-    api.vsActions.createNewSrcDoc
-  );
-
-  const performAction_analyseSrcDoc = useAction(api.vsActions.analyseSrcDoc);
-
   const onClick_uploadFiles_SrcDoc = async (droppedFiles: any) => {
     const ps = droppedFiles.map(
       (file: any) =>
@@ -62,7 +56,7 @@ export default function Dev() {
               });
               const uploadedCvxFile = await result.json();
               const cvxStoredFileId = uploadedCvxFile.storageId;
-              const newSrcDocId = await performAction_createNewSrcDoc({
+              const newSrcDocId = await cvxUtils.performAction_createNewSrcDoc({
                 projectId: currProject?._id,
                 cvxStoredFileId,
               });
@@ -86,10 +80,6 @@ export default function Dev() {
     projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
   );
 
-  const performAction_createNewPrjFile = useAction(
-    api.vsActions.createNewPrjFile
-  );
-
   const onClick_uploadFiles_PrjFiles = async (droppedFiles: any) => {
     const ps = droppedFiles.map(
       (file: any) =>
@@ -102,11 +92,13 @@ export default function Dev() {
               });
               const uploadedCvxFile = await result.json();
               const cvxStoredFileId = uploadedCvxFile.storageId;
-              const newPrjFileId = await performAction_createNewPrjFile({
-                projectId: currProject?._id,
-                applicationId: "" as Id<"vsApplications">,
-                cvxStoredFileId,
-              });
+              const newPrjFileId = await cvxUtils.performAction_createNewPrjFile(
+                {
+                  projectId: currProject?._id,
+                  applicationId: "" as Id<"vsApplications">,
+                  cvxStoredFileId,
+                }
+              );
               return resolve(newPrjFileId);
             } catch (err) {
               return reject(err);

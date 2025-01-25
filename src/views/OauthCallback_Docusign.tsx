@@ -4,30 +4,27 @@ import { Button, Flex } from "@mantine/core";
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
+import useCvxUtils from "../hooks/cvxUtils";
+
 export default function OauthCallback_Docusign() {
   const storedUserData = useQuery(api.dbOps.getUserData_ForCurrUser);
+  const cvxUtils = useCvxUtils();
 
   const location = useLocation();
-
-  const performAction_retrieveDocusignAccessToken = useAction(
-    api.vsActions.retrieveDocusignAccessToken
-  );
 
   const onClickTest_retrieveDocusignAccessToken = async () => {
     const queryParams = new URLSearchParams(location.search);
     const code = queryParams.get("code");
-    const savedRecord = await performAction_retrieveDocusignAccessToken({
-      authCode: code ?? "",
-    });
+    const savedRecord =
+      await cvxUtils.performAction_retrieveDocusignAccessToken({
+        authCode: code ?? "",
+      });
     console.log(savedRecord);
   };
 
-  const performAction_retrieveDocusignUserToken = useAction(
-    api.vsActions.retrieveDocusignUserToken
-  );
-
   const onClickTest_retrieveDocusignUserToken = async () => {
-    const savedRecord = await performAction_retrieveDocusignUserToken();
+    const savedRecord =
+      await cvxUtils.performAction_retrieveDocusignUserToken();
     console.log(savedRecord);
   };
 

@@ -3,21 +3,19 @@ import { Button, Flex } from "@mantine/core";
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { useState } from "react";
+
+import useCvxUtils from "../hooks/cvxUtils";
 
 export default function OauthCallback_GWspc() {
   const storedUserData = useQuery(api.dbOps.getUserData_ForCurrUser);
+  const cvxUtils = useCvxUtils();
 
   const location = useLocation();
-
-  const performAction_retrieveGWspcToken = useAction(
-    api.vsActions.retrieveGWspcToken
-  );
 
   const onClickTest_retrieveGWspcAccessToken = async () => {
     const queryParams = new URLSearchParams(location.search);
     const code = queryParams.get("code");
-    const savedRecord = await performAction_retrieveGWspcToken({
+    const savedRecord = await cvxUtils.performAction_retrieveGWspcToken({
       authCode: code ?? "",
     });
     console.log(savedRecord);
