@@ -194,6 +194,7 @@ export default function Preview() {
           style={{
             width: "100%",
             height: "100%",
+            minHeight: rem(400),
             borderRadius: rem(20),
           }}
           src={srcDoc.fileUrl}
