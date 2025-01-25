@@ -10,6 +10,7 @@ import {
   Loader,
   Text,
   Textarea,
+  MultiSelect,
   rem,
 } from "@mantine/core";
 
@@ -69,7 +70,12 @@ export default function ProjectInit_AgreementsUploaded({
     if ((curProjectSrcDocs ?? []).length < 1) return;
     const docOne: any = (curProjectSrcDocs ?? [])[0];
     if (!docOne?.criteria_Text) return;
-    setCriteriaJSON(JSON.parse(docOne.criteria_Text));
+    const crit = JSON.parse(docOne.criteria_Text);
+    const critJ = crit.map((c: any) => ({
+      ...c,
+      valid_docs: [],
+    }));
+    setCriteriaJSON(critJ);
   }, [curProjectSrcDocs]);
 
   const removeCriteriaItem = (criteriaIdx: number) => {
@@ -332,6 +338,60 @@ export default function ProjectInit_AgreementsUploaded({
                                     onChange={(e) => {
                                       criteriaItem.applies_to = e.target.value;
                                     }}
+                                  />
+                                </Flex>
+                                <Flex w="100%" gap="sm" px="sm">
+                                  <Text fz="md">Valid Docs:</Text>
+                                  <MultiSelect
+                                    style={{ flexGrow: 1 }}
+                                    size="sm"
+                                    searchable
+                                    checkIconPosition="left"
+                                    maxDropdownHeight={200}
+                                    placeholder="Select documents"
+                                    defaultValue={criteriaItem.valid_docs}
+                                    onChange={(v) => {
+                                      console.log(v);
+                                      criteriaItem.valid_docs = v;
+                                    }}
+                                    data={[
+                                      {
+                                        value: "passport",
+                                        label: "Passport",
+                                      },
+                                      {
+                                        value: "aadhar-card",
+                                        label: "AADHAR Card",
+                                      },
+                                      {
+                                        value: "driving-license",
+                                        label: "Driving License",
+                                      },
+                                      {
+                                        value: "tax-id",
+                                        label: "Tax ID",
+                                      },
+                                      {
+                                        value: "tax-records",
+                                        label: "Tax Records",
+                                      },
+                                      {
+                                        value: "pay-slips",
+                                        label: "Pay Slips",
+                                      },
+                                      {
+                                        value: "birth-certificate",
+                                        label: "Birth Certificate",
+                                      },
+                                      {
+                                        value: "self-declaration",
+                                        label: "Self Declaration",
+                                      },
+                                      {
+                                        value: "notarized-declaration",
+                                        label: "Notarized Declaration",
+                                      },
+                                    ]}
                                   />
                                 </Flex>
                                 <Textarea
