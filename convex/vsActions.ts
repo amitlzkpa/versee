@@ -738,30 +738,30 @@ export const analyseSrcDoc = action({
 
     const writeData = { titleStatus: "generating" };
 
-    // uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
-    //   srcDocId,
-    //   updateDataStr: JSON.stringify(writeData),
-    // });
-    // const titleText = await generateForPDF_title(pdfArrayBuffer, model);
-    // writeData.titleStatus = "generated";
-    // writeData.titleText = titleText;
-    // uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
-    //   srcDocId,
-    //   updateDataStr: JSON.stringify(writeData),
-    // });
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
+      srcDocId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+    const titleText = await generateForPDF_title(pdfArrayBuffer, model);
+    writeData.titleStatus = "generated";
+    writeData.titleText = titleText;
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
+      srcDocId,
+      updateDataStr: JSON.stringify(writeData),
+    });
 
-    // writeData.summaryStatus = "generating";
-    // uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
-    //   srcDocId,
-    //   updateDataStr: JSON.stringify(writeData),
-    // });
-    // const summaryText = await generateForPDF_summary(pdfArrayBuffer, model);
-    // writeData.summaryStatus = "generated";
-    // writeData.summaryText = summaryText;
-    // uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
-    //   srcDocId,
-    //   updateDataStr: JSON.stringify(writeData),
-    // });
+    writeData.summaryStatus = "generating";
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
+      srcDocId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+    const summaryText = await generateForPDF_summary(pdfArrayBuffer, model);
+    writeData.summaryStatus = "generated";
+    writeData.summaryText = summaryText;
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
+      srcDocId,
+      updateDataStr: JSON.stringify(writeData),
+    });
 
     const schema_offerings = {
       description: "List of offerings",
