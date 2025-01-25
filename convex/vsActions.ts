@@ -691,7 +691,7 @@ const generateForPDF_summary = async (pdfArrayBuffer, model) => {
         mimeType: "application/pdf",
       },
     },
-    "Give a very short description of the contents of this document in 1-2 sentences. Keep it simple and don't use any formatting. Reply directly with the answer.",
+    "Give a very short description of the contents of this document in 1-2 sentences. Keep it simple and don't use any formatting. Reply directly with the answer. Eg: 'New York City's public housing scheme outlining eligibility criteria, application processes and available categories'",
   ]);
   const summaryText = result.response.text();
   return summaryText;
@@ -852,7 +852,7 @@ export const analyseSrcDoc = action({
           },
           applies_to: {
             type: SchemaType.STRING,
-            description: "Stipulatios for where this criteria applies.",
+            description: "Stipulations where this criteria applies.",
             nullable: false,
           },
         },
