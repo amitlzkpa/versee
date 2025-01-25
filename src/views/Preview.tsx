@@ -70,6 +70,15 @@ export default function Preview() {
     setCriteriaJSON(JSON.parse(docOne.criteria_Text));
   }, [curProjectSrcDocs]);
 
+  // USER APPLICATION
+
+  const existingApplication: any = useQuery(
+    api.dbOps.getApplication_ByProjectId_ForCurrUser,
+    {
+      projectId: currProject?._id ? currProject._id : "skip",
+    }
+  );
+
   // CLICK
 
   const onClick_startNewApplication = async () => {
@@ -207,45 +216,77 @@ export default function Preview() {
         </Unauthenticated>
 
         <Authenticated>
-          <Flex
-            w="100%"
-            h="100%"
-            direction="column"
-            justify="center"
-            align="center"
-            gap="xl"
-            px="lg"
-            style={{ textAlign: "center" }}
-          >
-            <FaRobot
-              style={{
-                width: rem(24),
-                height: rem(24),
-                color: "var(--mantine-color-gray-5)",
-              }}
-            />
-            <Flex w="100%" direction="column" align="stretch" gap="sm">
-              <Text lh="1">
-                Our AI guide is here to make it simple and stress-free.
-              </Text>
-              <Text fz="lg" lh="1.2">
-                Let's begin your application
-              </Text>
-            </Flex>
-            <ActionIcon
-              variant="filled"
-              size="input-xl"
-              aria-label="Start Application Button"
-              onClick={onClick_startNewApplication}
+          {existingApplication?._id ? (
+            <Flex
+              w="100%"
+              h="100%"
+              direction="column"
+              justify="center"
+              align="center"
+              gap="xl"
+              px="lg"
+              style={{ textAlign: "center" }}
             >
-              <FaAngleRight
+              <Flex w="100%" direction="column" align="stretch" gap="sm">
+                <Text fz="lg" lh="1.2">
+                  Continue your application
+                </Text>
+              </Flex>
+              <ActionIcon
+                variant="filled"
+                size="input-xl"
+                aria-label="Start Application Button"
+                onClick={() => navigate(`/apply/${existingApplication?._id}`)}
+              >
+                <FaAngleRight
+                  style={{
+                    width: rem(38),
+                    height: rem(38),
+                  }}
+                />
+              </ActionIcon>
+            </Flex>
+          ) : (
+            <Flex
+              w="100%"
+              h="100%"
+              direction="column"
+              justify="center"
+              align="center"
+              gap="xl"
+              px="lg"
+              style={{ textAlign: "center" }}
+            >
+              <FaRobot
                 style={{
-                  width: rem(38),
-                  height: rem(38),
+                  width: rem(24),
+                  height: rem(24),
+                  color: "var(--mantine-color-gray-5)",
                 }}
               />
-            </ActionIcon>
-          </Flex>
+              <Flex w="100%" direction="column" align="stretch" gap="sm">
+                <Text lh="1">
+                  Our AI guide is here to make it simple and stress-free.
+                </Text>
+                <Text fz="lg" lh="1.2">
+                  Let's begin your application
+                </Text>
+              </Flex>
+              <ActionIcon
+                variant="filled"
+                size="input-xl"
+                aria-label="Start Application Button"
+                onClick={onClick_startNewApplication}
+              >
+                <FaAngleRight
+                  style={{
+                    width: rem(38),
+                    height: rem(38),
+                  }}
+                />
+              </ActionIcon>
+            </Flex>
+          )}
         </Authenticated>
       </Flex>
     </Flex>

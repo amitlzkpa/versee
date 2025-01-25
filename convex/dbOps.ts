@@ -281,6 +281,27 @@ export const getApplication_ByApplicationId = query({
   },
 });
 
+export const getApplication_ByProjectId_ForCurrUser = query({
+  args: {
+    projectId: v.optional(v.id("vsProjects")),
+  },
+  handler: async (ctx, { projectId }) => {
+    const currUser = await ctx.auth.getUserIdentity();
+    if (!currUser) return null;
+    if (!projectId) return null;
+    const application = await ctx.db
+      .query("vsApplications")
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("projectId"), projectId),
+          q.eq(q.field("applicant.subject"), currUser.subject)
+        )
+      )
+      .first();
+    return application;
+  },
+});
+
 export const createNewApplication = internalMutation({
   args: {
     projectId: v.id("vsProjects"),
