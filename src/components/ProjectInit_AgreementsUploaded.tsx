@@ -42,11 +42,18 @@ export default function ProjectInit_AgreementsUploaded({
   );
 
   const onClick_confirmAgreementReview = async () => {
-    const updateData = JSON.stringify({
-      initializationStatus: "agreements_reviewed",
+    if ((curProjectSrcDocs ?? []).length < 1) return;
+    const docOne: any = (curProjectSrcDocs ?? [])[0];
+    const offeringsText = JSON.stringify(offeringsJSON);
+    const updateData_srcdoc = JSON.stringify({
+      offerings_Text: offeringsText,
     });
 
-    await cvxUtils.performAction_updateProject({ projectId, updateData });
+    await cvxUtils.performAction_updateSrcDoc({ srcDocId: docOne._id, updateDataStr: updateData_srcdoc });
+    const updateData_project = JSON.stringify({
+      initializationStatus: "agreements_reviewed",
+    });
+    await cvxUtils.performAction_updateProject({ projectId, updateData: updateData_project });
   };
 
   const [srcDoc, setSrcDoc] = useState<any>({});
@@ -160,13 +167,13 @@ export default function ProjectInit_AgreementsUploaded({
                             {
                               offeringsJSON.map((offerItem: any, offerIdx: number) => {
                                 return (
-                                  <Flex w="100%" direction="column" align="center" gap="xs" key={offerIdx}>
+                                  <Flex w="100%" direction="column" align="center" gap="xs" key={offerItem.title}>
                                     <Input
                                       w="100%"
                                       fz="md"
                                       fw="bold"
                                       defaultValue={offerItem.title}
-                                      placeholder="New Signer Name"
+                                      onChange={(e) => { offerItem.title = e.target.value }}
                                     />
                                     <Textarea
                                       variant="filled"
@@ -174,6 +181,7 @@ export default function ProjectInit_AgreementsUploaded({
                                       rows={4}
                                       resize="vertical"
                                       defaultValue={offerItem.description}
+                                      onChange={(e) => { offerItem.description = e.target.value }}
                                     />
                                   </Flex>
                                 );
