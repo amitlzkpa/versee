@@ -891,14 +891,17 @@ export const analyseSrcDoc = action({
 export const createNewPrjFile = action({
   args: {
     cvxStoredFileId: v.string(),
+    applicationId: v.id("vsApplications"),
     projectId: v.string(),
   },
-  handler: async (ctx, { cvxStoredFileId, projectId }) => {
+  handler: async (ctx, { cvxStoredFileId, projectId, applicationId }) => {
     const _cvxStoredFileId = cvxStoredFileId as Id<"_storage">;
     const _projectId = projectId as Id<"vsProjects">;
+    const _applicationId = applicationId as Id<"vsApplications">;
     const writeData = {
       cvxStoredFileId: _cvxStoredFileId,
       projectId: _projectId,
+      applicationId: _applicationId,
     };
     const newPrjFileId: any = await ctx.runMutation(
       internal.dbOps.createNewPrjFile,

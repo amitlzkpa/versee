@@ -228,11 +228,16 @@ export const createNewPrjFile = internalMutation({
   args: {
     cvxStoredFileId: v.id("_storage"),
     projectId: v.id("vsProjects"),
+    applicationId: v.id("vsApplications"),
   },
-  handler: async (ctx, { cvxStoredFileId, projectId }) => {
+  handler: async (ctx, { cvxStoredFileId, projectId, applicationId }) => {
+    const currUser = await ctx.auth.getUserIdentity();
+    if (!currUser) return null;
     const prjFileData = {
       cvxStoredFileId,
       projectId,
+      applicationId,
+      uploader: currUser,
       titleStatus: "not_generated",
       titleText: "",
       summaryStatus: "not_generated",
