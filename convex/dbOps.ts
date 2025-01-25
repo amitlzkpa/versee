@@ -213,6 +213,41 @@ export const getAllPrjFiles_ForProject = query({
   },
 });
 
+export const getAllPrjFiles_ForApplication = query({
+  args: {
+    applicationId: v.optional(v.id("vsApplications")),
+  },
+  handler: async (ctx, { applicationId }) => {
+    if (!applicationId) return [];
+    const dbRecs = await ctx.db
+      .query("vsPrjFile")
+      .filter((q) => q.eq(q.field("applicationId"), applicationId))
+      .order("desc")
+      .collect();
+    const ps = dbRecs.map(
+      (dbRec) =>
+        new Promise((resolve, reject) => {
+          const storageId = dbRec.cvxStoredFileId as Id<"_storage">;
+          ctx.storage
+            .getUrl(storageId)
+            .then((fileUrl) => {
+              resolve({
+                ...dbRec,
+                fileUrl,
+              });
+            })
+            .catch((err) => {
+              reject(err);
+            });
+        })
+    );
+    const projectPrjFiles = (await Promise.allSettled(ps))
+      .filter((p) => p.status === "fulfilled")
+      .map((p) => p.value);
+    return projectPrjFiles;
+  },
+});
+
 export const getPrjFile_ByPrjFileId = query({
   args: {
     prjFileId: v.optional(v.id("vsPrjFile")),

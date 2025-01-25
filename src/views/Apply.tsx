@@ -80,9 +80,9 @@ export default function Preview() {
 
   // PRJFILES
 
-  const curProjectPrjFiles = useQuery(
-    api.dbOps.getAllPrjFiles_ForProject,
-    currApplication ? { projectId: currApplication.projectId } : "skip"
+  const currApplicationPrjFiles = useQuery(
+    api.dbOps.getAllPrjFiles_ForApplication,
+    currApplication ? { applicationId: currApplication._id } : "skip"
   );
 
   const onClick_uploadFiles_PrjFiles = async (droppedFiles: any) => {
@@ -236,8 +236,8 @@ export default function Preview() {
             bg="gray.1"
             style={{ flexGrow: 1, overflowY: "auto" }}
           >
-            {(curProjectPrjFiles ?? []).length > 0 ? (
-              (curProjectPrjFiles ?? []).map((prjFile: any) => {
+            {(currApplicationPrjFiles ?? []).length > 0 ? (
+              (currApplicationPrjFiles ?? []).map((prjFile: any) => {
                 return (
                   <Card key={prjFile._id} w="50%" withBorder p="md">
                     <Flex direction="column" align="stretch" gap="sm">
