@@ -351,7 +351,6 @@ export default function ProjectInit_AgreementsUploaded({
                                     placeholder="Select documents"
                                     defaultValue={criteriaItem.valid_docs}
                                     onChange={(v) => {
-                                      console.log(v);
                                       criteriaItem.valid_docs = v;
                                     }}
                                     data={[

@@ -197,7 +197,27 @@ export default function Preview() {
                               </Flex>
                             </Accordion.Control>
                             <Accordion.Panel>
-                              <Text fz="sm">{criteriaItem.description}</Text>
+                              <Flex
+                                w="100%"
+                                direction="column"
+                                align="stretch"
+                                gap="xs"
+                              >
+                                <Text fz="sm">{criteriaItem.description}</Text>
+                                <Flex
+                                  w="100%"
+                                  align="center"
+                                  gap="xs"
+                                  py="xs"
+                                  style={{ overflowX: "auto" }}
+                                >
+                                  {(criteriaItem.valid_docs ?? []).map(
+                                    (ct: any, cIdx: number) => {
+                                      return <Pill key={cIdx}>{ct}</Pill>;
+                                    }
+                                  )}
+                                </Flex>
+                              </Flex>
                             </Accordion.Panel>
                           </Accordion.Item>
                         );
