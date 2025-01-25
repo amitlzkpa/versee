@@ -6,7 +6,7 @@ import {
   Center,
   Divider,
   Flex,
-  Input,
+  TextInput,
   Loader,
   Text,
   Textarea,
@@ -183,9 +183,9 @@ export default function ProjectInit_AgreementsUploaded({
                                 gap="xs"
                                 key={offerItem.title}
                               >
-                                <Input
+                                <TextInput
                                   w="100%"
-                                  fz="md"
+                                  size="md"
                                   fw="bold"
                                   defaultValue={offerItem.title}
                                   onChange={(e) => {
@@ -193,18 +193,18 @@ export default function ProjectInit_AgreementsUploaded({
                                   }}
                                 />
                                 <Flex gap="sm">
-                                  <Input
+                                  <TextInput
                                     w="60%"
-                                    fz="sm"
+                                    size="sm"
                                     fw="bold"
                                     defaultValue={offerItem.quantity}
                                     onChange={(e) => {
                                       offerItem.quantity = e.target.value;
                                     }}
                                   />
-                                  <Input
+                                  <TextInput
                                     w="40%"
-                                    fz="sm"
+                                    size="sm"
                                     fw="bold"
                                     defaultValue={offerItem.units}
                                     onChange={(e) => {
@@ -255,9 +255,9 @@ export default function ProjectInit_AgreementsUploaded({
                                 gap="xs"
                                 key={criteriaItem.title}
                               >
-                                <Input
+                                <TextInput
                                   w="100%"
-                                  fz="md"
+                                  size="md"
                                   fw="bold"
                                   defaultValue={criteriaItem.title}
                                   onChange={(e) => {
@@ -266,9 +266,9 @@ export default function ProjectInit_AgreementsUploaded({
                                 />
                                 <Flex w="100%" gap="sm" px="sm">
                                   <Text fz="md">Applies To:</Text>
-                                  <Input
+                                  <TextInput
                                     style={{ flexGrow: 1 }}
-                                    fz="sm"
+                                    size="sm"
                                     fw="bold"
                                     defaultValue={criteriaItem.applies_to}
                                     onChange={(e) => {
