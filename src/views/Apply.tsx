@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import {
   Accordion,
   Button,
+  Card,
+  Paper,
   Drawer,
   Divider,
   Flex,
@@ -78,6 +80,11 @@ export default function Preview() {
 
   // PRJFILES
 
+  const curProjectPrjFiles = useQuery(
+    api.dbOps.getAllPrjFiles_ForProject,
+    currApplication ? { projectId: currApplication.projectId } : "skip"
+  );
+
   const onClick_uploadFiles_PrjFiles = async (droppedFiles: any) => {
     const ps = droppedFiles.map(
       (file: any) =>
@@ -145,7 +152,7 @@ export default function Preview() {
           align="stretch"
           style={{ overflowY: "auto" }}
         >
-          <Flex w="100%" align="center">
+          <Flex w="100%" align="center" pr="xs">
             <Text fz="lg" fw="bold" style={{ flexGrow: 1 }}>
               Eligibility List
             </Text>
@@ -206,7 +213,7 @@ export default function Preview() {
         </Flex>
       </Flex>
 
-      <Flex w="30%" direction="column" align="center" gap="md">
+      <Flex w="30%" direction="column" align="center" gap="sm">
         <Flex w="100%" direction="column" align="stretch">
           <FileUploader
             projectId={currProject?._id}
@@ -214,8 +221,43 @@ export default function Preview() {
           />
         </Flex>
 
+        <Divider w="100%" />
+
         <Flex w="100%" h="100%" direction="column" align="stretch">
-          File List
+          <Text fz="md" fw="bold">
+            Uploaded Files
+          </Text>
+
+          <Paper
+            w="100%"
+            h="100%"
+            p="md"
+            bg="gray.1"
+            style={{ flexGrow: 1, overflowY: "auto" }}
+          >
+            {(curProjectPrjFiles ?? []).map((prjFile: any) => {
+              return (
+                <Card key={prjFile._id} w="50%" withBorder p="md">
+                  <Flex direction="column" align="stretch" gap="sm">
+                    <Text fz="sm" fw="bold">
+                      {prjFile.titleText}
+                    </Text>
+
+                    <Button
+                      component="a"
+                      variant="outline"
+                      href={prjFile.fileUrl}
+                      target="_blank"
+                      w="100%"
+                      size="lg"
+                    >
+                      Open
+                    </Button>
+                  </Flex>
+                </Card>
+              );
+            })}
+          </Paper>
         </Flex>
       </Flex>
     </Flex>
