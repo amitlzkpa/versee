@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Accordion, Button, Divider, Flex, Text, rem } from "@mantine/core";
+import {
+  Accordion,
+  Button,
+  Divider,
+  Flex,
+  Text,
+  Pill,
+  rem,
+} from "@mantine/core";
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -137,17 +145,17 @@ export default function Submit() {
                           w="100%"
                           direction="column"
                           align="center"
-                          gap="xs"
                           key={offerItem.title}
                         >
                           <Flex w="100%" align="center" gap="sm">
-                            <Text>{offerItem.title}</Text>
+                            <Text fz="md" fw="bold" style={{ flexGrow: 1 }}>
+                              {offerItem.title}
+                            </Text>
+                            <Pill size="sm">
+                              {offerItem.quantity} {offerItem.units}
+                            </Pill>
                           </Flex>
-                          <Flex gap="sm">
-                            <Text>{offerItem.quantity}</Text>
-                            <Text>{offerItem.units}</Text>
-                          </Flex>
-                          <Text>{offerItem.description}</Text>
+                          <Text fz="sm">{offerItem.description}</Text>
                         </Flex>
                       );
                     })}
@@ -176,13 +184,12 @@ export default function Submit() {
                             key={criteriaItem.title}
                           >
                             <Flex w="100%" align="center" gap="sm">
-                              <Text>{criteriaItem.title}</Text>
+                              <Text fz="md" fw="bold" style={{ flexGrow: 1 }}>
+                                {criteriaItem.title}
+                              </Text>
+                              <Pill size="sm">{criteriaItem.applies_to}</Pill>
                             </Flex>
-                            <Flex w="100%" gap="sm" px="sm">
-                              <Text fz="md">Applies To:</Text>
-                              <Text>{criteriaItem.applies_to}</Text>
-                            </Flex>
-                            <Text>{criteriaItem.description}</Text>
+                            <Text fz="sm">{criteriaItem.description}</Text>
                           </Flex>
                         );
                       }
