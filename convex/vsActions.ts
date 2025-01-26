@@ -960,10 +960,116 @@ export const analysePrjFile = action({
       prjFileId,
       updateDataStr: JSON.stringify(writeData),
     });
+
+    // What information can be extracted from the given documents to check if a person meets the given criteria
+    // Include positive checks
+    // Include negative checks
   },
 });
 
 // APPLICATIONS
+
+export const prepareApplicationData = action({
+  args: {
+    applicationId: v.id("vsApplications"),
+  },
+  handler: async (ctx, { applicationId }) => {
+    let updatedApplicationData;
+    const writeData = { checkConditions_Status: "generating" };
+    writeData.checkConditions_Status = "generating";
+    updatedApplicationData = await ctx.runMutation(
+      internal.dbOps.updateApplication,
+      {
+        applicationId,
+        updateDataStr: JSON.stringify(writeData),
+      }
+    );
+
+    const schema_checkConditions = {
+      description: "List of conditions to check",
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          title: {
+            type: SchemaType.STRING,
+            description:
+              "A suitable title to be shown as heading for the check condition.",
+            nullable: false,
+          },
+          description: {
+            type: SchemaType.STRING,
+            description: "2 sentence description of the check condition.",
+            nullable: false,
+          },
+        },
+        required: ["title", "description"],
+      },
+    };
+
+    const soModel_checkConditions = genAI.getGenerativeModel({
+      model: "gemini-1.5-pro",
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: schema_checkConditions,
+      },
+    });
+
+    const application = await ctx.runQuery(
+      api.dbOps.getApplication_ByApplicationId,
+      { applicationId }
+    );
+
+    const srcDocs = await ctx.runQuery(api.dbOps.getAllSrcDocs_ForProject, {
+      projectId: application.projectId,
+    });
+
+    const srcDoc = srcDocs[0];
+
+    const eligibilityCriteria = JSON.parse(srcDoc.criteria_Text);
+
+    const ps = eligibilityCriteria.map(
+      (ec: any) =>
+        new Promise((resolve, reject) => {
+          model
+            .generateContent([
+              [
+                `List checks to be made based on following elgibility information to ensure a person meets the criteria:`,
+                "",
+                "",
+                `## Eligibility Condition:`,
+                "",
+                ec.title,
+                "",
+                `## Eligibility Description:`,
+                "",
+                ec.description,
+              ].join("\n"),
+            ])
+            .then((result) => {
+              const conditionText = result.response.text();
+              const conditionJSON = JSON.parse(conditionText);
+              resolve(conditionJSON);
+            })
+            .catch(reject);
+        })
+    );
+
+    const checkConditions = (await Promise.allSettled(ps))
+      .filter((p) => p.status === "fulfilled")
+      .map((p) => p.value);
+
+    writeData.checkConditions_Status = "generated";
+    writeData.checkConditions_Text = JSON.stringify(checkConditions);
+    updatedApplicationData = await ctx.runMutation(
+      internal.dbOps.updateApplication,
+      {
+        applicationId,
+        updateDataStr: JSON.stringify(writeData),
+      }
+    );
+  },
+});
 
 export const createNewApplication = action({
   args: {
@@ -974,6 +1080,11 @@ export const createNewApplication = action({
       internal.dbOps.createNewApplication,
       { projectId }
     );
+    (async () => {
+      ctx.scheduler.runAfter(0, api.vsActions.prepareApplicationData, {
+        applicationId: newApplication,
+      });
+    })();
     return newApplication;
   },
 });
