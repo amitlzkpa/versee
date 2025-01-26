@@ -12,10 +12,6 @@ export const documentTypes = [
     label: "Driving License",
   },
   {
-    value: "tax-id",
-    label: "Tax ID",
-  },
-  {
     value: "tax-records",
     label: "Tax Records",
   },
@@ -30,9 +26,5 @@ export const documentTypes = [
   {
     value: "self-declaration",
     label: "Self Declaration",
-  },
-  {
-    value: "notarized-declaration",
-    label: "Notarized Declaration",
   },
 ];

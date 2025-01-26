@@ -1234,6 +1234,13 @@ export const analyseApplication = action({
       }
     );
 
+    // loop through all docs and check verification process for it
+    // result: verfied, needs notarization, rejected
+
+    // list all extractedInfo
+    // loop through eligibilityCriteria
+    // check if information in extractedInfo will satisfy condition
+
     console.log(application);
     console.log(project);
     console.log(srcDocs);
