@@ -336,7 +336,7 @@ export default function Preview() {
                   Full Details
                 </Button>
               </Flex>
-              <Accordion w="100%">
+              <Accordion w="100%" multiple defaultValue={[]}>
                 {criteriaJSON ? (
                   <Flex w="100%" direction="column" align="stretch" gap="md">
                     {criteriaJSON.map(
