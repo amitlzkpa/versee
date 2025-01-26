@@ -1252,9 +1252,38 @@ export const analyseApplication = action({
     // loop through eligibilityCriteria
     // check if information in extractedInfo will satisfy condition
 
-    console.log(application);
-    console.log(project);
-    console.log(srcDocs);
-    console.log(prjFiles);
+    const eligibilityObjs = JSON.parse(project.eligibilityCheckObjs_Text);
+    const allExtractedInfo = prjFiles
+      .map((pf) => {
+        const infoObjs = JSON.parse(pf.extractedInfoText);
+        const extractedInfoList = infoObjs
+          .map((io) => `- ${io.extractedInfoLabel}: ${io.extractedInfoValue}`)
+          .join("\n");
+        const textLines = [
+          "",
+          `Document Name: ${pf.titleText}`,
+          `Document Type: ${pf.classifyDocText}`,
+          `Verification Status: ${pf.verificationStatus}`,
+          "",
+          `Summary`,
+          "",
+          `${pf.summaryText}`,
+          "",
+          `Extracted Information`,
+          "",
+          `${extractedInfoList}`,
+          "",
+        ].join("\n");
+        return textLines;
+      })
+      .join("\n\n");
+
+    console.log(eligibilityObjs);
+    console.log(allExtractedInfo);
+
+    // console.log(application);
+    // console.log(project);
+    // console.log(srcDocs);
+    // console.log(prjFiles);
   },
 });
