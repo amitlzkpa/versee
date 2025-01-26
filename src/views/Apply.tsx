@@ -11,6 +11,7 @@ import {
   Text,
   Pill,
   ScrollArea,
+  SimpleGrid,
   rem,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -284,39 +285,47 @@ export default function Preview() {
                 style={{ flexGrow: 1, overflowY: "auto" }}
               >
                 {(currApplicationPrjFiles ?? []).length > 0 ? (
-                  (currApplicationPrjFiles ?? []).map((prjFile: any) => {
-                    return (
-                      <Card key={prjFile._id} w="50%" withBorder p="md">
-                        <Flex direction="column" align="stretch" gap="sm">
-                          <Text fz="sm" fw="bold">
-                            {prjFile.titleText}
-                          </Text>
+                  <SimpleGrid cols={2}>
+                    {(currApplicationPrjFiles ?? []).map((prjFile: any) => {
+                      return (
+                        <Card
+                          key={prjFile._id}
+                          w="100%"
+                          h="100%"
+                          withBorder
+                          p="md"
+                        >
+                          <Flex direction="column" align="stretch" gap="sm">
+                            <Text fz="sm" fw="bold">
+                              {prjFile.titleText}
+                            </Text>
 
-                          <Button
-                            component="a"
-                            variant="outline"
-                            href={prjFile.fileUrl}
-                            target="_blank"
-                            w="100%"
-                            size="lg"
-                          >
-                            Open
-                          </Button>
+                            <Button
+                              component="a"
+                              variant="outline"
+                              href={prjFile.fileUrl}
+                              target="_blank"
+                              w="100%"
+                              size="lg"
+                            >
+                              Open
+                            </Button>
 
-                          <Button
-                            variant="outline"
-                            onClick={() => {
-                              cvxUtils.performAction_analysePrjFile({
-                                prjFileId: prjFile._id,
-                              });
-                            }}
-                          >
-                            Analyse
-                          </Button>
-                        </Flex>
-                      </Card>
-                    );
-                  })
+                            <Button
+                              variant="outline"
+                              onClick={() => {
+                                cvxUtils.performAction_analysePrjFile({
+                                  prjFileId: prjFile._id,
+                                });
+                              }}
+                            >
+                              Analyse
+                            </Button>
+                          </Flex>
+                        </Card>
+                      );
+                    })}
+                  </SimpleGrid>
                 ) : (
                   <Flex
                     w="100%"
