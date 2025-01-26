@@ -57,6 +57,8 @@ export default function useCvxUtils() {
     api.vsActions.createNewPrjFile
   );
 
+  const performAction_analysePrjFile = useAction(api.vsActions.analysePrjFile);
+
   const performAction_createNewApplication = useAction(
     api.vsActions.createNewApplication
   );
@@ -89,6 +91,7 @@ export default function useCvxUtils() {
     performAction_updateSrcDoc,
     performAction_analyseSrcDoc,
     performAction_createNewPrjFile,
+    performAction_analysePrjFile,
     performAction_createNewApplication,
     performAction_updateApplication,
     performAction_analyseApplication,

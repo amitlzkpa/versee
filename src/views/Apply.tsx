@@ -302,6 +302,17 @@ export default function Preview() {
                           >
                             Open
                           </Button>
+
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              cvxUtils.performAction_analysePrjFile({
+                                prjFileId: prjFile._id,
+                              });
+                            }}
+                          >
+                            Analyse
+                          </Button>
                         </Flex>
                       </Card>
                     );
