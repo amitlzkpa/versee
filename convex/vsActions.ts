@@ -886,8 +886,8 @@ export const test_readSheet = action({
 
 // SRCDOCS
 
-const generateForPDF_offerings = async (pdfArrayBuffer, model) => {
-  const result = await model.generateContent([
+const generateForPDF_offerings = async (pdfArrayBuffer) => {
+  const result = await soModel_offerings.generateContent([
     {
       inlineData: {
         data: Buffer.from(pdfArrayBuffer).toString("base64"),
@@ -900,8 +900,8 @@ const generateForPDF_offerings = async (pdfArrayBuffer, model) => {
   return offerings;
 };
 
-const generateForPDF_criteria = async (pdfArrayBuffer, model) => {
-  const result = await model.generateContent([
+const generateForPDF_criteria = async (pdfArrayBuffer) => {
+  const result = await soModel_criteria.generateContent([
     {
       inlineData: {
         data: Buffer.from(pdfArrayBuffer).toString("base64"),
@@ -914,7 +914,7 @@ const generateForPDF_criteria = async (pdfArrayBuffer, model) => {
   return criteria;
 };
 
-const generateForPDF_title = async (pdfArrayBuffer, model) => {
+const generateForPDF_title = async (pdfArrayBuffer) => {
   const result = await model.generateContent([
     {
       inlineData: {
@@ -928,7 +928,7 @@ const generateForPDF_title = async (pdfArrayBuffer, model) => {
   return titleText;
 };
 
-const generateForPDF_summary = async (pdfArrayBuffer, model) => {
+const generateForPDF_summary = async (pdfArrayBuffer) => {
   const result = await model.generateContent([
     {
       inlineData: {
@@ -999,7 +999,7 @@ export const analyseSrcDoc = action({
       srcDocId,
       updateDataStr: JSON.stringify(writeData),
     });
-    const titleText = await generateForPDF_title(pdfArrayBuffer, model);
+    const titleText = await generateForPDF_title(pdfArrayBuffer);
     writeData.titleStatus = "generated";
     writeData.titleText = titleText;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
@@ -1012,7 +1012,7 @@ export const analyseSrcDoc = action({
       srcDocId,
       updateDataStr: JSON.stringify(writeData),
     });
-    const summaryText = await generateForPDF_summary(pdfArrayBuffer, model);
+    const summaryText = await generateForPDF_summary(pdfArrayBuffer);
     writeData.summaryStatus = "generated";
     writeData.summaryText = summaryText;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
@@ -1025,10 +1025,7 @@ export const analyseSrcDoc = action({
       srcDocId,
       updateDataStr: JSON.stringify(writeData),
     });
-    const offerings_Text = await generateForPDF_offerings(
-      pdfArrayBuffer,
-      soModel_offerings
-    );
+    const offerings_Text = await generateForPDF_offerings(pdfArrayBuffer);
     writeData.offerings_Status = "generated";
     writeData.offerings_Text = offerings_Text;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
@@ -1041,10 +1038,7 @@ export const analyseSrcDoc = action({
       srcDocId,
       updateDataStr: JSON.stringify(writeData),
     });
-    const criteria_Text = await generateForPDF_criteria(
-      pdfArrayBuffer,
-      soModel_criteria
-    );
+    const criteria_Text = await generateForPDF_criteria(pdfArrayBuffer);
     writeData.criteria_Status = "generated";
     writeData.criteria_Text = criteria_Text;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
@@ -1056,8 +1050,8 @@ export const analyseSrcDoc = action({
 
 // PRJFILE
 
-const generateForPDF_classifyDoc = async (pdfArrayBuffer, model) => {
-  const result = await model.generateContent([
+const generateForPDF_classifyDoc = async (pdfArrayBuffer) => {
+  const result = await soModel_classifyDoc.generateContent([
     {
       inlineData: {
         data: Buffer.from(pdfArrayBuffer).toString("base64"),
@@ -1070,8 +1064,8 @@ const generateForPDF_classifyDoc = async (pdfArrayBuffer, model) => {
   return classifyDoc;
 };
 
-const generateForPDF_extractedInfo = async (pdfArrayBuffer, model) => {
-  const result = await model.generateContent([
+const generateForPDF_extractedInfo = async (pdfArrayBuffer) => {
+  const result = await soModel_extractedInfo.generateContent([
     {
       inlineData: {
         data: Buffer.from(pdfArrayBuffer).toString("base64"),
@@ -1136,7 +1130,7 @@ export const analysePrjFile = action({
       updateDataStr: JSON.stringify(writeData),
     });
 
-    const titleText = await generateForPDF_title(pdfArrayBuffer, model);
+    const titleText = await generateForPDF_title(pdfArrayBuffer);
     writeData.titleStatus = "generated";
     writeData.titleText = titleText;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
@@ -1149,7 +1143,7 @@ export const analysePrjFile = action({
       prjFileId,
       updateDataStr: JSON.stringify(writeData),
     });
-    const summaryText = await generateForPDF_summary(pdfArrayBuffer, model);
+    const summaryText = await generateForPDF_summary(pdfArrayBuffer);
     writeData.summaryStatus = "generated";
     writeData.summaryText = summaryText;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
@@ -1162,10 +1156,7 @@ export const analysePrjFile = action({
       prjFileId,
       updateDataStr: JSON.stringify(writeData),
     });
-    const classifyDocText = await generateForPDF_classifyDoc(
-      pdfArrayBuffer,
-      soModel_classifyDoc
-    );
+    const classifyDocText = await generateForPDF_classifyDoc(pdfArrayBuffer);
     writeData.classifyDocStatus = "generated";
     writeData.classifyDocText = classifyDocText;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
@@ -1178,10 +1169,8 @@ export const analysePrjFile = action({
       prjFileId,
       updateDataStr: JSON.stringify(writeData),
     });
-    const extractedInfoText = await generateForPDF_extractedInfo(
-      pdfArrayBuffer,
-      soModel_extractedInfo
-    );
+    const extractedInfoText =
+      await generateForPDF_extractedInfo(pdfArrayBuffer);
     writeData.extractedInfoStatus = "generated";
     writeData.extractedInfoText = extractedInfoText;
     uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
