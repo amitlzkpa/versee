@@ -97,6 +97,34 @@ const schema_criteria = {
   },
 };
 
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+const soModel_offerings = genAI.getGenerativeModel({
+  model: "gemini-1.5-pro",
+  generationConfig: {
+    responseMimeType: "application/json",
+    responseSchema: schema_offerings,
+  },
+});
+
+const soModel_checkConditions = genAI.getGenerativeModel({
+  model: "gemini-1.5-pro",
+  generationConfig: {
+    responseMimeType: "application/json",
+    responseSchema: schema_checkConditions,
+  },
+});
+
+const soModel_criteria = genAI.getGenerativeModel({
+  model: "gemini-1.5-pro",
+  generationConfig: {
+    responseMimeType: "application/json",
+    responseSchema: schema_criteria,
+  },
+});
+
 // UTILS
 
 export const generateUploadUrl = action(async (ctx) => {
@@ -141,15 +169,6 @@ export const setupCheckingConditions = action({
     updatedProject = await ctx.runMutation(internal.dbOps.updateProject, {
       projectId,
       updateData,
-    });
-
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const soModel_checkConditions = genAI.getGenerativeModel({
-      model: "gemini-1.5-pro",
-      generationConfig: {
-        responseMimeType: "application/json",
-        responseSchema: schema_checkConditions,
-      },
     });
 
     const srcDocs = await ctx.runQuery(api.dbOps.getAllSrcDocs_ForProject, {
@@ -901,8 +920,6 @@ export const analyseSrcDoc = action({
     });
     const fileUrl = await ctx.storage.getUrl(srcDoc.cvxStoredFileId);
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const pdfArrayBuffer = await fetch(fileUrl).then((response) =>
       response.arrayBuffer()
     );
@@ -936,14 +953,6 @@ export const analyseSrcDoc = action({
       updateDataStr: JSON.stringify(writeData),
     });
 
-    const soModel_offerings = genAI.getGenerativeModel({
-      model: "gemini-1.5-pro",
-      generationConfig: {
-        responseMimeType: "application/json",
-        responseSchema: schema_offerings,
-      },
-    });
-
     writeData.offerings_Status = "generating";
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
@@ -958,14 +967,6 @@ export const analyseSrcDoc = action({
     uploadedFileData = await ctx.runMutation(internal.dbOps.updateSrcDoc, {
       srcDocId,
       updateDataStr: JSON.stringify(writeData),
-    });
-
-    const soModel_criteria = genAI.getGenerativeModel({
-      model: "gemini-1.5-pro",
-      generationConfig: {
-        responseMimeType: "application/json",
-        responseSchema: schema_criteria,
-      },
     });
 
     writeData.criteria_Status = "generating";
@@ -1026,8 +1027,6 @@ export const analysePrjFile = action({
     });
     const fileUrl = await ctx.storage.getUrl(prjFile.cvxStoredFileId);
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const pdfArrayBuffer = await fetch(fileUrl).then((response) =>
       response.arrayBuffer()
     );
