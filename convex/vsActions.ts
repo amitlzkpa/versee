@@ -1073,6 +1073,10 @@ const generateForPDF_extractedInfo = async (pdfArrayBuffer) => {
   return extractedInfo;
 };
 
+const verifyInfo_prjFile = async (extractedInfoText, classifyDocText) => {
+  return "verified";
+};
+
 export const createNewPrjFile = action({
   args: {
     cvxStoredFileId: v.string(),
@@ -1172,6 +1176,21 @@ export const analysePrjFile = action({
       prjFileId,
       updateDataStr: JSON.stringify(writeData),
     });
+
+    writeData.verificationStatus = "unverified";
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
+      prjFileId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+    const verificationResult = await verifyInfo_prjFile(
+      extractedInfoText,
+      classifyDocText
+    );
+    writeData.verificationStatus = verificationResult;
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
+      prjFileId,
+      updateDataStr: JSON.stringify(writeData),
+    });
   },
 });
 
@@ -1228,9 +1247,6 @@ export const analyseApplication = action({
         applicationId: application._id,
       }
     );
-
-    // loop through all docs and check verification process for it
-    // result: verfied, needs notarization, rejected
 
     // list all extractedInfo
     // loop through eligibilityCriteria
