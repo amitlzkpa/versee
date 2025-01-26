@@ -365,10 +365,10 @@ export const createNewApplication = internalMutation({
 export const updateApplication = internalMutation({
   args: {
     applicationId: v.id("vsApplications"),
-    updateData: v.string(),
+    updateDataStr: v.string(),
   },
-  handler: async (ctx, { applicationId, updateData }) => {
-    const _updateData = JSON.parse(updateData);
+  handler: async (ctx, { applicationId, updateDataStr }) => {
+    const _updateData = JSON.parse(updateDataStr);
     const updatedApplication = await ctx.db.patch(applicationId, _updateData);
     return updatedApplication;
   },

@@ -69,6 +69,10 @@ export default function useCvxUtils() {
     api.vsActions.analyseApplication
   );
 
+  const performAction_prepareApplication = useAction(
+    api.vsActions.prepareApplication
+  );
+
   return {
     performAction_startDocusignOAuth,
     performAction_retrieveDocusignAccessToken,
@@ -88,5 +92,6 @@ export default function useCvxUtils() {
     performAction_createNewApplication,
     performAction_updateApplication,
     performAction_analyseApplication,
+    performAction_prepareApplication,
   };
 }
