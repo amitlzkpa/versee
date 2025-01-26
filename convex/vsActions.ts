@@ -974,11 +974,9 @@ export const prepareApplication = action({
     applicationId: v.id("vsApplications"),
   },
   handler: async (ctx, { applicationId }) => {
-    console.log(applicationId);
-
     let updatedApplicationData;
-    const writeData = { checkConditions_Status: "generating" };
-    writeData.checkConditions_Status = "generating";
+    const writeData = {};
+    writeData.eligibilityCheckObjs_Status = "generating";
     updatedApplicationData = await ctx.runMutation(
       internal.dbOps.updateApplication,
       {
@@ -1031,13 +1029,9 @@ export const prepareApplication = action({
 
     const eligibilityCriteria = JSON.parse(srcDoc.criteria_Text);
 
-    console.log("-------------------------");
-    console.log(eligibilityCriteria);
-
     const ps = eligibilityCriteria.map(
       (ec: any) =>
         new Promise((resolve, reject) => {
-          console.log(ec.title);
           soModel_checkConditions
             .generateContent([
               [
@@ -1056,22 +1050,21 @@ export const prepareApplication = action({
             .then((result) => {
               const conditionText = result.response.text();
               const conditionJSON = JSON.parse(conditionText);
-              console.log(conditionJSON);
-              resolve(conditionJSON);
+              resolve({
+                eligibilityCritera: ec,
+                checkConditions: conditionJSON,
+              });
             })
             .catch(reject);
         })
     );
 
-    const checkConditions = (await Promise.allSettled(ps))
+    const eligibilityCheckObjs = (await Promise.allSettled(ps))
       .filter((p) => p.status === "fulfilled")
       .map((p) => p.value);
 
-    console.log("=====================");
-    console.log(checkConditions);
-
-    writeData.checkConditions_Status = "generated";
-    writeData.checkConditions_Text = JSON.stringify(checkConditions);
+    writeData.eligibilityCheckObjs_Status = "generated";
+    writeData.eligibilityCheckObjs_Text = JSON.stringify(eligibilityCheckObjs);
     updatedApplicationData = await ctx.runMutation(
       internal.dbOps.updateApplication,
       {
