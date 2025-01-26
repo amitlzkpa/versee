@@ -11,6 +11,8 @@ import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 // import jwt from "jsonwebtoken";
 import * as docusign from "docusign-esign";
 
+import { documentTypes } from "../common/documentTypes";
+
 let DEV = true;
 DEV = false;
 
@@ -97,6 +99,13 @@ const schema_criteria = {
   },
 };
 
+const schema_classifyDoc = {
+  type: SchemaType.STRING,
+  description: "The type of document.",
+  nullable: false,
+  enum: documentTypes.map((d) => d.value),
+};
+
 const schema_extractedInfo = {
   description: "List of information available in the document",
   type: SchemaType.ARRAY,
@@ -108,7 +117,6 @@ const schema_extractedInfo = {
         description:
           "The type of information does the extracted data represents.",
         nullable: false,
-        // format: "enum",
         enum: [
           "age",
           "address",
@@ -160,6 +168,14 @@ const soModel_criteria = genAI.getGenerativeModel({
   generationConfig: {
     responseMimeType: "application/json",
     responseSchema: schema_criteria,
+  },
+});
+
+const soModel_classifyDoc = genAI.getGenerativeModel({
+  model: "gemini-1.5-pro",
+  generationConfig: {
+    responseMimeType: "application/json",
+    responseSchema: schema_classifyDoc,
   },
 });
 
@@ -1040,6 +1056,20 @@ export const analyseSrcDoc = action({
 
 // PRJFILE
 
+const generateForPDF_classifyDoc = async (pdfArrayBuffer, model) => {
+  const result = await model.generateContent([
+    {
+      inlineData: {
+        data: Buffer.from(pdfArrayBuffer).toString("base64"),
+        mimeType: "application/pdf",
+      },
+    },
+    "Categorize the type of document.",
+  ]);
+  const classifyDoc = result.response.text();
+  return classifyDoc;
+};
+
 const generateForPDF_extractedInfo = async (pdfArrayBuffer, model) => {
   const result = await model.generateContent([
     {
@@ -1098,7 +1128,9 @@ export const analysePrjFile = action({
 
     let uploadedFileData;
 
-    const writeData = { titleStatus: "generating" };
+    const writeData = {};
+
+    writeData.titleStatus = "generating";
     uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
       prjFileId,
       updateDataStr: JSON.stringify(writeData),
@@ -1125,6 +1157,22 @@ export const analysePrjFile = action({
       updateDataStr: JSON.stringify(writeData),
     });
 
+    writeData.classifyDocStatus = "generating";
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
+      prjFileId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+    const classifyDocText = await generateForPDF_classifyDoc(
+      pdfArrayBuffer,
+      soModel_classifyDoc
+    );
+    writeData.classifyDocStatus = "generated";
+    writeData.classifyDocText = classifyDocText;
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
+      prjFileId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+
     writeData.extractedInfoStatus = "generating";
     uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
       prjFileId,
@@ -1136,20 +1184,10 @@ export const analysePrjFile = action({
     );
     writeData.extractedInfoStatus = "generated";
     writeData.extractedInfoText = extractedInfoText;
-    console.log(JSON.parse(extractedInfoText));
     uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
       prjFileId,
       updateDataStr: JSON.stringify(writeData),
     });
-
-    // docuemntType
-    // infoAvailable
-
-    // extractedInfo
-
-    // What information can be extracted from the given documents to check if a person meets the given criteria
-    // Include positive checks
-    // Include negative checks
   },
 });
 
