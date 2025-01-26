@@ -20,6 +20,8 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
+import { documentTypes } from "../../common/documentTypes";
+
 import Summary_SrcDoc from "../components/Summary_SrcDoc";
 
 import useCvxUtils from "../hooks/cvxUtils";
@@ -353,44 +355,7 @@ export default function ProjectInit_AgreementsUploaded({
                                     onChange={(v) => {
                                       criteriaItem.valid_docs = v;
                                     }}
-                                    data={[
-                                      {
-                                        value: "passport",
-                                        label: "Passport",
-                                      },
-                                      {
-                                        value: "aadhar-card",
-                                        label: "AADHAR Card",
-                                      },
-                                      {
-                                        value: "driving-license",
-                                        label: "Driving License",
-                                      },
-                                      {
-                                        value: "tax-id",
-                                        label: "Tax ID",
-                                      },
-                                      {
-                                        value: "tax-records",
-                                        label: "Tax Records",
-                                      },
-                                      {
-                                        value: "pay-slips",
-                                        label: "Pay Slips",
-                                      },
-                                      {
-                                        value: "birth-certificate",
-                                        label: "Birth Certificate",
-                                      },
-                                      {
-                                        value: "self-declaration",
-                                        label: "Self Declaration",
-                                      },
-                                      {
-                                        value: "notarized-declaration",
-                                        label: "Notarized Declaration",
-                                      },
-                                    ]}
+                                    data={documentTypes}
                                   />
                                 </Flex>
                                 <Textarea
