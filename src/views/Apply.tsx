@@ -14,6 +14,7 @@ import {
   ScrollArea,
   SimpleGrid,
   rem,
+  Textarea,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
@@ -21,7 +22,12 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
-import { FaExclamationCircle } from "react-icons/fa";
+import {
+  FaExclamationCircle,
+  FaRedo,
+  FaTrashAlt,
+  FaCheckCircle,
+} from "react-icons/fa";
 
 import FileUploader from "../components/FileUploader";
 
@@ -120,6 +126,17 @@ export default function Preview() {
       .map((r) => r.value);
   };
 
+  // PRJFILES MODAL
+
+  const prjFilesModalCtr = useDisclosure(false);
+
+  const [prjFileInModal, setPrjFileInModal] = useState<any>({});
+
+  const onClick_openPrjFileModal = async (prjFile: any) => {
+    setPrjFileInModal(prjFile);
+    prjFilesModalCtr[1].open();
+  };
+
   // LHS PREVIEW
 
   const lhsPaneDrawerCtr = useDisclosure(false);
@@ -161,6 +178,120 @@ export default function Preview() {
               />
             </Flex>
           </Drawer>
+
+          <Modal
+            size="70%"
+            opened={prjFilesModalCtr[0]}
+            onClose={prjFilesModalCtr[1].close}
+            title={prjFileInModal?.titleText ?? ""}
+            centered
+          >
+            <Flex w="100%" h="70vh" gap="md">
+              <Flex w="70%" h="100%">
+                <embed
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    minHeight: rem(400),
+                    borderRadius: rem(20),
+                    flexGrow: 1,
+                  }}
+                  src={prjFileInModal?.fileUrl}
+                />
+              </Flex>
+              <Flex
+                w="30%"
+                h="100%"
+                direction="column"
+                align="stretch"
+                gap="xs"
+              >
+                <Flex
+                  w="100%"
+                  direction="column"
+                  gap="sm"
+                  style={{ flexGrow: 1 }}
+                >
+                  <Text fw="bold">Notes</Text>
+                  <Textarea w="100%" rows={6} />
+                </Flex>
+
+                <Flex w="100%" align="center" gap="sm">
+                  <Flex
+                    w="100%"
+                    justify="center"
+                    align="center"
+                    style={{ flexGrow: 1 }}
+                    gap="xs"
+                  >
+                    {prjFileInModal.verificationStatus === "verified" ? (
+                      <>
+                        <FaCheckCircle
+                          style={{
+                            width: rem(12),
+                            height: rem(12),
+                            color: "var(--mantine-color-gray-5)",
+                          }}
+                        />
+                        <Text
+                          fz="xs"
+                          fs="italic"
+                          style={{ textAlign: "center" }}
+                        >
+                          Verified successfully.
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        <FaExclamationCircle
+                          style={{
+                            width: rem(12),
+                            height: rem(12),
+                            color: "var(--mantine-color-gray-5)",
+                          }}
+                        />
+                        <Text
+                          fz="xs"
+                          fs="italic"
+                          style={{ textAlign: "center" }}
+                        >
+                          Verification failed!
+                        </Text>
+                      </>
+                    )}
+                  </Flex>
+
+                  <Flex align="center" gap="sm">
+                    <FaRedo
+                      onClick={() => {
+                        cvxUtils.performAction_analysePrjFile({
+                          prjFileId: prjFileInModal._id,
+                        });
+                      }}
+                      style={{
+                        width: rem(16),
+                        height: rem(16),
+                        color: "var(--mantine-color-gray-5)",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <FaTrashAlt
+                      color="#ababab"
+                      onClick={() => {
+                        console.log("foo");
+                      }}
+                      style={{
+                        width: rem(16),
+                        height: rem(16),
+                        color: "var(--mantine-color-gray-5)",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </Flex>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Modal>
 
           <Flex w="30%" direction="column" align="stretch" gap="sm">
             <Flex
@@ -293,32 +424,35 @@ export default function Preview() {
                           withBorder
                           p="md"
                         >
-                          <Flex direction="column" align="stretch" gap="sm">
-                            <Text fz="sm" fw="bold">
-                              {prjFile.titleText}
-                            </Text>
-
-                            <Button
-                              component="a"
-                              variant="outline"
-                              href={prjFile.fileUrl}
-                              target="_blank"
+                          <Flex
+                            h="100%"
+                            direction="column"
+                            align="stretch"
+                            gap="sm"
+                          >
+                            <Flex
                               w="100%"
-                              size="lg"
+                              h="100%"
+                              direction="column"
+                              align="stretch"
+                              style={{ flexGrow: 1 }}
                             >
-                              Open
-                            </Button>
+                              <Text fz="sm" fw="bold">
+                                {prjFile.titleText}
+                              </Text>
+                            </Flex>
 
-                            <Button
-                              variant="outline"
-                              onClick={() => {
-                                cvxUtils.performAction_analysePrjFile({
-                                  prjFileId: prjFile._id,
-                                });
-                              }}
-                            >
-                              Analyse
-                            </Button>
+                            <Flex w="100%" justify="center">
+                              <Button
+                                variant="transparent"
+                                size="xs"
+                                onClick={() => {
+                                  onClick_openPrjFileModal(prjFile);
+                                }}
+                              >
+                                Open
+                              </Button>
+                            </Flex>
                           </Flex>
                         </Card>
                       );
