@@ -97,6 +97,44 @@ const schema_criteria = {
   },
 };
 
+const schema_extractedInfo = {
+  description: "List of information available in the document",
+  type: SchemaType.ARRAY,
+  items: {
+    type: SchemaType.OBJECT,
+    properties: {
+      extractedInfoType: {
+        type: SchemaType.STRING,
+        description:
+          "The type of information does the extracted data represents.",
+        nullable: false,
+        // format: "enum",
+        enum: [
+          "age",
+          "address",
+          "name",
+          "nationality",
+          "earnings",
+          "outstanding-taxes",
+          "residency",
+          "home-ownership",
+        ],
+      },
+      extractedInfoLabel: {
+        type: SchemaType.STRING,
+        description: "Label used to indentify the extracted information.",
+        nullable: false,
+      },
+      extractedInfoValue: {
+        type: SchemaType.STRING,
+        description: "The value of the extracted information.",
+        nullable: false,
+      },
+    },
+    required: ["extractedInfoType", "extractedInfoLabel", "extractedInfoValue"],
+  },
+};
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -122,6 +160,14 @@ const soModel_criteria = genAI.getGenerativeModel({
   generationConfig: {
     responseMimeType: "application/json",
     responseSchema: schema_criteria,
+  },
+});
+
+const soModel_extractedInfo = genAI.getGenerativeModel({
+  model: "gemini-1.5-pro",
+  generationConfig: {
+    responseMimeType: "application/json",
+    responseSchema: schema_extractedInfo,
   },
 });
 
@@ -994,6 +1040,20 @@ export const analyseSrcDoc = action({
 
 // PRJFILE
 
+const generateForPDF_extractedInfo = async (pdfArrayBuffer, model) => {
+  const result = await model.generateContent([
+    {
+      inlineData: {
+        data: Buffer.from(pdfArrayBuffer).toString("base64"),
+        mimeType: "application/pdf",
+      },
+    },
+    "Extract all available information about the applicant from the document.",
+  ]);
+  const extractedInfo = result.response.text();
+  return extractedInfo;
+};
+
 export const createNewPrjFile = action({
   args: {
     cvxStoredFileId: v.string(),
@@ -1064,6 +1124,28 @@ export const analysePrjFile = action({
       prjFileId,
       updateDataStr: JSON.stringify(writeData),
     });
+
+    writeData.extractedInfoStatus = "generating";
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
+      prjFileId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+    const extractedInfoText = await generateForPDF_extractedInfo(
+      pdfArrayBuffer,
+      soModel_extractedInfo
+    );
+    writeData.extractedInfoStatus = "generated";
+    writeData.extractedInfoText = extractedInfoText;
+    console.log(JSON.parse(extractedInfoText));
+    uploadedFileData = await ctx.runMutation(internal.dbOps.updatePrjFile, {
+      prjFileId,
+      updateDataStr: JSON.stringify(writeData),
+    });
+
+    // docuemntType
+    // infoAvailable
+
+    // extractedInfo
 
     // What information can be extracted from the given documents to check if a person meets the given criteria
     // Include positive checks
