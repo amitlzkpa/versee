@@ -185,7 +185,7 @@ export const setupCheckingConditions = action({
           soModel_checkConditions
             .generateContent([
               [
-                `List checks to be made based on following elgibility information to ensure a person meets the criteria:`,
+                `List how to perform a check from the given documents to ensure an applicant meets the eligiblity the criteria based on following information. Keep it very short and simple. Discard information which introduces complexity.`,
                 "",
                 "",
                 `## Eligibility Condition:`,
@@ -195,6 +195,11 @@ export const setupCheckingConditions = action({
                 `## Eligibility Description:`,
                 "",
                 ec.description,
+                "",
+                `## Valid Documents:`,
+                "",
+                ec.valid_docs.join(","),
+                "",
               ].join("\n"),
             ])
             .then((result) => {
@@ -841,7 +846,7 @@ const generateForPDF_criteria = async (pdfArrayBuffer, model) => {
         mimeType: "application/pdf",
       },
     },
-    "Extract criterias relevant for applicants described in the PDF.",
+    "Extract criterias relevant for applicants described in the PDF. List only 1 criteria in each item. Keep it very short and simple. Discard information which introduces complexity.",
   ]);
   const criteria = result.response.text();
   return criteria;
