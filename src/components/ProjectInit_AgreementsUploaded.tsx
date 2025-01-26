@@ -108,9 +108,9 @@ export default function ProjectInit_AgreementsUploaded({
       projectId,
       updateData: updateData_project,
     });
-    // await cvxUtils.performAction_setupCheckingConditions({
-    //   projectId
-    // });
+    cvxUtils.performAction_setupCheckingConditions({
+      projectId,
+    });
   };
 
   return (
