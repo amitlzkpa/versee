@@ -145,7 +145,7 @@ const schema_extractedInfo = {
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const txtModel_texts = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const soModel_offerings = genAI.getGenerativeModel({
   model: "gemini-1.5-pro",
@@ -915,7 +915,7 @@ const generateForPDF_criteria = async (pdfArrayBuffer) => {
 };
 
 const generateForPDF_title = async (pdfArrayBuffer) => {
-  const result = await model.generateContent([
+  const result = await txtModel_texts.generateContent([
     {
       inlineData: {
         data: Buffer.from(pdfArrayBuffer).toString("base64"),
@@ -929,7 +929,7 @@ const generateForPDF_title = async (pdfArrayBuffer) => {
 };
 
 const generateForPDF_summary = async (pdfArrayBuffer) => {
-  const result = await model.generateContent([
+  const result = await txtModel_texts.generateContent([
     {
       inlineData: {
         data: Buffer.from(pdfArrayBuffer).toString("base64"),
