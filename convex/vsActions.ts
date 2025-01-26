@@ -14,6 +14,89 @@ import * as docusign from "docusign-esign";
 let DEV = true;
 DEV = false;
 
+// SCHEMAS
+
+const schema_offerings = {
+  description: "List of offerings",
+  type: SchemaType.ARRAY,
+  items: {
+    type: SchemaType.OBJECT,
+    properties: {
+      title: {
+        type: SchemaType.STRING,
+        description: "A suitable title to be shown for the offering.",
+        nullable: false,
+      },
+      description: {
+        type: SchemaType.STRING,
+        description: "2 sentence description of what is being offered.",
+        nullable: false,
+      },
+      quantity: {
+        type: SchemaType.NUMBER,
+        description:
+          "Quantity of what is being made available (without units).",
+        nullable: false,
+      },
+      units: {
+        type: SchemaType.STRING,
+        description: "Units for the quantity of what is being offered.",
+        nullable: false,
+      },
+    },
+    required: ["title", "description", "quantity", "units"],
+  },
+};
+
+const schema_checkConditions = {
+  description: "List of conditions to check",
+  type: SchemaType.ARRAY,
+  items: {
+    type: SchemaType.OBJECT,
+    properties: {
+      title: {
+        type: SchemaType.STRING,
+        description:
+          "A suitable title to be shown as heading for the check condition.",
+        nullable: false,
+      },
+      description: {
+        type: SchemaType.STRING,
+        description: "2 sentence description of the check condition.",
+        nullable: false,
+      },
+    },
+    required: ["title", "description"],
+  },
+};
+
+const schema_criteria = {
+  description: "List of eligibility criteria",
+  type: SchemaType.ARRAY,
+  items: {
+    type: SchemaType.OBJECT,
+    properties: {
+      title: {
+        type: SchemaType.STRING,
+        description:
+          "A suitable title to be shown as heading for the criteria.",
+        nullable: false,
+      },
+      description: {
+        type: SchemaType.STRING,
+        description: "2 sentence description of the criteria.",
+        nullable: false,
+      },
+      applies_to: {
+        type: SchemaType.STRING,
+        description: "Stipulations where this criteria applies.",
+        nullable: false,
+      },
+    },
+    required: ["title", "description", "applies_to"],
+  },
+};
+
 // UTILS
 
 export const generateUploadUrl = action(async (ctx) => {
@@ -59,28 +142,6 @@ export const setupCheckingConditions = action({
       projectId,
       updateData,
     });
-
-    const schema_checkConditions = {
-      description: "List of conditions to check",
-      type: SchemaType.ARRAY,
-      items: {
-        type: SchemaType.OBJECT,
-        properties: {
-          title: {
-            type: SchemaType.STRING,
-            description:
-              "A suitable title to be shown as heading for the check condition.",
-            nullable: false,
-          },
-          description: {
-            type: SchemaType.STRING,
-            description: "2 sentence description of the check condition.",
-            nullable: false,
-          },
-        },
-        required: ["title", "description"],
-      },
-    };
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const soModel_checkConditions = genAI.getGenerativeModel({
@@ -875,38 +936,6 @@ export const analyseSrcDoc = action({
       updateDataStr: JSON.stringify(writeData),
     });
 
-    const schema_offerings = {
-      description: "List of offerings",
-      type: SchemaType.ARRAY,
-      items: {
-        type: SchemaType.OBJECT,
-        properties: {
-          title: {
-            type: SchemaType.STRING,
-            description: "A suitable title to be shown for the offering.",
-            nullable: false,
-          },
-          description: {
-            type: SchemaType.STRING,
-            description: "2 sentence description of what is being offered.",
-            nullable: false,
-          },
-          quantity: {
-            type: SchemaType.NUMBER,
-            description:
-              "Quantity of what is being made available (without units).",
-            nullable: false,
-          },
-          units: {
-            type: SchemaType.STRING,
-            description: "Units for the quantity of what is being offered.",
-            nullable: false,
-          },
-        },
-        required: ["title", "description", "quantity", "units"],
-      },
-    };
-
     const soModel_offerings = genAI.getGenerativeModel({
       model: "gemini-1.5-pro",
       generationConfig: {
@@ -930,33 +959,6 @@ export const analyseSrcDoc = action({
       srcDocId,
       updateDataStr: JSON.stringify(writeData),
     });
-
-    const schema_criteria = {
-      description: "List of eligibility criteria",
-      type: SchemaType.ARRAY,
-      items: {
-        type: SchemaType.OBJECT,
-        properties: {
-          title: {
-            type: SchemaType.STRING,
-            description:
-              "A suitable title to be shown as heading for the criteria.",
-            nullable: false,
-          },
-          description: {
-            type: SchemaType.STRING,
-            description: "2 sentence description of the criteria.",
-            nullable: false,
-          },
-          applies_to: {
-            type: SchemaType.STRING,
-            description: "Stipulations where this criteria applies.",
-            nullable: false,
-          },
-        },
-        required: ["title", "description", "applies_to"],
-      },
-    };
 
     const soModel_criteria = genAI.getGenerativeModel({
       model: "gemini-1.5-pro",
