@@ -8,6 +8,7 @@ import {
   Flex,
   TextInput,
   Loader,
+  Skeleton,
   Text,
   Textarea,
   MultiSelect,
@@ -189,28 +190,36 @@ export default function ProjectInit_AgreementsUploaded({
 
               <Divider my="sm" />
 
-              <TextInput
-                variant="unstyled"
-                w="100%"
-                size="lg"
-                fw="bold"
-                defaultValue={srcDoc.titleText}
-                onChange={(e) => {
-                  srcDoc.titleText = e.target.value;
-                }}
-              />
+              {srcDoc.titleStatus === "generating" ? (
+                <Skeleton height={24} width="100%" radius="xl" />
+              ) : (
+                <TextInput
+                  variant="unstyled"
+                  w="100%"
+                  size="lg"
+                  fw="bold"
+                  defaultValue={srcDoc.titleText}
+                  onChange={(e) => {
+                    srcDoc.titleText = e.target.value;
+                  }}
+                />
+              )}
 
-              <Textarea
-                variant="unstyled"
-                size="md"
-                w="100%"
-                rows={6}
-                resize="vertical"
-                defaultValue={srcDoc.summaryText}
-                onChange={(e) => {
-                  srcDoc.summaryText = e.target.value;
-                }}
-              />
+              {srcDoc.summaryText === "generating" ? (
+                <Skeleton height={160} width="100%" radius="xl" />
+              ) : (
+                <Textarea
+                  variant="unstyled"
+                  size="md"
+                  w="100%"
+                  rows={6}
+                  resize="vertical"
+                  defaultValue={srcDoc.summaryText}
+                  onChange={(e) => {
+                    srcDoc.summaryText = e.target.value;
+                  }}
+                />
+              )}
 
               <Accordion w="100%">
                 <Accordion.Item key="first" value="first">
