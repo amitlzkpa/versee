@@ -1,0 +1,44 @@
+[
+  {
+    "eligibilityCritera": {
+      "applies_to": "All Applicants",
+      "description": "The applicant must be 18 years of age or older as of the date of application.",
+      "title": "Minimum Age Requirement",
+      "valid_docs": ["aadhar-card", "passport"]
+    },
+    "checkConditions": [
+      {
+        "description": "Applicant must be at least 18 years old. Check the Date of Birth on provided document against application date.",
+        "title": "Minimum Age Check"
+      }
+    ]
+  },
+  {
+    "eligibilityCritera": {
+      "applies_to": "All Applicants",
+      "description": "The applicant's annual family income must be less than or equal to ₹6,00,000.",
+      "title": "Income Limit",
+      "valid_docs": ["pay-slips", "tax-records"]
+    },
+    "checkConditions": [
+      {
+        "description": "Check if the applicant's annual family income is less than or equal to ₹6,00,000. Refer to the provided pay slips or tax records for income verification.",
+        "title": "Income Limit"
+      }
+    ]
+  },
+  {
+    "eligibilityCritera": {
+      "applies_to": "All Applicants",
+      "description": "The applicant should make a declaration they do not own an house in the same neighbourhood.",
+      "title": "Home Ownership",
+      "valid_docs": ["self-declaration"]
+    },
+    "checkConditions": [
+      {
+        "description": "Applicant must declare that they do not own a house in the same neighbourhood.",
+        "title": "Home Ownership Declaration"
+      }
+    ]
+  }
+]

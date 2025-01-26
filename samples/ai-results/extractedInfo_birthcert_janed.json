@@ -1,0 +1,47 @@
+[
+  {
+    "extractedInfoLabel": "Name of Child",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "JANE DOE"
+  },
+  {
+    "extractedInfoLabel": "Sex",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "F"
+  },
+  {
+    "extractedInfoLabel": "Date of Birth",
+    "extractedInfoType": "age",
+    "extractedInfoValue": "08/12/1985"
+  },
+  {
+    "extractedInfoLabel": "Place of Birth",
+    "extractedInfoType": "address",
+    "extractedInfoValue": "Mumbai"
+  },
+  {
+    "extractedInfoLabel": "Name of Mother",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "SHEILA DOE"
+  },
+  {
+    "extractedInfoLabel": "Name of Father",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "SHAURYA DOE"
+  },
+  {
+    "extractedInfoLabel": "Registration No.",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "R6789"
+  },
+  {
+    "extractedInfoLabel": "Date of Registration",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "10/12/1985"
+  },
+  {
+    "extractedInfoLabel": "Date of Issue",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "10/12/1985"
+  }
+]

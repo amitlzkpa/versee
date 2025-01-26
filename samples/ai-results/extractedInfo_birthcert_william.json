@@ -1,0 +1,52 @@
+[
+  {
+    "extractedInfoLabel": "Name",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "WILLIAM MENZES"
+  },
+  {
+    "extractedInfoLabel": "Gender",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "Male"
+  },
+  {
+    "extractedInfoLabel": "Date of Birth",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "19/06/1981"
+  },
+  {
+    "extractedInfoLabel": "Place of Birth",
+    "extractedInfoType": "address",
+    "extractedInfoValue": "DELHI"
+  },
+  {
+    "extractedInfoLabel": "Mother's Name",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "JOSEPHINE MENZES"
+  },
+  {
+    "extractedInfoLabel": "Address of parents at the time of birth",
+    "extractedInfoType": "address",
+    "extractedInfoValue": "43 HANUMAN RD NEW DELHI 110001"
+  },
+  {
+    "extractedInfoLabel": "Permanent Address of parents",
+    "extractedInfoType": "address",
+    "extractedInfoValue": "43 HANUMAN RD NEW DELHI 110001"
+  },
+  {
+    "extractedInfoLabel": "Date of Registration",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "24/06/1981"
+  },
+  {
+    "extractedInfoLabel": "Registration No.",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "R054389"
+  },
+  {
+    "extractedInfoLabel": "Date of Issue",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "24/06/1981"
+  }
+]

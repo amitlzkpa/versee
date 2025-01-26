@@ -1,0 +1,62 @@
+[
+  {
+    "extractedInfoLabel": "Passport Type",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "P"
+  },
+  {
+    "extractedInfoLabel": "Surname",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "MENZES"
+  },
+  {
+    "extractedInfoLabel": "Given Name",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "WILLIAM"
+  },
+  {
+    "extractedInfoLabel": "Passport Number",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "N9876543"
+  },
+  {
+    "extractedInfoLabel": "Nationality",
+    "extractedInfoType": "nationality",
+    "extractedInfoValue": "INDIAN"
+  },
+  {
+    "extractedInfoLabel": "Country Code",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "IND"
+  },
+  {
+    "extractedInfoLabel": "Sex",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "M"
+  },
+  {
+    "extractedInfoLabel": "Date of Birth",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "19/06/1981"
+  },
+  {
+    "extractedInfoLabel": "Place of Birth",
+    "extractedInfoType": "address",
+    "extractedInfoValue": "DELHI"
+  },
+  {
+    "extractedInfoLabel": "Place of Issue",
+    "extractedInfoType": "address",
+    "extractedInfoValue": "DELHI"
+  },
+  {
+    "extractedInfoLabel": "Date of Issue",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "09/05/2021"
+  },
+  {
+    "extractedInfoLabel": "Date of Expiry",
+    "extractedInfoType": "name",
+    "extractedInfoValue": "08/05/2031"
+  }
+]
