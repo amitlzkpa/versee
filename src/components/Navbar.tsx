@@ -1,59 +1,33 @@
 import { Button, Flex, Loader } from "@mantine/core";
-import { FaInfoCircle } from "react-icons/fa";
+import { FaBars, FaInfoCircle } from "react-icons/fa";
 
-import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
+import {
+  Authenticated,
+  Unauthenticated,
+  AuthLoading,
+  useConvexAuth,
+} from "convex/react";
 import { SignInButton, UserButton } from "@clerk/clerk-react";
 
 export default function Navbar() {
+  const { isAuthenticated, isLoading } = useConvexAuth();
+
   return (
     <Flex w="100%" h="100%" justify="space-between" align="center" gap="md">
       <Flex align="center">
-        <Button component="a" href="/" variant="subtle" size="md" h={48}>
+        <Button
+          component="a"
+          href={isAuthenticated ? "/home" : "/"}
+          variant="subtle"
+          size="md"
+          h={48}
+        >
           <img
             src="/logo-512x512.png"
             alt="Versee"
             style={{ height: "2rem", margin: 8 }}
           />
           Versee
-        </Button>
-        <Button
-          component="a"
-          variant="transparent"
-          href="/home"
-          size="sm"
-          h={32}
-        >
-          <FaInfoCircle color="versee-purple" />
-        </Button>
-        <Button component="a" variant="transparent" href="/p" size="sm" h={32}>
-          <FaInfoCircle color="versee-purple" />
-        </Button>
-        <Button
-          component="a"
-          variant="transparent"
-          href="/preview"
-          size="sm"
-          h={32}
-        >
-          <FaInfoCircle color="versee-purple" />
-        </Button>
-        <Button
-          component="a"
-          variant="transparent"
-          href="/my-account"
-          size="sm"
-          h={32}
-        >
-          <FaInfoCircle color="versee-purple" />
-        </Button>
-        <Button
-          component="a"
-          variant="transparent"
-          href="/dev"
-          size="sm"
-          h={32}
-        >
-          <FaInfoCircle color="versee-purple" />
         </Button>
       </Flex>
 
@@ -69,7 +43,18 @@ export default function Navbar() {
           </SignInButton>
         </Unauthenticated>
         <Authenticated>
-          <UserButton />
+          <Flex align="center" mr="md">
+            <Button
+              component="a"
+              variant="transparent"
+              href="/my-account"
+              size="sm"
+              h={32}
+            >
+              <FaBars />
+            </Button>
+            <UserButton />
+          </Flex>
         </Authenticated>
       </Flex>
     </Flex>
