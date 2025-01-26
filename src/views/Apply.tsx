@@ -13,8 +13,10 @@ import {
   Modal,
   ScrollArea,
   SimpleGrid,
-  rem,
+  Table,
+  TextInput,
   Textarea,
+  rem,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
@@ -183,11 +185,11 @@ export default function Preview() {
             size="70%"
             opened={prjFilesModalCtr[0]}
             onClose={prjFilesModalCtr[1].close}
-            title={prjFileInModal?.titleText ?? ""}
+            title="Uploaded File"
             centered
           >
             <Flex w="100%" h="70vh" gap="md">
-              <Flex w="70%" h="100%">
+              <Flex w="60%" h="100%">
                 <embed
                   style={{
                     width: "100%",
@@ -200,20 +202,45 @@ export default function Preview() {
                 />
               </Flex>
               <Flex
-                w="30%"
+                w="40%"
                 h="100%"
                 direction="column"
                 align="stretch"
                 gap="xs"
               >
+                <Flex w="100%" direction="column" gap="sm">
+                  <TextInput
+                    variant="unstyled"
+                    w="100%"
+                    size="lg"
+                    fw="bold"
+                    defaultValue={prjFileInModal?.titleText}
+                  />
+                  <Textarea
+                    variant="unstyled"
+                    w="100%"
+                    rows={6}
+                    defaultValue={prjFileInModal?.summaryText}
+                  />
+                </Flex>
                 <Flex
                   w="100%"
                   direction="column"
                   gap="sm"
-                  style={{ flexGrow: 1 }}
+                  style={{ flexGrow: 1, overflowY: "auto" }}
                 >
-                  <Text fw="bold">Notes</Text>
-                  <Textarea w="100%" rows={6} />
+                  <Table highlightOnHover withColumnBorders>
+                    <Table.Tbody>
+                      {JSON.parse(
+                        prjFileInModal?.extractedInfoText ?? "[]"
+                      ).map((d: any, i: number) => (
+                        <Table.Tr key={i}>
+                          <Table.Td>{d.extractedInfoLabel}</Table.Td>
+                          <Table.Td>{d.extractedInfoValue}</Table.Td>
+                        </Table.Tr>
+                      ))}
+                    </Table.Tbody>
+                  </Table>
                 </Flex>
 
                 <Flex w="100%" align="center" gap="sm">
@@ -446,6 +473,7 @@ export default function Preview() {
                               <Button
                                 variant="transparent"
                                 size="xs"
+                                c="gray.6"
                                 onClick={() => {
                                   onClick_openPrjFileModal(prjFile);
                                 }}
