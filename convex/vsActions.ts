@@ -50,16 +50,15 @@ export const setupCheckingConditions = action({
     projectId: v.id("vsProjects"),
   },
   handler: async (ctx, { projectId }) => {
-    // let updatedApplicationData;
-    // const writeData = {};
-    // writeData.eligibilityCheckObjs_Status = "generating";
-    // updatedApplicationData = await ctx.runMutation(
-    //   internal.dbOps.updateApplication,
-    //   {
-    //     applicationId,
-    //     updateDataStr: JSON.stringify(writeData),
-    //   }
-    // );
+    let updateData;
+    let updatedProject;
+    const writeData = {};
+    writeData.eligibilityCheckObjs_Status = "generating";
+    updateData = JSON.stringify(writeData);
+    updatedProject = await ctx.runMutation(internal.dbOps.updateProject, {
+      projectId,
+      updateData,
+    });
 
     const schema_checkConditions = {
       description: "List of conditions to check",
@@ -93,7 +92,7 @@ export const setupCheckingConditions = action({
     });
 
     const srcDocs = await ctx.runQuery(api.dbOps.getAllSrcDocs_ForProject, {
-      projectId: projectId,
+      projectId,
     });
 
     const srcDoc = srcDocs[0];
@@ -134,15 +133,13 @@ export const setupCheckingConditions = action({
       .filter((p) => p.status === "fulfilled")
       .map((p) => p.value);
 
-    // writeData.eligibilityCheckObjs_Status = "generated";
-    // writeData.eligibilityCheckObjs_Text = JSON.stringify(eligibilityCheckObjs);
-    // updatedApplicationData = await ctx.runMutation(
-    //   internal.dbOps.updateApplication,
-    //   {
-    //     applicationId,
-    //     updateDataStr: JSON.stringify(writeData),
-    //   }
-    // );
+    writeData.eligibilityCheckObjs_Status = "generated";
+    writeData.eligibilityCheckObjs_Text = JSON.stringify(eligibilityCheckObjs);
+    updateData = JSON.stringify(writeData);
+    updatedProject = await ctx.runMutation(internal.dbOps.updateProject, {
+      projectId,
+      updateData,
+    });
   },
 });
 
