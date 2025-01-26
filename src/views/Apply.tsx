@@ -10,6 +10,7 @@ import {
   Flex,
   Text,
   Pill,
+  Modal,
   ScrollArea,
   SimpleGrid,
   rem,
@@ -121,7 +122,7 @@ export default function Preview() {
 
   // LHS PREVIEW
 
-  const [opened, { open, close }] = useDisclosure(false);
+  const lhsPaneDrawerCtr = useDisclosure(false);
 
   // ACCESS
 
@@ -141,8 +142,8 @@ export default function Preview() {
           <Drawer
             h="100%"
             size="xl"
-            opened={opened}
-            onClose={close}
+            opened={lhsPaneDrawerCtr[0]}
+            onClose={lhsPaneDrawerCtr[1].close}
             withCloseButton={false}
             title={srcDoc?.titleText}
             scrollAreaComponent={ScrollArea.Autosize}
@@ -173,7 +174,7 @@ export default function Preview() {
                 <Text fz="lg" fw="bold" style={{ flexGrow: 1 }}>
                   Eligibility List
                 </Text>
-                <Button variant="outline" onClick={open}>
+                <Button variant="outline" onClick={lhsPaneDrawerCtr[1].open}>
                   Full Details
                 </Button>
               </Flex>
