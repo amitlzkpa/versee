@@ -162,7 +162,6 @@ export default function Preview() {
                               <Text fz="md" fw="bold" style={{ flexGrow: 1 }}>
                                 {criteriaItem.title}
                               </Text>
-                              <Pill size="sm">{criteriaItem.applies_to}</Pill>
                             </Flex>
                             <Text fz="sm">{criteriaItem.description}</Text>
                           </Flex>

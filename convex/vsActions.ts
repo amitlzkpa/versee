@@ -89,13 +89,8 @@ const schema_criteria = {
         description: "2 sentence description of the criteria.",
         nullable: false,
       },
-      applies_to: {
-        type: SchemaType.STRING,
-        description: "Stipulations where this criteria applies.",
-        nullable: false,
-      },
     },
-    required: ["title", "description", "applies_to"],
+    required: ["title", "description"],
   },
 };
 

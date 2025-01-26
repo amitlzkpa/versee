@@ -354,18 +354,6 @@ export default function ProjectInit_AgreementsUploaded({
                                   />
                                 </Flex>
                                 <Flex w="100%" gap="sm" px="sm">
-                                  <Text fz="md">Applies To:</Text>
-                                  <TextInput
-                                    style={{ flexGrow: 1 }}
-                                    size="sm"
-                                    fw="bold"
-                                    defaultValue={criteriaItem.applies_to}
-                                    onChange={(e) => {
-                                      criteriaItem.applies_to = e.target.value;
-                                    }}
-                                  />
-                                </Flex>
-                                <Flex w="100%" gap="sm" px="sm">
                                   <Text fz="md">Valid Docs:</Text>
                                   <MultiSelect
                                     style={{ flexGrow: 1 }}

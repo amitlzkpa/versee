@@ -192,9 +192,6 @@ export default function Preview() {
                                 <Text fz="md" fw="bold">
                                   {criteriaItem.title}
                                 </Text>
-                                <Text fz="xs" fw="thin">
-                                  {criteriaItem.applies_to}
-                                </Text>
                               </Flex>
                             </Accordion.Control>
                             <Accordion.Panel>
