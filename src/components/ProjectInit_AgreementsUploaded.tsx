@@ -107,6 +107,9 @@ export default function ProjectInit_AgreementsUploaded({
       projectId,
       updateData: updateData_project,
     });
+    // await cvxUtils.performAction_setupCheckingConditions({
+    //   projectId
+    // });
   };
 
   return (
@@ -165,6 +168,17 @@ export default function ProjectInit_AgreementsUploaded({
               </Button>
             </Flex>
             <Flex w="50%" h="100%" direction="column" align="stretch" gap="xs">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  cvxUtils.performAction_setupCheckingConditions({
+                    projectId,
+                  });
+                }}
+              >
+                Prepare
+              </Button>
+
               <Button
                 w="100%"
                 size="lg"

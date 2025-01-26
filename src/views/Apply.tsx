@@ -258,16 +258,6 @@ export default function Preview() {
               >
                 Analyse
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  cvxUtils.performAction_prepareApplication({
-                    applicationId: currApplication._id,
-                  });
-                }}
-              >
-                Prepare
-              </Button>
             </Flex>
           </Flex>
 
