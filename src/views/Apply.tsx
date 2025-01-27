@@ -200,13 +200,13 @@ export default function Preview() {
 
   const [msgHistory, setMessageHistory] = useState<any[]>([]);
 
-  useEffect(() => {
-    const content = Array(40)
-      .fill(0)
-      .map((_, index) => index);
-    console.log(content);
-    setMessageHistory(content);
-  }, []);
+  // useEffect(() => {
+  //   const content = Array(40)
+  //     .fill(0)
+  //     .map((_, index) => index);
+  //   console.log(content);
+  //   setMessageHistory(content);
+  // }, []);
 
   return (
     <Flex w="100%" h="100%" gap="sm">
@@ -674,7 +674,18 @@ export default function Preview() {
                   }}
                 >
                   {msgHistory.length < 1 ? (
-                    <Flex>No messages</Flex>
+                    <Flex
+                      w="100%"
+                      h="100%"
+                      justify="center"
+                      align="center"
+                      style={{ textAlign: "center" }}
+                    >
+                      <Text fs="italic" size="sm">
+                        Have questions? Ask away, and we’ll help you find
+                        answers!
+                      </Text>
+                    </Flex>
                   ) : (
                     <Flex w="100%" direction="column" gap="xs">
                       {msgHistory.map((msg, idx) => (

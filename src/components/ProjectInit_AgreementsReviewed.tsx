@@ -114,7 +114,9 @@ export default function ProjectInit_AgreementsReviewed({
                       gap="sm"
                       style={{ textAlign: "center" }}
                     >
-                      <Text>No applications received yet</Text>
+                      <Text fs="italic" size="sm">
+                        No applications received yet
+                      </Text>
                     </Flex>
                   ) : (
                     (applicationsReceived ?? []).map(
