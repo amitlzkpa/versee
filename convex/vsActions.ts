@@ -1245,6 +1245,12 @@ export const analysePrjFile = action({
       prjFileId,
       updateDataStr: JSON.stringify(writeData),
     });
+
+    (async () => {
+      ctx.scheduler.runAfter(0, api.vsActions.analyseApplication, {
+        applicationId: assocApplicationId,
+      });
+    })();
   },
 });
 
