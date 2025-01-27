@@ -196,6 +196,18 @@ export default function Preview() {
     setCurrUserHasAccess(currUserEmail === currApplication.applicant.email);
   }, [currApplication, storedUserData?.user?.email]);
 
+  // CHAT
+
+  const [msgHistory, setMessageHistory] = useState<any[]>([]);
+
+  useEffect(() => {
+    const content = Array(40)
+      .fill(0)
+      .map((_, index) => index);
+    console.log(content);
+    setMessageHistory(content);
+  }, []);
+
   return (
     <Flex w="100%" h="100%" gap="sm">
       {currUserHasAccess ? (
@@ -517,11 +529,16 @@ export default function Preview() {
               direction="column"
               align="stretch"
               gap="md"
-              style={{ overflowY: "auto", textAlign: "center" }}
+              style={{
+                overflowY: "clip",
+                textAlign: "center",
+              }}
             >
+              {/* Top row */}
               <Paper
                 w="100%"
                 h={rem(340)}
+                mih={rem(340)}
                 p="md"
                 bg="gray.1"
                 style={{ overflowX: "auto", position: "relative" }}
@@ -617,6 +634,7 @@ export default function Preview() {
                 />
               </Paper>
 
+              {/* Chat row */}
               <Flex
                 w="100%"
                 h="100%"
@@ -646,7 +664,6 @@ export default function Preview() {
                 </Flex>
                 <Flex
                   w="50%"
-                  h="100%"
                   direction="column"
                   align="stretch"
                   gap="sm"
@@ -655,7 +672,19 @@ export default function Preview() {
                     flexGrow: 1,
                     overflowY: "auto",
                   }}
-                ></Flex>
+                >
+                  {msgHistory.length < 1 ? (
+                    <Flex>No messages</Flex>
+                  ) : (
+                    <Flex w="100%" direction="column" gap="xs">
+                      {msgHistory.map((msg, idx) => (
+                        <Flex w="80%" key={idx}>
+                          {msg}
+                        </Flex>
+                      ))}
+                    </Flex>
+                  )}
+                </Flex>
               </Flex>
             </Flex>
           </Flex>
