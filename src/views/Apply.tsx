@@ -17,6 +17,7 @@ import {
   TextInput,
   Textarea,
   rem,
+  Loader,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
@@ -49,6 +50,15 @@ export default function Preview() {
       ? { applicationId: applicationId as Id<"vsApplications"> }
       : "skip"
   );
+
+  const [eligibilityCheckResultJSON, setEligibilityCheckResultJSON] = useState(
+    []
+  );
+
+  useEffect(() => {
+    const ecrJSON = JSON.parse(currApplication?.eligibilityCheckResult ?? "[]");
+    setEligibilityCheckResultJSON(ecrJSON);
+  }, [currApplication]);
 
   // PROJECT
 
@@ -407,7 +417,37 @@ export default function Preview() {
               gap="md"
               style={{ overflowY: "auto", textAlign: "center" }}
             >
-              <Text>Docs</Text>
+              <Paper
+                w="100%"
+                h={rem(340)}
+                p="md"
+                bg="gray.1"
+                style={{ overflowX: "auto" }}
+              >
+                <Flex
+                  w="100%"
+                  h="100%"
+                  align="center"
+                  justify="center"
+                  gap="sm"
+                >
+                  {currApplication?.eligibilityCheckResultStatus ===
+                  "generated" ? (
+                    <>
+                      {eligibilityCheckResultJSON.map(
+                        (cr: any, crIdx: number) => {
+                          <Flex>
+                            {crIdx}. {cr.isEligible}
+                          </Flex>;
+                        }
+                      )}
+                    </>
+                  ) : (
+                    <Loader type="oval" size="lg" />
+                  )}
+                </Flex>
+              </Paper>
+
               <Button
                 variant="outline"
                 onClick={() => {
