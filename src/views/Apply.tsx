@@ -59,9 +59,17 @@ export default function Preview() {
 
   useEffect(() => {
     const ecrJSON = JSON.parse(currApplication?.eligibilityCheckResult ?? "[]");
-    console.log(ecrJSON);
     setEligibilityCheckResultJSON(ecrJSON);
   }, [currApplication]);
+
+  const [canApply, setCanApply] = useState(false);
+
+  useEffect(() => {
+    const allChecks = eligibilityCheckResultJSON.every(
+      (e: any) => e.isEligible
+    );
+    setCanApply(allChecks);
+  }, [eligibilityCheckResultJSON]);
 
   // PROJECT
 
@@ -515,11 +523,20 @@ export default function Preview() {
           </Flex>
 
           <Flex w="30%" direction="column" align="center" gap="sm">
-            <Flex w="100%" direction="column" align="stretch">
-              <FileUploader
-                projectId={currProject?._id}
-                onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
-              />
+            <Flex w="100%" gap="sm">
+              <Flex w="60%">
+                <FileUploader
+                  projectId={currProject?._id}
+                  onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
+                />
+              </Flex>
+              <Flex w="40%">
+                <Button variant="filled" w="100%" h="100%" disabled={!canApply}>
+                  <Text fz="lg" fw="bold">
+                    APPLY
+                  </Text>
+                </Button>
+              </Flex>
             </Flex>
 
             <Divider w="100%" />
