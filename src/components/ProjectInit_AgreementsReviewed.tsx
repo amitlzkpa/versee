@@ -24,14 +24,17 @@ export default function ProjectInit_AgreementsReviewed({
 }: any) {
   const cvxUtils = useCvxUtils();
 
-  const [signersList, setSignersList] = useState<any>([]);
-
   const applicationsReceived = useQuery(
     api.dbOps.getApplications_ByProjectId,
     projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
   );
 
   const onClick_completeAddingSigners = async () => {
+    const signersList = (applicationsReceived ?? []).map((appl: any) => ({
+      signerName: appl._id,
+      signerEmail: appl?.applicant?.email,
+    }));
+
     const updateData = JSON.stringify({
       initializationStatus: "signers_assigned",
       signers: signersList,
