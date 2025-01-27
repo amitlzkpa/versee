@@ -1334,7 +1334,7 @@ export const analyseApplication = action({
     // const eligibilityObjs = [ppo[0]];
 
     const ps = eligibilityObjs.map(
-      (eo: any) =>
+      (eo: any, eoIdx: number) =>
         new Promise((resolve, reject) => {
           const checkSteps = eo.checkConditions
             .map((cc) => `- ${cc.description}`)
@@ -1362,7 +1362,10 @@ export const analyseApplication = action({
 
           checkEligibility(promptText)
             .then((checkResult) => {
-              resolve(checkResult);
+              resolve({
+                ...checkResult,
+                forEligibityObjIdx: eoIdx,
+              });
             })
             .catch((err) => {
               console.log(err);
