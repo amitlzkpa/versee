@@ -26,6 +26,8 @@ import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
+import markdownit from "markdown-it";
+
 import {
   FaExclamationCircle,
   FaRedo,
@@ -36,8 +38,11 @@ import {
 } from "react-icons/fa";
 
 import FileUploader from "../components/FileUploader";
+import MessageCard from "../components/MessageCard";
 
 import useCvxUtils from "../hooks/cvxUtils";
+
+const md = markdownit();
 
 export default function Preview() {
   const storedUserData = useQuery(api.dbOps.getUserData_ForCurrUser);
@@ -198,15 +203,102 @@ export default function Preview() {
 
   // CHAT
 
-  const [msgHistory, setMessageHistory] = useState<any[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  // useEffect(() => {
-  //   const content = Array(40)
-  //     .fill(0)
-  //     .map((_, index) => index);
-  //   console.log(content);
-  //   setMessageHistory(content);
-  // }, []);
+  const handleInputChange = (e: any) => {
+    setInput(e.target.value);
+  };
+
+  const formatMessage = (content: any) => {
+    return {
+      author: "User",
+      rawContent: content,
+      timestamp: new Date().toISOString(),
+    };
+  };
+
+  const handleMessageReceived = (message: any) => {
+    const markdownContent = md.render(message);
+    const formattedMessage = {
+      author: "Bot",
+      rawContent: message,
+      timestamp: new Date().toISOString(),
+      markdownContent,
+    };
+    setMessages((prevMessages) => [formattedMessage, ...prevMessages]);
+  };
+
+  const handleSendMessage = async () => {
+    if (input.trim() !== "") {
+      const newMessage = formatMessage(input);
+      setMessages((prevMessages) => [newMessage, ...prevMessages]);
+      setInput("");
+      setIsLoading(true);
+      try {
+        // Flip the conversation history so far and add the new message to the end
+        // const msgsToSend = [...[...messages].reverse(), newMessage];
+        // const response = await axios.post(
+        //   `${process.env.REACT_APP_BACKEND_BASE_URL}/kranipel/gpt`,
+        //   {
+        //     messages: msgsToSend,
+        //     userDetails: userLoginCtx.state.userLoginObject,
+        //   }
+        // );
+        // handleMessageReceived(response.data);
+      } catch (error) {
+        console.error("Error sending message:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleClearMessages = () => {
+    setMessages([]);
+  };
+
+  const onClick_send = () => {
+    setMessages([
+      {
+        author: "User",
+        rawContent:
+          "Hi, can you tell me about the locations available for the affordable housing lottery project?",
+        timestamp: "2025-01-27T14:00:00.000Z",
+      },
+      {
+        author: "Bot",
+        rawContent:
+          "The locations available for the affordable housing lottery project are Taloja, Kharghar, and Vashi.",
+        timestamp: "2025-01-27T14:00:10.000Z",
+        markdownContent:
+          "The locations available for the affordable housing lottery project are <strong>Taloja</strong>, <strong>Kharghar</strong>, and <strong>Vashi</strong>.",
+      },
+      {
+        author: "User",
+        rawContent: "Can you provide more details about these locations?",
+        timestamp: "2025-01-27T14:01:00.000Z",
+      },
+      {
+        author: "Bot",
+        rawContent:
+          "Sure! Taloja is known for its upcoming infrastructure, Kharghar offers good connectivity and amenities, and Vashi is a developed area with excellent transport links.",
+        timestamp: "2025-01-27T14:01:15.000Z",
+        markdownContent:
+          "Sure! <strong>Taloja</strong> is known for its upcoming infrastructure, <strong>Kharghar</strong> offers good connectivity and amenities, and <strong>Vashi</strong> is a developed area with excellent transport links.",
+      },
+      {
+        author: "User",
+        rawContent: "Thanks! Can you help me apply for the project in Vashi?",
+        timestamp: "2025-01-27T14:02:00.000Z",
+      },
+    ]);
+  };
+
+  useEffect(() => {
+    // onClick_send();
+  }, []);
 
   return (
     <Flex w="100%" h="100%" gap="sm">
@@ -656,7 +748,12 @@ export default function Preview() {
                       }}
                     >
                       <div style={{ flexGrow: 1 }}></div>
-                      <Button color="gray.6" variant="outline" size="md">
+                      <Button
+                        color="gray.6"
+                        variant="outline"
+                        size="md"
+                        onClick={onClick_send}
+                      >
                         Send
                       </Button>
                     </Flex>
@@ -664,6 +761,7 @@ export default function Preview() {
                 </Flex>
                 <Flex
                   w="50%"
+                  h="100%"
                   direction="column"
                   align="stretch"
                   gap="sm"
@@ -672,7 +770,7 @@ export default function Preview() {
                     overflowY: "auto",
                   }}
                 >
-                  {msgHistory.length < 1 ? (
+                  {messages.length < 1 ? (
                     <Flex
                       w="100%"
                       h="100%"
@@ -686,11 +784,15 @@ export default function Preview() {
                       </Text>
                     </Flex>
                   ) : (
-                    <Flex w="100%" direction="column" gap="xs">
-                      {msgHistory.map((msg, idx) => (
-                        <Flex w="80%" key={idx}>
-                          {msg}
-                        </Flex>
+                    <Flex
+                      w="100%"
+                      h="100%"
+                      direction="column"
+                      gap="xs"
+                      style={{ overflowY: "auto" }}
+                    >
+                      {messages.map((message, index) => (
+                        <MessageCard key={index} message={message} />
                       ))}
                     </Flex>
                   )}
