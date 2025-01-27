@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   Accordion,
   Button,
@@ -12,12 +12,27 @@ import {
 } from "@mantine/core";
 import { FaAddressBook } from "react-icons/fa";
 
+import QRCodeStyling from "qr-code-styling";
+
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
 import useCvxUtils from "../hooks/cvxUtils";
 import { Link } from "react-router-dom";
+
+const qrCode = new QRCodeStyling({
+  width: 300,
+  height: 300,
+  dotsOptions: {
+    color: "#5f30d8",
+    type: "rounded",
+  },
+  imageOptions: {
+    crossOrigin: "anonymous",
+    margin: 20,
+  },
+});
 
 export default function ProjectInit_AgreementsReviewed({
   projectId = null,
@@ -43,6 +58,20 @@ export default function ProjectInit_AgreementsReviewed({
     await cvxUtils.performAction_updateProject({ projectId, updateData });
   };
 
+  // QR CODE
+
+  const ref = useRef<any>(null);
+
+  useEffect(() => {
+    qrCode.append(ref?.current);
+  }, []);
+
+  useEffect(() => {
+    qrCode.update({
+      data: `${window.location.origin}/preview/${projectId}`,
+    });
+  }, [projectId]);
+
   return (
     <>
       <Flex
@@ -53,6 +82,8 @@ export default function ProjectInit_AgreementsReviewed({
         gap="sm"
         py="lg"
       >
+        <div ref={ref} />
+
         <Card
           w="100%"
           h="100%"
