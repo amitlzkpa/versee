@@ -112,12 +112,12 @@ export default function Project() {
             </Stepper.Step>
             <Stepper.Step
               label="Third step"
-              description="Add signers"
+              description="Invite applicants"
               allowStepSelect={shouldAllowSelectStep(2)}
             >
               <GuideInfo
                 msgHead="Time to bring others on board!"
-                msgDesc="Add your signers to start the signing process."
+                msgDesc="Distribute the offer and invite them to apply."
               />
             </Stepper.Step>
             <Stepper.Step
