@@ -1359,7 +1359,7 @@ export const analyseApplication = action({
             .join("\n");
 
           const promptText = [
-            "Check if the applicant meets this criteria. Criteria and applicant details are given below. If there are specific document types listed as valid docs be strict about checking the associated information only in the relevant document type. Based on that respond with a decision if the applicant is eligible or not. Also include a reason for the decision.",
+            "Check if the applicant meets this criteria. Criteria and applicant details are given below. If there are specific document types listed as valid docs be strict about checking the associated information only in the relevant document type. If there are no documents uploaded for a certain condition assume it should be marked as ineligible. Based on that respond with a decision if the applicant is eligible or not. Also include a reason for the decision.",
             "",
             "",
             "## Criteria Details",
