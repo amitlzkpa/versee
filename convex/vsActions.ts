@@ -201,7 +201,7 @@ const soModel_extractedInfo = genAI.getGenerativeModel({
 });
 
 const soModel_checkEligibility = genAI.getGenerativeModel({
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash",
   generationConfig: {
     responseMimeType: "application/json",
     responseSchema: schema_checkEligibility,
@@ -1369,9 +1369,9 @@ export const analyseApplication = action({
           ].join("\n");
 
           checkEligibility(promptText)
-            .then((checkResult) => {
+            .then((checkResultStr) => {
               resolve({
-                ...checkResult,
+                ...JSON.parse(checkResultStr),
                 forEligibityObjIdx: eoIdx,
               });
             })
