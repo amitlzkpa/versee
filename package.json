@@ -23,6 +23,7 @@
     "@mantine/nprogress": "^7.15.2",
     "@mantine/spotlight": "^7.15.2",
     "@types/docusign-esign": "^5.19.7",
+    "@types/markdown-it": "^14.1.2",
     "convex": "^1.17.4",
     "dayjs": "^1.11.13",
     "docusign-esign": "^8.0.1",
