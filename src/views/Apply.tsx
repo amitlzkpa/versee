@@ -65,12 +65,14 @@ export default function Preview() {
   const [canApply, setCanApply] = useState(false);
 
   useEffect(() => {
+    if (currApplication?.initializationStatus === "complete") {
+      setCanApply(false);
+      return;
+    }
     const allChecks = eligibilityCheckResultJSON.every(
       (e: any) => e.isEligible
     );
-    setCanApply(
-      allChecks && currApplication?.initializationStatus !== "complete"
-    );
+    setCanApply(allChecks);
     // setCanApply(true);
   }, [eligibilityCheckResultJSON, currApplication]);
 
