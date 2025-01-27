@@ -138,6 +138,24 @@ const schema_extractedInfo = {
   },
 };
 
+const schema_checkEligibility = {
+  type: SchemaType.OBJECT,
+  properties: {
+    isEligible: {
+      type: SchemaType.BOOLEAN,
+      description:
+        "Value which represents if the applicant is eligible for the criteria",
+      nullable: false,
+    },
+    reason: {
+      type: SchemaType.STRING,
+      description: "Reason for arriving at the decision.",
+      nullable: false,
+    },
+  },
+  required: ["isEligible", "reason"],
+};
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const txtModel_texts = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -179,6 +197,14 @@ const soModel_extractedInfo = genAI.getGenerativeModel({
   generationConfig: {
     responseMimeType: "application/json",
     responseSchema: schema_extractedInfo,
+  },
+});
+
+const soModel_checkEligibility = genAI.getGenerativeModel({
+  model: "gemini-1.5-pro",
+  generationConfig: {
+    responseMimeType: "application/json",
+    responseSchema: schema_checkEligibility,
   },
 });
 
@@ -1196,6 +1222,12 @@ export const analysePrjFile = action({
 
 // APPLICATIONS
 
+const checkEligibility = async (promptText) => {
+  const result = await soModel_checkEligibility.generateContent(promptText);
+  const checkResult = result.response.text();
+  return checkResult;
+};
+
 export const createNewApplication = action({
   args: {
     projectId: v.id("vsProjects"),
@@ -1248,19 +1280,15 @@ export const analyseApplication = action({
       }
     );
 
-    // list all extractedInfo
-    // loop through eligibilityCriteria
-    // check if information in extractedInfo will satisfy condition
-
-    const eligibilityObjs = JSON.parse(project.eligibilityCheckObjs_Text);
     const allExtractedInfo = prjFiles
-      .map((pf) => {
+      .map((pf, docIdx) => {
         const infoObjs = JSON.parse(pf.extractedInfoText);
         const extractedInfoList = infoObjs
           .map((io) => `- ${io.extractedInfoLabel}: ${io.extractedInfoValue}`)
           .join("\n");
         const textLines = [
           "",
+          `${docIdx + 1}.`,
           `Document Name: ${pf.titleText}`,
           `Document Type: ${pf.classifyDocText}`,
           `Verification Status: ${pf.verificationStatus}`,
@@ -1268,7 +1296,6 @@ export const analyseApplication = action({
           `Summary`,
           "",
           `${pf.summaryText}`,
-          "",
           `Extracted Information`,
           "",
           `${extractedInfoList}`,
@@ -1276,10 +1303,53 @@ export const analyseApplication = action({
         ].join("\n");
         return textLines;
       })
-      .join("\n\n");
+      .join("\n");
 
-    console.log(eligibilityObjs);
-    console.log(allExtractedInfo);
+    const eligibilityObjs = JSON.parse(project.eligibilityCheckObjs_Text);
+    // const ppo = JSON.parse(project.eligibilityCheckObjs_Text);
+    // const eligibilityObjs = [ppo[0]];
+
+    const ps = eligibilityObjs.map(
+      (eo: any) =>
+        new Promise((resolve, reject) => {
+          const checkSteps = eo.checkConditions
+            .map((cc) => `- ${cc.description}`)
+            .join("\n");
+
+          const promptText = [
+            "Check if the applicant meets this criteria. Criteria and applicant details are given below. Based on that give a yes or no reply if the applicant is eligible or not. Also include a reason for the decision.",
+            "",
+            "",
+            "## Criteria Details",
+            "",
+            `Criteria Name: ${eo.eligibilityCritera.title}`,
+            `Criteria Description: ${eo.eligibilityCritera.description}`,
+            `Documents To Refer: ${eo.eligibilityCritera.valid_docs.join(",")}`,
+            "",
+            "## How to Check",
+            "",
+            checkSteps,
+            "",
+            "## Applicant Details",
+            "",
+            allExtractedInfo,
+            "",
+          ].join("\n");
+
+          checkEligibility(promptText)
+            .then((checkResult) => {
+              resolve(checkResult);
+            })
+            .catch((err) => {
+              console.log(err);
+              reject(err);
+            });
+        })
+    );
+
+    const checkResults = (await Promise.allSettled(ps))
+      .filter((p) => p.status === "fulfilled")
+      .map((p) => p.value);
 
     // console.log(application);
     // console.log(project);
