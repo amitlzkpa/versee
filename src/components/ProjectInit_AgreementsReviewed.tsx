@@ -99,6 +99,78 @@ export default function ProjectInit_AgreementsReviewed({
           </Link>
         </Card>
 
+        <Accordion w="100%">
+          <Accordion.Item key="first" value="first">
+            <Accordion.Control>
+              <Flex w="100%" direction="column" align="center" gap="sm">
+                <Text c="gray.5">Applications Received</Text>
+              </Flex>
+            </Accordion.Control>
+            <Accordion.Panel>
+              <Flex w="100%" direction="column" align="center" gap="md">
+                <Flex
+                  w="100%"
+                  h="100%"
+                  mih="200"
+                  mah="400"
+                  direction="column"
+                  align="center"
+                  gap="md"
+                  style={{ overflowY: "auto" }}
+                >
+                  {signersList.length < 1 ? (
+                    <Flex
+                      w="100%"
+                      h="100%"
+                      maw="400"
+                      direction="column"
+                      justify="center"
+                      align="center"
+                      gap="sm"
+                      style={{ textAlign: "center" }}
+                    >
+                      <Text>No signers added yet</Text>
+                    </Flex>
+                  ) : (
+                    signersList.map((signerObj: any, idx: number) => {
+                      return (
+                        <Flex
+                          key={signerObj.signerEmail}
+                          w="100%"
+                          direction="row"
+                          align="center"
+                          gap="md"
+                        >
+                          <Flex h="100%" p="md" align="center" justify="center">
+                            <FaTrashAlt
+                              color="#ababab"
+                              onClick={() => {
+                                handleDeleteSigner(signerObj);
+                              }}
+                              style={{ cursor: "pointer" }}
+                            />
+                          </Flex>
+                          <Flex
+                            w="100%"
+                            h="100%"
+                            direction="column"
+                            justify="center"
+                          >
+                            <Text fw="bold" lh="0.8">
+                              {signerObj.signerName}
+                            </Text>
+                            <Text fz="sm">{signerObj.signerEmail}</Text>
+                          </Flex>
+                        </Flex>
+                      );
+                    })
+                  )}
+                </Flex>
+              </Flex>
+            </Accordion.Panel>
+          </Accordion.Item>
+        </Accordion>
+
         <Button
           w="100%"
           size="lg"
