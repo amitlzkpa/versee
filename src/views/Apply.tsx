@@ -636,20 +636,31 @@ export default function Preview() {
 
               {/* Chat row */}
               <Flex w="100%" h="100%" gap="sm" style={{ flexGrow: 1 }}>
-                <Flex w="50%" direction="column" align="stretch" gap="sm">
-                  <Textarea
-                    variant="filled"
-                    w="100%"
-                    rows={8}
-                    placeholder="Ask questions..."
-                  />
+                <Flex w="50%" direction="column" align="stretch" gap="xs">
+                  <div style={{ position: "relative" }}>
+                    <Textarea
+                      variant="filled"
+                      w="100%"
+                      rows={8}
+                      placeholder="Type your message here..."
+                    />
 
-                  <Flex w="100%" align="center" gap="sm">
-                    <div style={{ flexGrow: 1 }}></div>
-                    <Button variant="outline" size="md">
-                      Send
-                    </Button>
-                  </Flex>
+                    <Flex
+                      w="100%"
+                      align="center"
+                      gap="sm"
+                      style={{
+                        position: "absolute",
+                        bottom: rem(10),
+                        right: rem(10),
+                      }}
+                    >
+                      <div style={{ flexGrow: 1 }}></div>
+                      <Button color="gray.6" variant="outline" size="md">
+                        Send
+                      </Button>
+                    </Flex>
+                  </div>
                 </Flex>
                 <Flex
                   w="50%"
