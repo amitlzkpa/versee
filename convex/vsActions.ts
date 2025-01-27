@@ -1268,12 +1268,12 @@ export const createNewApplication = action({
 export const updateApplication = action({
   args: {
     applicationId: v.id("vsApplications"),
-    updateData: v.string(),
+    updateDataStr: v.string(),
   },
-  handler: async (ctx, { applicationId, updateData }) => {
+  handler: async (ctx, { applicationId, updateDataStr }) => {
     const updatedApplication: any = await ctx.runMutation(
       internal.dbOps.updateApplication,
-      { applicationId, updateData }
+      { applicationId, updateDataStr }
     );
     return updatedApplication;
   },
@@ -1288,6 +1288,14 @@ export const analyseApplication = action({
       api.dbOps.getApplication_ByApplicationId,
       { applicationId }
     );
+
+    const writeData = {};
+
+    writeData.eligibilityCheckResultStatus = "generating";
+    await ctx.runMutation(internal.dbOps.updateApplication, {
+      applicationId,
+      updateDataStr: JSON.stringify(writeData),
+    });
 
     const project = await ctx.runQuery(api.dbOps.getProject_ByProjectId, {
       projectId: application.projectId,
@@ -1374,13 +1382,17 @@ export const analyseApplication = action({
         })
     );
 
-    const checkResults = (await Promise.allSettled(ps))
+    const eligibilityCheckResult = (await Promise.allSettled(ps))
       .filter((p) => p.status === "fulfilled")
       .map((p) => p.value);
 
-    // console.log(application);
-    // console.log(project);
-    // console.log(srcDocs);
-    // console.log(prjFiles);
+    console.log(eligibilityCheckResult);
+
+    writeData.eligibilityCheckResult = JSON.stringify(eligibilityCheckResult);
+    writeData.eligibilityCheckResultStatus = "generated";
+    await ctx.runMutation(internal.dbOps.updateApplication, {
+      applicationId,
+      updateDataStr: JSON.stringify(writeData),
+    });
   },
 });
