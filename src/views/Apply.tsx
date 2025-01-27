@@ -69,7 +69,24 @@ export default function Preview() {
       (e: any) => e.isEligible
     );
     setCanApply(allChecks);
+    // setCanApply(true);
   }, [eligibilityCheckResultJSON]);
+
+  // APPLY MODAL
+
+  const confirmApplicationModalCtr = useDisclosure(false);
+
+  const onClick_openConfirmApplicationModal = async () => {
+    confirmApplicationModalCtr[1].open();
+  };
+
+  const onClick_submitApplication = async () => {
+    cvxUtils.performAction_updateApplication({
+      applicationId: currApplication._id,
+      updateDataStr: JSON.stringify({ initializationStatus: "comlpete" }),
+    });
+    confirmApplicationModalCtr[1].close();
+  };
 
   // PROJECT
 
@@ -344,6 +361,76 @@ export default function Preview() {
             </Flex>
           </Modal>
 
+          <Modal
+            size="50%"
+            opened={confirmApplicationModalCtr[0]}
+            onClose={confirmApplicationModalCtr[1].close}
+            centered
+            withCloseButton={false}
+          >
+            <Flex w="100%" h="50vh" direction="column" align="stretch">
+              <Flex w="100%" justify="center">
+                <Text>Your Application</Text>
+              </Flex>
+              <Divider w="100%" />
+              <Flex
+                w="100%"
+                h={rem(180)}
+                direction="column"
+                justify="center"
+                align="stretch"
+              >
+                <Text fz="xl" fw="bold">
+                  {storedUserData?.docusignUserInfo?.fullName ??
+                    storedUserData?.user?.name ??
+                    "Jane Doe"}
+                </Text>
+                <Text fz="md" fw="thin" lh="1.1">
+                  {storedUserData?.user?.email}
+                </Text>
+              </Flex>
+              <Divider w="100%" />
+              <Flex
+                w="100%"
+                h="100%"
+                my="sm"
+                pt="md"
+                direction="column"
+                align="stretch"
+                style={{ flexGrow: 1, overflowY: "auto" }}
+              >
+                <Text fz="sm">Attached Files</Text>
+                <Flex w="100%" direction="column">
+                  {(currApplicationPrjFiles ?? []).map((prjFile: any) => {
+                    return (
+                      <Flex
+                        key={prjFile._id}
+                        bottom="1"
+                        align="center"
+                        gap="sm"
+                      >
+                        <Text fw="bold">{prjFile.titleText}</Text>
+                      </Flex>
+                    );
+                  })}
+                </Flex>
+              </Flex>
+            </Flex>
+            <Flex w="100%" direction="column" justify="center" align="center">
+              <Button w="100%" size="lg" onClick={onClick_submitApplication}>
+                <Text fz="lg" fw="bold">
+                  Submit
+                </Text>
+              </Button>
+              <Button
+                variant="transparent"
+                onClick={confirmApplicationModalCtr[1].close}
+              >
+                Cancel
+              </Button>
+            </Flex>
+          </Modal>
+
           <Flex w="30%" direction="column" align="stretch" gap="sm">
             <Flex
               w="100%"
@@ -513,7 +600,6 @@ export default function Preview() {
                     top: 15,
                     right: 15,
                     position: "absolute",
-                    zIndex: 999,
                     width: rem(16),
                     height: rem(16),
                     color: "var(--mantine-color-gray-7)",
@@ -538,7 +624,13 @@ export default function Preview() {
                 />
               </Flex>
               <Flex w="40%">
-                <Button variant="filled" w="100%" h="100%" disabled={!canApply}>
+                <Button
+                  variant="filled"
+                  w="100%"
+                  h="100%"
+                  disabled={!canApply}
+                  onClick={onClick_openConfirmApplicationModal}
+                >
                   <Text fz="lg" fw="bold">
                     APPLY
                   </Text>
