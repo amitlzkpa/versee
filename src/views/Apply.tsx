@@ -15,9 +15,10 @@ import {
   SimpleGrid,
   Table,
   TextInput,
+  HoverCard,
   Textarea,
-  rem,
   Loader,
+  rem,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
@@ -30,6 +31,8 @@ import {
   FaRedo,
   FaTrashAlt,
   FaCheckCircle,
+  FaRegWindowClose,
+  FaClipboardCheck,
 } from "react-icons/fa";
 
 import FileUploader from "../components/FileUploader";
@@ -51,12 +54,12 @@ export default function Preview() {
       : "skip"
   );
 
-  const [eligibilityCheckResultJSON, setEligibilityCheckResultJSON] = useState(
-    []
-  );
+  const [eligibilityCheckResultJSON, setEligibilityCheckResultJSON] =
+    useState<any>([]);
 
   useEffect(() => {
     const ecrJSON = JSON.parse(currApplication?.eligibilityCheckResult ?? "[]");
+    console.log(ecrJSON);
     setEligibilityCheckResultJSON(ecrJSON);
   }, [currApplication]);
 
@@ -82,7 +85,7 @@ export default function Preview() {
     setSrcDoc(docOne);
   }, [curProjectSrcDocs]);
 
-  const [offeringsJSON, setOfferingsJSON] = useState([]);
+  const [offeringsJSON, setOfferingsJSON] = useState<any>([]);
 
   useEffect(() => {
     if ((curProjectSrcDocs ?? []).length < 1) return;
@@ -91,7 +94,7 @@ export default function Preview() {
     setOfferingsJSON(JSON.parse(docOne.offerings_Text));
   }, [curProjectSrcDocs]);
 
-  const [criteriaJSON, setCriteriaJSON] = useState([]);
+  const [criteriaJSON, setCriteriaJSON] = useState<any>([]);
 
   useEffect(() => {
     if ((curProjectSrcDocs ?? []).length < 1) return;
@@ -428,18 +431,68 @@ export default function Preview() {
                   w="100%"
                   h="100%"
                   align="center"
-                  justify="center"
+                  justify="space-around"
                   gap="sm"
                 >
                   {currApplication?.eligibilityCheckResultStatus ===
                   "generated" ? (
                     <>
                       {eligibilityCheckResultJSON.map(
-                        (cr: any, crIdx: number) => {
-                          <Flex>
-                            {crIdx}. {cr.isEligible}
-                          </Flex>;
-                        }
+                        (cr: any, crIdx: number) => (
+                          <Flex
+                            key={crIdx}
+                            w={rem(240)}
+                            h="100%"
+                            direction="column"
+                            align="center"
+                            justify="center"
+                            gap="md"
+                          >
+                            <Text fz="sm" fw="bold">
+                              {criteriaJSON[cr.forEligibityObjIdx]?.title}
+                            </Text>
+
+                            {cr.isEligible ? (
+                              <HoverCard width={280} shadow="md">
+                                <HoverCard.Target>
+                                  <Flex>
+                                    <FaClipboardCheck
+                                      style={{
+                                        width: rem(32),
+                                        height: rem(32),
+                                        color: "var(--mantine-color-gray-5)",
+                                      }}
+                                    />
+                                  </Flex>
+                                </HoverCard.Target>
+                                <HoverCard.Dropdown>
+                                  <Text size="sm" lh="1.1" fw="thin">
+                                    {cr.reason}
+                                  </Text>
+                                </HoverCard.Dropdown>
+                              </HoverCard>
+                            ) : (
+                              <HoverCard width={280} shadow="md">
+                                <HoverCard.Target>
+                                  <Flex>
+                                    <FaRegWindowClose
+                                      style={{
+                                        width: rem(32),
+                                        height: rem(32),
+                                        color: "var(--mantine-color-gray-5)",
+                                      }}
+                                    />
+                                  </Flex>
+                                </HoverCard.Target>
+                                <HoverCard.Dropdown>
+                                  <Text size="sm" lh="1.1" fw="thin">
+                                    {cr.reason}
+                                  </Text>
+                                </HoverCard.Dropdown>
+                              </HoverCard>
+                            )}
+                          </Flex>
+                        )
                       )}
                     </>
                   ) : (
