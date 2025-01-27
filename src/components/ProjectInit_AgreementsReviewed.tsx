@@ -82,14 +82,29 @@ export default function ProjectInit_AgreementsReviewed({
         gap="sm"
         py="lg"
       >
-        <div ref={ref} />
-
-        <Card
-          w="100%"
-          h="100%"
+        <Flex
+          direction="column"
+          justify="center"
+          align="center"
           c="versee-purple"
+          pt="sm"
           variant="outline"
-          style={{ borderStyle: "dashed" }}
+          style={{
+            borderStyle: "dashed",
+            aspectRatio: 1,
+            borderRadius: rem(36),
+          }}
+        >
+          <div ref={ref} />
+        </Flex>
+
+        <Flex
+          w="100%"
+          direction="column"
+          justify="center"
+          align="center"
+          gap="sm"
+          py="lg"
         >
           <Link
             to={`/preview/${projectId}`}
@@ -106,14 +121,14 @@ export default function ProjectInit_AgreementsReviewed({
               style={{ textAlign: "center" }}
             >
               <Text fz="xs" c="gray.6">
-                Public Link
+                Invite Link
               </Text>
               <Text fz="sm" c="versee-purple">
                 {`${window.location.origin}/preview/${projectId}`}
               </Text>
             </Flex>
           </Link>
-        </Card>
+        </Flex>
 
         <Accordion w="100%">
           <Accordion.Item key="first" value="first">
