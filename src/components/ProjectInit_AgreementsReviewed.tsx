@@ -10,7 +10,7 @@ import {
   Text,
   rem,
 } from "@mantine/core";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaAddressBook } from "react-icons/fa";
 
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -26,28 +26,10 @@ export default function ProjectInit_AgreementsReviewed({
 
   const [signersList, setSignersList] = useState<any>([]);
 
-  const [newSignerName, setNewSignerName] = useState("");
-  const [newSignerEmail, setNewSignerEmail] = useState("");
-
-  const handleAddSigner = () => {
-    const updSignersList = [
-      ...signersList,
-      {
-        signerName: newSignerName,
-        signerEmail: newSignerEmail,
-      },
-    ];
-    setSignersList(updSignersList);
-    setNewSignerName("");
-    setNewSignerEmail("");
-  };
-
-  const handleDeleteSigner = (signer: any) => {
-    const updSignersList = signersList.filter(
-      (s: any) => s.signerEmail !== signer.signerEmail
-    );
-    setSignersList(updSignersList);
-  };
+  const applicationsReceived = useQuery(
+    api.dbOps.getApplications_ByProjectId,
+    projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
+  );
 
   const onClick_completeAddingSigners = async () => {
     const updateData = JSON.stringify({
@@ -118,7 +100,7 @@ export default function ProjectInit_AgreementsReviewed({
                   gap="md"
                   style={{ overflowY: "auto" }}
                 >
-                  {signersList.length < 1 ? (
+                  {(applicationsReceived ?? []).length < 1 ? (
                     <Flex
                       w="100%"
                       h="100%"
@@ -129,41 +111,50 @@ export default function ProjectInit_AgreementsReviewed({
                       gap="sm"
                       style={{ textAlign: "center" }}
                     >
-                      <Text>No signers added yet</Text>
+                      <Text>No applications received yet</Text>
                     </Flex>
                   ) : (
-                    signersList.map((signerObj: any, idx: number) => {
-                      return (
-                        <Flex
-                          key={signerObj.signerEmail}
-                          w="100%"
-                          direction="row"
-                          align="center"
-                          gap="md"
-                        >
-                          <Flex h="100%" p="md" align="center" justify="center">
-                            <FaTrashAlt
-                              color="#ababab"
-                              onClick={() => {
-                                handleDeleteSigner(signerObj);
-                              }}
-                              style={{ cursor: "pointer" }}
-                            />
-                          </Flex>
+                    (applicationsReceived ?? []).map(
+                      (application: any, idx: number) => {
+                        return (
                           <Flex
+                            key={application._id}
                             w="100%"
-                            h="100%"
-                            direction="column"
-                            justify="center"
+                            direction="row"
+                            align="center"
+                            gap="md"
                           >
-                            <Text fw="bold" lh="0.8">
-                              {signerObj.signerName}
-                            </Text>
-                            <Text fz="sm">{signerObj.signerEmail}</Text>
+                            <Flex
+                              h="100%"
+                              p="md"
+                              align="center"
+                              justify="center"
+                            >
+                              <FaAddressBook
+                                color="#ababab"
+                                onClick={() => {
+                                  console.log(application);
+                                }}
+                                style={{ cursor: "pointer" }}
+                              />
+                            </Flex>
+                            <Flex
+                              w="100%"
+                              h="100%"
+                              direction="column"
+                              justify="center"
+                            >
+                              <Text fw="bold" lh="0.8">
+                                {application._id}
+                              </Text>
+                              <Text fz="sm">
+                                {application?.applicant?.email ?? ""}
+                              </Text>
+                            </Flex>
                           </Flex>
-                        </Flex>
-                      );
-                    })
+                        );
+                      }
+                    )
                   )}
                 </Flex>
               </Flex>
@@ -175,7 +166,7 @@ export default function ProjectInit_AgreementsReviewed({
           w="100%"
           size="lg"
           onClick={onClick_completeAddingSigners}
-          disabled={signersList.length < 1}
+          disabled={(applicationsReceived ?? []).length < 1}
         >
           Done
         </Button>
