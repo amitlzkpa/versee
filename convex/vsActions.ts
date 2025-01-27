@@ -16,6 +16,10 @@ import { documentTypes } from "../common/documentTypes";
 let DEV = true;
 DEV = false;
 
+const wait = async function (ms) {
+  return new Promise((resolve) => setTimeout(() => resolve(), ms));
+};
+
 // SCHEMAS
 
 const schema_offerings = {
