@@ -532,7 +532,9 @@ export default function Preview() {
                   gap="sm"
                 >
                   {currApplication?.eligibilityCheckResultStatus ===
-                  "generated" ? (
+                  "generating" ? (
+                    <Loader type="oval" size="lg" />
+                  ) : (
                     <>
                       {eligibilityCheckResultJSON.map(
                         (cr: any, crIdx: number) => (
@@ -592,8 +594,6 @@ export default function Preview() {
                         )
                       )}
                     </>
-                  ) : (
-                    <Loader type="oval" size="lg" />
                   )}
                 </Flex>
 
