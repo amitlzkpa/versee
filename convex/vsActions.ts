@@ -165,7 +165,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const txtModel_texts = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const soModel_offerings = genAI.getGenerativeModel({
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash",
   generationConfig: {
     responseMimeType: "application/json",
     responseSchema: schema_offerings,
@@ -173,7 +173,7 @@ const soModel_offerings = genAI.getGenerativeModel({
 });
 
 const soModel_checkConditions = genAI.getGenerativeModel({
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash",
   generationConfig: {
     responseMimeType: "application/json",
     responseSchema: schema_checkConditions,
@@ -181,7 +181,7 @@ const soModel_checkConditions = genAI.getGenerativeModel({
 });
 
 const soModel_criteria = genAI.getGenerativeModel({
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash",
   generationConfig: {
     responseMimeType: "application/json",
     responseSchema: schema_criteria,
@@ -189,7 +189,7 @@ const soModel_criteria = genAI.getGenerativeModel({
 });
 
 const soModel_classifyDoc = genAI.getGenerativeModel({
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash",
   generationConfig: {
     responseMimeType: "application/json",
     responseSchema: schema_classifyDoc,
@@ -197,7 +197,7 @@ const soModel_classifyDoc = genAI.getGenerativeModel({
 });
 
 const soModel_extractedInfo = genAI.getGenerativeModel({
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash",
   generationConfig: {
     responseMimeType: "application/json",
     responseSchema: schema_extractedInfo,
