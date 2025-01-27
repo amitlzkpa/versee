@@ -138,15 +138,19 @@ export default function ProjectInit_AgreementsUploaded({
               gap="sm"
               style={{ overflowY: "auto" }}
             >
-              <embed
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  minHeight: rem(800),
-                  borderRadius: rem(20),
-                }}
-                src={srcDoc.fileUrl}
-              />
+              {srcDoc.fileUrl ? (
+                <embed
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    minHeight: rem(400),
+                    borderRadius: rem(20),
+                  }}
+                  src={srcDoc.fileUrl}
+                />
+              ) : (
+                <></>
+              )}
 
               <Button
                 component="a"
@@ -159,6 +163,7 @@ export default function ProjectInit_AgreementsUploaded({
                 Open
               </Button>
 
+              {/*
               <Button
                 variant="outline"
                 w="100%"
@@ -167,6 +172,7 @@ export default function ProjectInit_AgreementsUploaded({
               >
                 Analyse
               </Button>
+               */}
             </Flex>
             <Flex w="50%" h="100%" direction="column" align="stretch" gap="xs">
               {/* 
