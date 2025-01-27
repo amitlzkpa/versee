@@ -344,6 +344,24 @@ export const getApplications_ByProjectId = query({
   },
 });
 
+export const getApplications_ByProjectId_FilterForCompleted = query({
+  args: {
+    projectId: v.id("vsProjects"),
+  },
+  handler: async (ctx, { projectId }) => {
+    const applications = await ctx.db
+      .query("vsApplications")
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("initializationStatus"), "complete"),
+          q.eq(q.field("projectId"), projectId)
+        )
+      )
+      .collect();
+    return applications;
+  },
+});
+
 export const getApplication_ByProjectId_ForCurrUser = query({
   args: {
     projectId: v.optional(v.id("vsProjects")),

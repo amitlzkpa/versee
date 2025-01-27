@@ -25,7 +25,7 @@ export default function ProjectInit_AgreementsReviewed({
   const cvxUtils = useCvxUtils();
 
   const applicationsReceived = useQuery(
-    api.dbOps.getApplications_ByProjectId,
+    api.dbOps.getApplications_ByProjectId_FilterForCompleted,
     projectId ? { projectId: projectId as Id<"vsProjects"> } : "skip"
   );
 
