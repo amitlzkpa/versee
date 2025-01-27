@@ -54,6 +54,8 @@ export default function MyAccount() {
         )}
       </Flex>
 
+      {/*
+      
       <Divider w="60%" my="lg" />
 
       <Flex w="60%" direction="column" align="center" gap="md" p="lg">
@@ -87,6 +89,7 @@ export default function MyAccount() {
           </>
         )}
       </Flex>
+      */}
     </Flex>
   );
 }
