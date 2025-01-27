@@ -616,6 +616,47 @@ export default function Preview() {
                   }}
                 />
               </Paper>
+
+              <Flex
+                w="100%"
+                h="100%"
+                style={{ border: "1px solid red", flexGrow: 1 }}
+                gap="sm"
+              >
+                <Flex
+                  w="50%"
+                  direction="column"
+                  align="stretch"
+                  gap="sm"
+                  style={{ border: "1px solid blue" }}
+                >
+                  <Textarea
+                    variant="filled"
+                    w="100%"
+                    rows={8}
+                    placeholder="Ask questions..."
+                  />
+
+                  <Flex w="100%" align="center" gap="sm">
+                    <div style={{ flexGrow: 1 }}></div>
+                    <Button variant="outline" size="md">
+                      Send
+                    </Button>
+                  </Flex>
+                </Flex>
+                <Flex
+                  w="50%"
+                  h="100%"
+                  direction="column"
+                  align="stretch"
+                  gap="sm"
+                  style={{
+                    border: "1px solid blue",
+                    flexGrow: 1,
+                    overflowY: "auto",
+                  }}
+                ></Flex>
+              </Flex>
             </Flex>
           </Flex>
 
