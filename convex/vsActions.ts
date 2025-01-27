@@ -1294,11 +1294,6 @@ export const analyseApplication = action({
     applicationId: v.id("vsApplications"),
   },
   handler: async (ctx, { applicationId }) => {
-    const application = await ctx.runQuery(
-      api.dbOps.getApplication_ByApplicationId,
-      { applicationId }
-    );
-
     const writeData = {};
 
     writeData.eligibilityCheckResultStatus = "generating";
@@ -1306,6 +1301,11 @@ export const analyseApplication = action({
       applicationId,
       updateDataStr: JSON.stringify(writeData),
     });
+
+    const application = await ctx.runQuery(
+      api.dbOps.getApplication_ByApplicationId,
+      { applicationId }
+    );
 
     const project = await ctx.runQuery(api.dbOps.getProject_ByProjectId, {
       projectId: application.projectId,

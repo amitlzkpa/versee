@@ -433,7 +433,7 @@ export default function Preview() {
                 h={rem(340)}
                 p="md"
                 bg="gray.1"
-                style={{ overflowX: "auto" }}
+                style={{ overflowX: "auto", position: "relative" }}
               >
                 <Flex
                   w="100%"
@@ -507,18 +507,25 @@ export default function Preview() {
                     <Loader type="oval" size="lg" />
                   )}
                 </Flex>
-              </Paper>
 
-              <Button
-                variant="outline"
-                onClick={() => {
-                  cvxUtils.performAction_analyseApplication({
-                    applicationId: currApplication._id,
-                  });
-                }}
-              >
-                Analyse
-              </Button>
+                <FaRedo
+                  style={{
+                    top: 15,
+                    right: 15,
+                    position: "absolute",
+                    zIndex: 999,
+                    width: rem(16),
+                    height: rem(16),
+                    color: "var(--mantine-color-gray-7)",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    cvxUtils.performAction_analyseApplication({
+                      applicationId: currApplication._id,
+                    });
+                  }}
+                />
+              </Paper>
             </Flex>
           </Flex>
 
