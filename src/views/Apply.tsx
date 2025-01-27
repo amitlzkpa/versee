@@ -68,9 +68,11 @@ export default function Preview() {
     const allChecks = eligibilityCheckResultJSON.every(
       (e: any) => e.isEligible
     );
-    setCanApply(allChecks);
+    setCanApply(
+      allChecks && currApplication?.initializationStatus !== "complete"
+    );
     // setCanApply(true);
-  }, [eligibilityCheckResultJSON]);
+  }, [eligibilityCheckResultJSON, currApplication]);
 
   // APPLY MODAL
 
@@ -83,7 +85,7 @@ export default function Preview() {
   const onClick_submitApplication = async () => {
     cvxUtils.performAction_updateApplication({
       applicationId: currApplication._id,
-      updateDataStr: JSON.stringify({ initializationStatus: "comlpete" }),
+      updateDataStr: JSON.stringify({ initializationStatus: "complete" }),
     });
     confirmApplicationModalCtr[1].close();
   };
@@ -618,10 +620,24 @@ export default function Preview() {
           <Flex w="30%" direction="column" align="center" gap="sm">
             <Flex w="100%" gap="sm">
               <Flex w="60%">
-                <FileUploader
-                  projectId={currProject?._id}
-                  onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
-                />
+                {currApplication?.initializationStatus === "complete" ? (
+                  <Flex
+                    w="100%"
+                    h="100%"
+                    direction="column"
+                    justify="center"
+                    align="center"
+                  >
+                    <Text fz="sm" fw="light">
+                      Application Submitted
+                    </Text>
+                  </Flex>
+                ) : (
+                  <FileUploader
+                    projectId={currProject?._id}
+                    onClick_uploadFiles={onClick_uploadFiles_PrjFiles}
+                  />
+                )}
               </Flex>
               <Flex w="40%">
                 <Button
@@ -629,11 +645,22 @@ export default function Preview() {
                   w="100%"
                   h="100%"
                   disabled={!canApply}
+                  p="lg"
                   onClick={onClick_openConfirmApplicationModal}
                 >
-                  <Text fz="lg" fw="bold">
-                    APPLY
-                  </Text>
+                  {currApplication?.initializationStatus === "complete" ? (
+                    <FaCheckCircle
+                      style={{
+                        width: rem(42),
+                        height: rem(42),
+                        color: "#693dd9",
+                      }}
+                    />
+                  ) : (
+                    <Text fz="lg" fw="bold">
+                      APPLY
+                    </Text>
+                  )}
                 </Button>
               </Flex>
             </Flex>
