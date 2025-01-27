@@ -635,19 +635,8 @@ export default function Preview() {
               </Paper>
 
               {/* Chat row */}
-              <Flex
-                w="100%"
-                h="100%"
-                style={{ border: "1px solid red", flexGrow: 1 }}
-                gap="sm"
-              >
-                <Flex
-                  w="50%"
-                  direction="column"
-                  align="stretch"
-                  gap="sm"
-                  style={{ border: "1px solid blue" }}
-                >
+              <Flex w="100%" h="100%" gap="sm" style={{ flexGrow: 1 }}>
+                <Flex w="50%" direction="column" align="stretch" gap="sm">
                   <Textarea
                     variant="filled"
                     w="100%"
@@ -668,7 +657,6 @@ export default function Preview() {
                   align="stretch"
                   gap="sm"
                   style={{
-                    border: "1px solid blue",
                     flexGrow: 1,
                     overflowY: "auto",
                   }}
