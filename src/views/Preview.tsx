@@ -187,17 +187,29 @@ export default function Preview() {
         style={{ overflowY: "auto" }}
       >
         <Text fw="bold" style={{ textAlign: "center" }}>
-          {srcDoc.titleText}
+          {srcDoc?.titleText}
         </Text>
-        <embed
-          style={{
-            width: "100%",
-            height: "100%",
-            minHeight: rem(400),
-            borderRadius: rem(20),
-          }}
-          src={srcDoc.fileUrl}
-        />
+        <Flex
+          w="100%"
+          h="100%"
+          direction="column"
+          align="stretch"
+          style={{ flexGrow: 1 }}
+        >
+          {srcDoc?.fileUrl ? (
+            <embed
+              style={{
+                width: "100%",
+                height: "100%",
+                minHeight: "60vh",
+                borderRadius: rem(20),
+              }}
+              src={srcDoc?.fileUrl}
+            />
+          ) : (
+            <></>
+          )}
+        </Flex>
       </Flex>
 
       <Flex w="20%" direction="column" align="stretch" gap="md">
