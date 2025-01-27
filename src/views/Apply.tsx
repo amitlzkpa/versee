@@ -305,7 +305,10 @@ export default function Preview() {
                     <FaTrashAlt
                       color="#ababab"
                       onClick={() => {
-                        console.log("foo");
+                        cvxUtils.performAction_deletePrjFile({
+                          prjFileId: prjFileInModal._id,
+                        });
+                        prjFilesModalCtr[1].close();
                       }}
                       style={{
                         width: rem(16),

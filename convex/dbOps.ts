@@ -283,6 +283,16 @@ export const createNewPrjFile = internalMutation({
   },
 });
 
+export const deletePrjFile = internalMutation({
+  args: {
+    prjFileId: v.id("vsPrjFile"),
+  },
+  handler: async (ctx, { prjFileId }) => {
+    const deletedPrjFileId = await ctx.db.delete(prjFileId);
+    return deletedPrjFileId;
+  },
+});
+
 export const updatePrjFile = internalMutation({
   args: {
     prjFileId: v.id("vsPrjFile"),

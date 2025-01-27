@@ -1131,6 +1131,30 @@ export const createNewPrjFile = action({
   },
 });
 
+export const deletePrjFile = action({
+  args: {
+    prjFileId: v.id("vsPrjFile"),
+  },
+  handler: async (ctx, { prjFileId }) => {
+    const prjFile = await ctx.runQuery(api.dbOps.getPrjFile_ByPrjFileId, {
+      prjFileId,
+    });
+    const assocApplicationId = prjFile.applicationId;
+    const cvxStoredFileId = prjFile.cvxStoredFileId;
+    const deletedPrjFileId: any = await ctx.runMutation(
+      internal.dbOps.deletePrjFile,
+      { prjFileId }
+    );
+    await ctx.storage.delete(cvxStoredFileId);
+    (async () => {
+      ctx.scheduler.runAfter(0, api.vsActions.analyseApplication, {
+        applicationId: assocApplicationId,
+      });
+    })();
+    return deletedPrjFileId;
+  },
+});
+
 export const analysePrjFile = action({
   args: {
     prjFileId: v.id("vsPrjFile"),

@@ -57,6 +57,8 @@ export default function useCvxUtils() {
     api.vsActions.createNewPrjFile
   );
 
+  const performAction_deletePrjFile = useAction(api.vsActions.deletePrjFile);
+
   const performAction_analysePrjFile = useAction(api.vsActions.analysePrjFile);
 
   const performAction_createNewApplication = useAction(
@@ -91,6 +93,7 @@ export default function useCvxUtils() {
     performAction_updateSrcDoc,
     performAction_analyseSrcDoc,
     performAction_createNewPrjFile,
+    performAction_deletePrjFile,
     performAction_analysePrjFile,
     performAction_createNewApplication,
     performAction_updateApplication,
