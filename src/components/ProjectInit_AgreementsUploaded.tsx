@@ -124,7 +124,7 @@ export default function ProjectInit_AgreementsUploaded({
         py="lg"
       >
         <Text fz="lg" fw="bold">
-          Agreement Papers ({(curProjectSrcDocs ?? []).length})
+          Documents
         </Text>
 
         {(curProjectSrcDocs ?? []).length > 0 ? (
@@ -169,6 +169,7 @@ export default function ProjectInit_AgreementsUploaded({
               </Button>
             </Flex>
             <Flex w="50%" h="100%" direction="column" align="stretch" gap="xs">
+              {/* 
               <Button
                 variant="outline"
                 onClick={() => {
@@ -179,6 +180,7 @@ export default function ProjectInit_AgreementsUploaded({
               >
                 Prepare
               </Button>
+              */}
 
               <Button
                 w="100%"
