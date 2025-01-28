@@ -1,4 +1,4 @@
-import { Flex } from "@mantine/core";
+import { Button, Flex, Text } from "@mantine/core";
 
 export default function Landing() {
   return (
@@ -9,6 +9,38 @@ export default function Landing() {
       Versee is a web app designed to make reviewing and submitting complex applications, like affordable housing schemes, simple and user-friendly. Reviewing agreements and understanding eligibility criteria can be overwhelming, especially when dealing with multiple documents and hidden requirements. Versee uses advanced language models (LLMs) to analyze documents, extract relevant information, and guide you through the process step-by-step. This ensures that you no longer need to rely on third parties or share sensitive documents with strangers to determine your eligibility.
       <br /><br />
       With Versee, you can easily upload files, whether they’re PDFs or even photos converted into PDFs. The app analyzes these documents, identifies their type, and extracts key details to assess your eligibility against specific criteria, like income limits. For example, in the case of an affordable housing scheme in Navi Mumbai, Versee scans your tax records to verify your income level, saving you time and effort. The app also provides an interactive interface to track your application status, reduces ineligible applications, and ensures a smoother experience with features like QR code scanning and document signing through DocuSign. Versee transforms tedious manual processes into efficient, AI-driven workflows, empowering you to make informed decisions with ease.
+      <br />
+      <Button
+        component="a"
+        size="lg"
+        href="https://versee.vercel.app/apply/k171d8gpaa6hypn4rbw3y0qw25795600"
+        target="_blank"
+      >
+        <Text fw="bold">
+          Preview Scheme
+        </Text>
+      </Button>
+      <Button
+        component="a"
+        size="lg"
+        href="https://versee.vercel.app/preview/jd74e7crp9k98s1jqt7jbep47s794b90"
+        target="_blank"
+      >
+        <Text fw="bold">
+          Demo
+        </Text>
+      </Button>
+      <Button
+        component="a"
+        variant="transparent"
+        size="lg"
+        href="https://versee.vercel.app/home"
+        target="_blank"
+      >
+        <Text fw="bold">
+          Dashboard
+        </Text>
+      </Button>
     </Flex>
   );
 }
