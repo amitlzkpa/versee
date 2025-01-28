@@ -237,16 +237,14 @@ export default function Preview() {
       setInput("");
       setIsLoading(true);
       try {
-        // Flip the conversation history so far and add the new message to the end
-        // const msgsToSend = [...[...messages].reverse(), newMessage];
-        // const response = await axios.post(
-        //   `${process.env.REACT_APP_BACKEND_BASE_URL}/kranipel/gpt`,
-        //   {
-        //     messages: msgsToSend,
-        //     userDetails: userLoginCtx.state.userLoginObject,
-        //   }
-        // );
-        // handleMessageReceived(response.data);
+        const msgsToSend = [...[...messages].reverse(), newMessage];
+        const msgsStr = JSON.stringify(msgsToSend);
+        const response = await cvxUtils.performAction_createNewReply({
+          applicationId: currApplication._id,
+          msgsStr,
+        });
+        console.log(response);
+        handleMessageReceived(response);
       } catch (error) {
         console.error("Error sending message:", error);
       } finally {
@@ -258,47 +256,6 @@ export default function Preview() {
   const handleClearMessages = () => {
     setMessages([]);
   };
-
-  const onClick_send = () => {
-    setMessages([
-      {
-        author: "User",
-        rawContent:
-          "Hi, can you tell me about the locations available for the affordable housing lottery project?",
-        timestamp: "2025-01-27T14:00:00.000Z",
-      },
-      {
-        author: "Bot",
-        rawContent:
-          "The locations available for the affordable housing lottery project are Taloja, Kharghar, and Vashi.",
-        timestamp: "2025-01-27T14:00:10.000Z",
-        markdownContent:
-          "The locations available for the affordable housing lottery project are <strong>Taloja</strong>, <strong>Kharghar</strong>, and <strong>Vashi</strong>.",
-      },
-      {
-        author: "User",
-        rawContent: "Can you provide more details about these locations?",
-        timestamp: "2025-01-27T14:01:00.000Z",
-      },
-      {
-        author: "Bot",
-        rawContent:
-          "Sure! Taloja is known for its upcoming infrastructure, Kharghar offers good connectivity and amenities, and Vashi is a developed area with excellent transport links.",
-        timestamp: "2025-01-27T14:01:15.000Z",
-        markdownContent:
-          "Sure! <strong>Taloja</strong> is known for its upcoming infrastructure, <strong>Kharghar</strong> offers good connectivity and amenities, and <strong>Vashi</strong> is a developed area with excellent transport links.",
-      },
-      {
-        author: "User",
-        rawContent: "Thanks! Can you help me apply for the project in Vashi?",
-        timestamp: "2025-01-27T14:02:00.000Z",
-      },
-    ]);
-  };
-
-  useEffect(() => {
-    // onClick_send();
-  }, []);
 
   return (
     <Flex w="100%" h="100%" gap="sm">
@@ -734,6 +691,8 @@ export default function Preview() {
                       variant="filled"
                       w="100%"
                       rows={8}
+                      onChange={handleInputChange}
+                      disabled={isLoading}
                       placeholder="Type your message here..."
                     />
 
@@ -748,11 +707,22 @@ export default function Preview() {
                       }}
                     >
                       <div style={{ flexGrow: 1 }}></div>
+                      <FaTrashAlt
+                        color="#ababab"
+                        onClick={handleClearMessages}
+                        style={{
+                          width: rem(16),
+                          height: rem(16),
+                          color: "var(--mantine-color-gray-5)",
+                          cursor: isLoading ? "not-allowed" : "pointer",
+                        }}
+                      />
                       <Button
                         color="gray.6"
                         variant="outline"
                         size="md"
-                        onClick={onClick_send}
+                        onClick={handleSendMessage}
+                        disabled={isLoading}
                       >
                         Send
                       </Button>
@@ -765,10 +735,6 @@ export default function Preview() {
                   direction="column"
                   align="stretch"
                   gap="sm"
-                  style={{
-                    flexGrow: 1,
-                    overflowY: "auto",
-                  }}
                 >
                   {messages.length < 1 ? (
                     <Flex
@@ -784,17 +750,25 @@ export default function Preview() {
                       </Text>
                     </Flex>
                   ) : (
-                    <Flex
-                      w="100%"
-                      h="100%"
-                      direction="column"
-                      gap="xs"
-                      style={{ overflowY: "auto" }}
+                    <div
+                      style={{
+                        height: "100%",
+                        overflowY: "auto",
+                      }}
                     >
-                      {messages.map((message, index) => (
-                        <MessageCard key={index} message={message} />
-                      ))}
-                    </Flex>
+                      <Flex
+                        w="100%"
+                        h="2000"
+                        mih="3000"
+                        direction="column-reverse"
+                        justify="flex-end"
+                        gap="xs"
+                      >
+                        {messages.map((message, index) => (
+                          <MessageCard key={index} message={message} />
+                        ))}
+                      </Flex>
+                    </div>
                   )}
                 </Flex>
               </Flex>

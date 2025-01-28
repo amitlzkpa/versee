@@ -1407,3 +1407,59 @@ export const analyseApplication = action({
     });
   },
 });
+
+export const createNewReply = action({
+  args: {
+    applicationId: v.id("vsApplications"),
+    msgsStr: v.string(),
+  },
+  handler: async (ctx, { applicationId, msgsStr }) => {
+    const msgsRcvd = JSON.parse(msgsStr);
+    const convHistory = msgsRcvd
+      .map((msg) => `${msg.author}: ${msg.rawContent}`)
+      .join("\n");
+    console.log(convHistory);
+
+    const application = await ctx.runQuery(
+      api.dbOps.getApplication_ByApplicationId,
+      { applicationId }
+    );
+
+    const srcDocs = await ctx.runQuery(api.dbOps.getAllSrcDocs_ForProject, {
+      projectId: application.projectId,
+    });
+
+    const srcDoc = srcDocs[0];
+
+    const fileUrl = await ctx.storage.getUrl(srcDoc.cvxStoredFileId);
+
+    const pdfArrayBuffer = await fetch(fileUrl).then((response) =>
+      response.arrayBuffer()
+    );
+
+    const promptText = [
+      "Use the document as a reference and generate a brief, helpful response to continue the conversation below.",
+      "Format the response in markdown and return only the response.",
+      "Keep the responses brief.",
+      // "Use tables and other formatting to explain and summarize information.",
+      "Say you are not sure about the response if the answer to any questions isn't simple.",
+      "Try to be helpful and mention the page numbers for any retrieved information.",
+      "",
+      "## Convsation History",
+      convHistory,
+      "",
+    ].join("\n\n");
+
+    const result = await txtModel_texts.generateContent([
+      {
+        inlineData: {
+          data: Buffer.from(pdfArrayBuffer).toString("base64"),
+          mimeType: "application/pdf",
+        },
+      },
+      promptText,
+    ]);
+    const response = result.response.text();
+    return response;
+  },
+});
