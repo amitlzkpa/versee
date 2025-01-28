@@ -1104,7 +1104,8 @@ const generateForPDF_extractedInfo = async (pdfArrayBuffer) => {
 };
 
 const verifyInfo_prjFile = async (extractedInfoText, classifyDocText) => {
-  return "verified";
+  const documentEnums = documentTypes.map((d: any) => d?.value);
+  return documentEnums.includes(classifyDocText) ? "verified" : "unverified";
 };
 
 export const createNewPrjFile = action({
