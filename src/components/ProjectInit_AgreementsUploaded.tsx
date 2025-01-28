@@ -163,21 +163,22 @@ export default function ProjectInit_AgreementsUploaded({
                 Open
               </Button>
 
-              {/*
+
               <Button
-                variant="outline"
+                variant="transparent"
                 w="100%"
                 size="sm"
                 onClick={() => onClick_analyseDoc(srcDoc._id)}
               >
                 Analyse
               </Button>
-               */}
+
             </Flex>
             <Flex w="50%" h="100%" direction="column" align="stretch" gap="xs">
-              {/* 
+
               <Button
-                variant="outline"
+                variant="transparent"
+                size="sm"
                 onClick={() => {
                   cvxUtils.performAction_setupCheckingConditions({
                     projectId,
@@ -186,7 +187,7 @@ export default function ProjectInit_AgreementsUploaded({
               >
                 Prepare
               </Button>
-              */}
+
 
               <Button
                 w="100%"
