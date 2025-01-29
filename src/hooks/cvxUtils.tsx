@@ -77,6 +77,8 @@ export default function useCvxUtils() {
     api.vsActions.setupCheckingConditions
   );
 
+  const performAction_createNewReply = useAction(api.vsActions.createNewReply);
+
   return {
     performAction_startDocusignOAuth,
     performAction_retrieveDocusignAccessToken,
@@ -99,5 +101,6 @@ export default function useCvxUtils() {
     performAction_updateApplication,
     performAction_analyseApplication,
     performAction_setupCheckingConditions,
+    performAction_createNewReply,
   };
 }
