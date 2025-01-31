@@ -17,6 +17,7 @@ import OauthCallback_Docusign from "./views/OauthCallback_Docusign";
 import OauthCallback_GWspc from "./views/OauthCallback_GWspc";
 import CompletedSigningAnnotation_Docusign from "./views/CompletedSigningAnnotation_Docusign";
 import Landing from "./views/Landing";
+import Screenshots from "./views/Screenshots";
 import MyAccount from "./views/MyAccount";
 import Home from "./views/Home";
 import Project from "./views/Project";
@@ -98,6 +99,7 @@ function App() {
       element: <Outlet />,
       children: [
         { path: "", element: <Landing /> },
+        { path: "screenshots", element: <Screenshots /> },
         { path: "dev", element: <Dev /> },
         {
           path: "completed-signing-annotation",
