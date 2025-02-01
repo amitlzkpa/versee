@@ -313,7 +313,7 @@ export const getAllApplications_ForCurrUser = query({
     if (!currUser) return [];
     const applications = await ctx.db
       .query("vsApplications")
-      .filter((q) => q.eq(q.field("creator.subject"), currUser.subject))
+      .filter((q) => q.eq(q.field("applicant.subject"), currUser.subject))
       .order("desc")
       .collect();
     return applications;

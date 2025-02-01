@@ -53,7 +53,7 @@ export default function Home() {
                 key={prj._id}
               >
                 <Card w="100%" withBorder radius="xl">
-                  <Text>{prj._id}</Text>
+                  <Text>{prj.titleText}</Text>
                 </Card>
               </UnstyledButton>
             );
